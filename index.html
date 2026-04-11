@@ -1,115 +1,368 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>無料占い診断</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>無料生命線占い診断</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f7f3ff;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: linear-gradient(180deg, #f7f3ff 0%, #fffafc 100%);
       margin: 0;
       padding: 20px;
+      color: #333;
     }
 
     .box {
-      max-width: 600px;
+      max-width: 680px;
       margin: auto;
       background: #fff;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 24px;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
     }
 
     h1 {
       text-align: center;
       color: #8a4de0;
+      margin-bottom: 10px;
+      font-size: 28px;
     }
 
     .sub {
       text-align: center;
       color: #666;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #d9d9d9;
       box-sizing: border-box;
       font-size: 16px;
+      margin-bottom: 14px;
     }
 
     button {
       width: 100%;
       padding: 15px;
-      background: #b05cff;
+      background: linear-gradient(90deg, #a95cff 0%, #d26dff 100%);
       color: #fff;
       border: none;
-      border-radius: 10px;
-      margin-top: 10px;
-      font-size: 16px;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: bold;
       cursor: pointer;
+      margin-top: 6px;
+    }
+
+    button:hover {
+      opacity: 0.95;
     }
 
     .result {
-      margin-top: 20px;
+      margin-top: 24px;
+      padding: 20px;
+      background: #faf7ff;
+      border-radius: 18px;
+      border: 1px solid #eee3ff;
+      line-height: 1.9;
       display: none;
-      background: #faf5ff;
+    }
+
+    .result h2 {
+      margin-top: 0;
+      color: #7a42cf;
+      font-size: 22px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #8a4de0;
+      margin-top: 14px;
+      margin-bottom: 4px;
+    }
+
+    .color-chip {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #f1e8ff;
+      color: #6d36c1;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .paid-box {
+      margin-top: 28px;
+      padding: 22px;
+      background: linear-gradient(180deg, #fff7fb 0%, #fff 100%);
+      border: 1px solid #ffd8ef;
+      border-radius: 18px;
+    }
+
+    .paid-box h3 {
+      margin-top: 0;
+      color: #d14b97;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .paid-box p {
+      line-height: 1.9;
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    .benefits {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 14px 0 18px;
+      border: 1px solid #ffe3f3;
+    }
+
+    .benefits div {
+      margin: 8px 0;
+    }
+
+    .cta-btn {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      width: 100%;
+      box-sizing: border-box;
       padding: 15px;
-      border-radius: 12px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .line-btn {
+      background: #06c755;
+      color: #fff;
+    }
+
+    .pay-btn {
+      background: #8a4de0;
+      color: #fff;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #888;
+      margin-top: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-msg {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #888;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 480px) {
+      .box {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .result h2 {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
-
   <div class="box">
-    <h1>無料占い診断</h1>
-    <p class="sub">生年月日から簡単な運勢を診断します</p>
+    <h1>無料生命線占い診断</h1>
+    <p class="sub">
+      生年月日から、あなたが生まれ持った<br>
+      「生命線」「しがらみ」「解放のヒント」「中心の色」を無料で診断します。
+    </p>
 
-    <input type="date" id="birth">
-    <button onclick="uranai()">占う</button>
+    <label for="birthdate">生年月日を入力してください</label>
+    <input type="date" id="birthdate" />
+    <button onclick="uranai()">無料で占う</button>
 
-    <div class="result" id="result">
-      <h2>結果</h2>
-      <p id="text"></p>
-    </div>
+    <div class="result" id="result"></div>
+
+    <p class="footer-msg">
+      あなたの内なる力を知ることで、<br>
+      これからの流れは大きく変わります。
+    </p>
   </div>
 
   <script>
-    function uranai() {
-      let birth = document.getElementById("birth").value;
+    const lifelineData = {
+      1: {
+        type: "炎の生命線",
+        essence: "あなたは自ら道を切り開く力を持つ人です。新しい流れを生み出し、周囲に影響を与える強さがあります。",
+        shigarami: "自分が頑張りすぎてしまい、人に頼ることが苦手になりやすい傾向があります。",
+        release: "一人で抱え込まず、信頼できる人に気持ちを話すことで運の流れが軽くなります。",
+        color: "赤",
+        message: "あなたの生命線は、止まっていた流れを動かす力を持っています。"
+      },
+      2: {
+        type: "月の生命線",
+        essence: "あなたは優しさと調和を大切にする人です。人の気持ちを感じ取り、安心感を与える魅力があります。",
+        shigarami: "相手に合わせすぎて、自分の本音を後回しにしてしまうことがあります。",
+        release: "まずは自分の気持ちを認めること。心の声を大切にすると、人間関係も整っていきます。",
+        color: "銀",
+        message: "あなたの生命線は、静かな優しさで人を包み込む光です。"
+      },
+      3: {
+        type: "花の生命線",
+        essence: "あなたは表現力が豊かで、明るさや華やかさを周囲に与える人です。",
+        shigarami: "気分に左右されやすく、自分の魅力を小さく見積もってしまうことがあります。",
+        release: "好きなことを形にすることが開運の鍵です。言葉や創作があなたを解放します。",
+        color: "桃",
+        message: "あなたの生命線は、咲くことで人を元気にする美しい力です。"
+      },
+      4: {
+        type: "大地の生命線",
+        essence: "あなたは安定感があり、コツコツと積み上げることで大きな力を発揮する人です。",
+        shigarami: "慎重になりすぎて、新しい流れを受け入れるのが遅くなることがあります。",
+        release: "完璧を求めすぎず、小さな一歩を踏み出すことで道が開けます。",
+        color: "茶",
+        message: "あなたの生命線は、揺るがない土台を築く強さに満ちています。"
+      },
+      5: {
+        type: "風の生命線",
+        essence: "あなたは変化を恐れず、自由な発想で人生を切り開く人です。",
+        shigarami: "落ち着かない状況や迷いが続くと、力が分散しやすくなります。",
+        release: "今の自分に本当に必要なものだけを選ぶと、運気が一気に整います。",
+        color: "空色",
+        message: "あなたの生命線は、新しい流れを運んでくる追い風です。"
+      },
+      6: {
+        type: "愛の生命線",
+        essence: "あなたは人を思いやる力が強く、ぬくもりで周囲を支える人です。",
+        shigarami: "相手を優先しすぎて、自分自身が疲れてしまうことがあります。",
+        release: "まず自分を満たすこと。心に余白ができるほど、愛も運も循環します。",
+        color: "ローズピンク",
+        message: "あなたの生命線は、愛によって人生をやさしく整える力です。"
+      },
+      7: {
+        type: "星の生命線",
+        essence: "あなたは深い洞察力と直感を持ち、本質を見抜く力に優れています。",
+        shigarami: "考えすぎてしまい、行動する前に疲れてしまうことがあります。",
+        release: "静かな時間の中で気持ちを整えたあと、小さくても行動に移すことが鍵です。",
+        color: "藍",
+        message: "あなたの生命線は、迷いの中でも本当の道を照らす星の光です。"
+      },
+      8: {
+        type: "光の生命線",
+        essence: "あなたは現実を動かす力が強く、豊かさや成功を引き寄せる力があります。",
+        shigarami: "結果を急ぎすぎると、心が置き去りになってしまうことがあります。",
+        release: "心と現実の両方を大切にすると、大きな実りにつながります。",
+        color: "金",
+        message: "あなたの生命線は、願いを現実へと変えていく眩しい光です。"
+      },
+      9: {
+        type: "海の生命線",
+        essence: "あなたは包容力があり、多くの人の気持ちを受け止められる深さを持つ人です。",
+        shigarami: "感情をため込みすぎると、気づかないうちに心が重くなりやすいです。",
+        release: "終わらせる勇気を持つことが大切です。手放すことで新しい流れが入ってきます。",
+        color: "深い青",
+        message: "あなたの生命線は、すべてを受け止めながら浄化していく海の力です。"
+      }
+    };
 
-      if (!birth) {
-        alert("生年月日を入れてください");
+    function getLifeNumber(dateString) {
+      const numbers = dateString.replace(/-/g, "").split("").map(Number);
+      let total = numbers.reduce((sum, num) => sum + num, 0);
+
+      while (total > 9) {
+        total = total.toString().split("").reduce((sum, num) => sum + Number(num), 0);
+      }
+
+      return total;
+    }
+
+    function uranai() {
+      const birthdate = document.getElementById("birthdate").value;
+      const result = document.getElementById("result");
+
+      if (!birthdate) {
+        alert("生年月日を入力してください。");
         return;
       }
 
-      let num = birth.replace(/-/g, "").split("").reduce((a, b) => a + Number(b), 0);
+      const lifeNumber = getLifeNumber(birthdate);
+      const data = lifelineData[lifeNumber];
 
-      while (num > 9) {
-        num = num.toString().split("").reduce((a, b) => a + Number(b), 0);
-      }
+      result.style.display = "block";
+      result.innerHTML = `
+        <h2>あなたの生命線は「${data.type}」です</h2>
 
-      let resultText = {
-        1: "リーダータイプ。行動すると運気アップ",
-        2: "優しさが運を呼びます",
-        3: "楽しむことで運気アップ",
-        4: "コツコツが成功の鍵",
-        5: "変化がチャンス",
-        6: "愛情がテーマ",
-        7: "自分と向き合う時",
-        8: "金運強め",
-        9: "手放しで運気上昇"
-      };
+        <div class="section-title">本質</div>
+        <div>${data.essence}</div>
 
-      document.getElementById("text").innerText = resultText[num] || "今日は落ち着いて過ごすと良い日です";
-      document.getElementById("result").style.display = "block";
+        <div class="section-title">今抱えやすいしがらみ</div>
+        <div>${data.shigarami}</div>
+
+        <div class="section-title">解放のヒント</div>
+        <div>${data.release}</div>
+
+        <div class="section-title">中心の色</div>
+        <div class="color-chip">${data.color}</div>
+
+        <div class="section-title">今日のメッセージ</div>
+        <div>${data.message}</div>
+
+        <div class="paid-box">
+          <h3>ここから先は、あなた専用の詳細鑑定になります</h3>
+          <p>
+            無料診断では、あなたの生命線の入り口だけをお伝えしています。<br>
+            本当に大切なのは、この先にある
+            <strong>「なぜ同じ悩みを繰り返すのか」</strong>
+            <strong>「これからどんな流れが来るのか」</strong>
+            という深い部分です。
+          </p>
+
+          <div class="benefits">
+            <div>・あなたが抱えやすい本当の原因</div>
+            <div>・恋愛運 / 仕事運 / 金運の流れ</div>
+            <div>・人間関係で気をつけること</div>
+            <div>・しがらみから抜け出す具体的な方法</div>
+            <div>・あなた専用の開運メッセージ</div>
+          </div>
+
+          <a class="cta-btn line-btn" href="https://line.me/R/ti/p/@あなたのLINEID" target="_blank">
+            LINEで詳細鑑定を受け取る
+          </a>
+
+          <a class="cta-btn pay-btn" href="https://あなたの決済ページURL" target="_blank">
+            詳細鑑定を申し込む
+          </a>
+
+          <div class="note">
+            ※上のLINEリンク、または決済ページURLはご自身のものに変更してください。<br>
+            ※たとえば LINE公式、BASE、STORES、Stripe のURLに差し替えて使えます。
+          </div>
+        </div>
+      `;
+
+      result.scrollIntoView({ behavior: "smooth" });
     }
   </script>
-
 </body>
 </html>
