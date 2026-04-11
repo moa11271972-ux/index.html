@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>無料占い診断</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f7f3ff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #8a4de0;
+    }
+
+    p {
+      line-height: 1.8;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #b05cff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 20px;
+      display: none;
+      background: #faf7ff;
+      padding: 15px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>無料占い診断</h1>
+    <p>生年月日を入力すると、簡単な占い結果が表示されます。</p>
+
+    <input type="date" id="birth">
+    <button onclick="uranai()">占う</button>
+
+    <div class="result" id="result">
+      <h2>結果</h2>
+      <p id="text"></p>
+    </div>
+  </div>
+
+  <script>
+    function uranai() {
+      let birth = document.getElementById("birth").value;
+
+      if (!birth) {
+        alert("生年月日を入力してください");
+        return;
+      }
+
+      let num = birth.replace(/-/g, "").split("").reduce((a, b) => a + Number(b), 0);
+
+      while (num > 9) {
+        num = num.toString().split("").reduce((a, b) => a + Number(b), 0);
+      }
+
+      let resultText = {
+        1: "リーダータイプ。行動すると運気アップ。",
+        2: "優しさが運を呼びます。",
+        3: "楽しむことで運気アップ。",
+        4: "コツコツが成功の鍵。",
+        5: "変化がチャンス。",
+        6: "愛情がテーマ。",
+        7: "自分と向き合う時。",
+        8: "金運強め。",
+        9: "手放しで運気上昇。"
+      };
+
+      document.getElementById("text").innerText = resultText[num];
+      document.getElementById("result").style.display = "block";
+    }
+  </script>
+</body>
+</html>
