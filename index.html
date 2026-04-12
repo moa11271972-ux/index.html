@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -123,9 +124,7 @@
 
     button:hover {
       opacity: 0.95;
-    }
-
-    .result {
+    }    .result {
       margin-top: 24px;
       display: none;
       background: rgba(250, 245, 255, 0.92);
@@ -304,9 +303,7 @@
         total += text.charCodeAt(i);
       }
       return reduceNumber(total);
-    }
-
-    function getZodiac(month, day) {
+    }    function getZodiac(month, day) {
       if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "牡羊座";
       if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "牡牛座";
       if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) return "双子座";
@@ -320,6 +317,70 @@
       if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "水瓶座";
       return "魚座";
     }
+
+    const lifeData = {
+      1:{type:"開拓の生命線",colorName:"ルビーレッド",colorCode:"#d94b64",base:"あなたは自分で道を切り開く力を持つ人です。止まるより動くことで運が育つタイプです。",strength:"決断力、行動力、始める力が強みです。",theme:"今の課題は、ひとりで抱え込みすぎないことです。",release:"完璧を目指すより、まず小さく動くことでしがらみがほどけていきます。"},
+      2:{type:"調和の生命線",colorName:"パールピンク",colorCode:"#e08db0",base:"あなたは人の気持ちを感じ取る力に優れ、やわらかく場を整える人です。",strength:"共感力、気配り、つなぐ力が強みです。",theme:"今の課題は、自分の本音を後回しにしすぎないことです。",release:"相手に合わせる前に、自分の気持ちを認めることで流れが変わります。"},
+      3:{type:"表現の生命線",colorName:"サンシャインオレンジ",colorCode:"#f39b3d",base:"あなたは明るい発想と表現力で周りに元気を与える人です。",strength:"発信力、創造力、楽しませる力が強みです。",theme:"今の課題は、気分の波にのまれず継続することです。",release:"楽しいことを入口にすると、止まっていた流れが軽く動き始めます。"},
+      4:{type:"安定の生命線",colorName:"フォレストグリーン",colorCode:"#4d8b63",base:"あなたは堅実で誠実。ひとつずつ積み上げて信頼をつくる人です。",strength:"継続力、責任感、現実を整える力が強みです。",theme:"今の課題は、変化を怖がりすぎないことです。",release:"少しだけ新しいやり方を取り入れると、停滞が安心に変わっていきます。"},
+      5:{type:"変化の生命線",colorName:"ターコイズブルー",colorCode:"#3aa7b4",base:"あなたは自由を愛し、新しい流れをつかむのが上手な人です。",strength:"柔軟性、行動力、変化対応力が強みです。",theme:"今の課題は、広げすぎた力を一点に集めることです。",release:"本当に大切なものを一つ選ぶと、散らばっていた運がまとまり始めます。"},
+      6:{type:"慈愛の生命線",colorName:"ローズベージュ",colorCode:"#c98d8d",base:"あなたは愛情深く、人を支えることで輝く人です。",strength:"包容力、安心感、育てる力が強みです。",theme:"今の課題は、人のために頑張りすぎて疲れないことです。",release:"まず自分を満たすことが、まわりを幸せにする近道になります。"},
+      7:{type:"叡智の生命線",colorName:"インディゴブルー",colorCode:"#4d5aa6",base:"あなたは深く考え、本質を見抜く静かな強さを持っています。",strength:"洞察力、直感力、分析力が強みです。",theme:"今の課題は、考えすぎて動けなくならないことです。",release:"答えを探しすぎず、今の自分が納得する一歩を選ぶと道が開きます。"},
+      8:{type:"実現の生命線",colorName:"ゴールドアンバー",colorCode:"#c7952d",base:"あなたは結果を形にする力が強く、現実を動かす人です。",strength:"実行力、統率力、豊かさを引き寄せる力が強みです。",theme:"今の課題は、力みすぎず余白を持つことです。",release:"全部を自分で抱えず、人や流れを信じると運の器が大きくなります。"},
+      9:{type:"包容の生命線",colorName:"アメジストパープル",colorCode:"#8a62c7",base:"あなたは広い視野と優しさで人を包み込む人です。",strength:"受容力、癒やし、全体を見る力が強みです。",theme:"今の課題は、終わったものを手放す勇気を持つことです。",release:"過去への執着を少し緩めると、新しい光が自然に入ってきます。"},
+      11:{type:"直感の生命線",colorName:"ミスティックシルバー",colorCode:"#8f96b2",base:"あなたは感性が鋭く、目に見えない流れを感じ取る人です。",strength:"ひらめき、感受性、人に希望を与える力が強みです。",theme:"今の課題は、感じすぎて心が疲れないようにすることです。",release:"静かな時間をつくり、余計な刺激を減らすと本来の光が戻ります。"},
+      22:{type:"創造の生命線",colorName:"ディープネイビー",colorCode:"#42506f",base:"あなたは大きな理想を現実へ落とし込める特別な力を持つ人です。",strength:"構築力、実現力、大きな視点が強みです。",theme:"今の課題は、理想の大きさに自分が押されないことです。",release:"遠い未来ではなく、今日の一歩に集中すると大きな運が回り出します。"},
+      33:{type:"導きの生命線",colorName:"ピュアホワイト",colorCode:"#b8b8b8",base:"あなたは深い愛と優しさで人を照らす特別な存在です。",strength:"癒やし、奉仕、無償のあたたかさが強みです。",theme:"今の課題は、背負いすぎず自然体でいることです。",release:"助ける前に整える。これがあなたの力を長く守る鍵になります。"}
+    };
+
+    const todayWords = {
+      1:"今日は『最初の一歩』が運を開きます。",
+      2:"今日は『やさしい距離感』が心を守ります。",
+      3:"今日は『笑顔と言葉』がチャンスを呼びます。",
+      4:"今日は『整えること』が流れを安定させます。",
+      5:"今日は『少し違う選択』が幸運の入口です。",
+      6:"今日は『自分も大事にすること』が開運になります。",
+      7:"今日は『静かな時間』が答えを連れてきます。",
+      8:"今日は『ひとつ終わらせること』で運が動きます。",
+      9:"今日は『手放し』が新しい運を招きます。"
+    };
+
+    const zodiacData = {
+      "牡羊座":{base:"まっすぐで情熱的。恋も人生も、自分らしく進みたい星座です。",love:"恋愛では気持ちがはっきりしていて、好きになると一途です。",work:"仕事では決断力が強み。先頭に立つと魅力が光ります。",money:"勢いで使いやすいので、目的を決めると金運が安定します。"},
+      "牡牛座":{base:"穏やかで愛情深く、安心できる関係を大切にする星座です。",love:"恋愛では信頼をじっくり育てるタイプです。",work:"仕事では継続力と丁寧さが武器になります。",money:"堅実さがあり、コツコツ貯めると強い金運になります。"},
+      "双子座":{base:"軽やかで知的。会話や感性で人とつながる星座です。",love:"恋愛では会話のテンポや感覚の一致が大切です。",work:"仕事では情報力と柔軟性が強みです。",money:"流れが速いので、使う目的を決めると安定します。"},
+      "蟹座":{base:"やさしく情が深く、大切な人を守ろうとする星座です。",love:"恋愛では心の安心感が何より大切です。",work:"仕事では支える力や気配りが評価されます。",money:"身近な幸せに使うと満足度が高まります。"},
+      "獅子座":{base:"華やかであたたかく、自分らしく輝く力を持つ星座です。",love:"恋愛では愛情表現が豊かで、相手を大切にします。",work:"仕事では存在感と発信力が魅力になります。",money:"自分を高めるための出費は良い循環を作ります。"},
+      "乙女座":{base:"誠実で細やか。丁寧な優しさを持つ星座です。",love:"恋愛では小さな気遣いが愛情表現になります。",work:"仕事では分析力と実務力が大きな強みです。",money:"管理上手なので、計画的に増やしていけます。"},
+      "天秤座":{base:"バランス感覚に優れ、人との調和を大切にする星座です。",love:"恋愛では心地よい距離感と美しい関係を望みます。",work:"仕事では対人力や調整力が評価されます。",money:"人付き合いの出費が増えやすいので配分が鍵です。"},
+      "蠍座":{base:"一途で深く、簡単には揺れない強い想いを持つ星座です。",love:"恋愛では深い絆や本音のつながりを求めます。",work:"仕事では集中力と探究心が武器になります。",money:"大きく動かすより、着実に守るのが得意です。"},
+      "射手座":{base:"自由で前向き。広い世界へ進んでいく星座です。",love:"恋愛では束縛より信頼と開放感が大切です。",work:"仕事では挑戦心と行動力が光ります。",money:"使う時は大きく使いやすいのでメリハリが大事です。"},
+      "山羊座":{base:"現実的で努力家。長い目で人生を築く星座です。",love:"恋愛では軽さより誠実さを大切にします。",work:"仕事では信頼感と責任感が大きな武器です。",money:"計画性があり、積み上げる金運に強いです。"},
+      "水瓶座":{base:"個性的で自由。自分らしい考えを大切にする星座です。",love:"恋愛では心の自由と理解し合える関係が大切です。",work:"仕事では独自性やアイデアが魅力になります。",money:"新しいことへの投資が運を動かします。"},
+      "魚座":{base:"感受性が豊かで、やさしさと想像力に満ちた星座です。",love:"恋愛では心の共鳴や優しい空気を大切にします。",work:"仕事では感性や寄り添う力が光ります。",money:"気分で使いやすいので、見える化すると安定します。"}
+    };
+
+    const nameKeywords = {
+      1:"名前の波動キーワード：はじまり・勇気・先導",
+      2:"名前の波動キーワード：調和・やさしさ・共鳴",
+      3:"名前の波動キーワード：魅力・表現・ひらめき",
+      4:"名前の波動キーワード：安定・信頼・積み重ね",
+      5:"名前の波動キーワード：自由・変化・広がり",
+      6:"名前の波動キーワード：愛情・守る力・ぬくもり",
+      7:"名前の波動キーワード：直感・探究・静かな強さ",
+      8:"名前の波動キーワード：実現・豊かさ・影響力",
+      9:"名前の波動キーワード：包容・癒やし・手放し"
+    };    const pairData = {
+      1:{base:"ふたりの関係は、前へ進む力が強い組み合わせです。気持ちが通うと一気に距離が縮まりやすいでしょう。",strength:"決断が早く、関係を形にしやすい強みがあります。",caution:"お互いに主導権を握りたくなると、気持ちの押し合いが起きやすいです。",advice:"勝ち負けではなく、どちらの気持ちも大切にする意識が愛を育てます。"},
+      2:{base:"ふたりの関係は、やさしさと安心感で育つ流れです。",strength:"相手の気持ちを思いやることで、深い信頼が生まれやすいです。",caution:"遠慮が増えると、本音が見えにくくなります。",advice:"優しさの中に、少しだけ勇気ある本音を混ぜると絆が深まります。"},
+      3:{base:"ふたりの関係は、会話や楽しさが愛の鍵になる流れです。",strength:"一緒にいると気持ちが明るくなり、自然体でつながりやすいです。",caution:"楽しいだけで大事な話を後回しにすると、温度差が出やすいです。",advice:"笑い合える空気を大切にしながら、本音も少しずつ共有すると長続きします。"},
+      4:{base:"ふたりの関係は、時間をかけて安定していく流れです。",strength:"誠実さと安心感があり、地に足のついた関係を築きやすいです。",caution:"慎重になりすぎると、進展のタイミングを逃しやすくなります。",advice:"安心を大切にしつつ、節目では一歩進む勇気を持つと流れが整います。"},
+      5:{base:"ふたりの関係は、刺激と変化で動く流れです。",strength:"新鮮さがあり、惹かれ合う力が強い組み合わせです。",caution:"自由を大切にしすぎると、不安やすれ違いが生まれやすいです。",advice:"自由と信頼のバランスを取ると、軽やかで心地よい愛になります。"},
+      6:{base:"ふたりの関係は、愛情を育て合うあたたかい流れです。",strength:"支え合い、守り合う力が強く、心の居場所になりやすいです。",caution:"尽くしすぎたり、期待しすぎると負担になりやすいです。",advice:"頑張りすぎず、自然な優しさを循環させることが長続きの鍵です。"},
+      7:{base:"ふたりの関係は、深く静かにつながる流れです。",strength:"言葉が多くなくても、心で感じ合える魅力があります。",caution:"考えすぎたり距離を取りすぎると、誤解が生まれやすいです。",advice:"静かな関係だからこそ、気持ちは言葉でも少し伝えると安定します。"},
+      8:{base:"ふたりの関係は、現実を動かす力のある組み合わせです。",strength:"一緒に未来を形にしていく強さがあります。",caution:"強さ同士がぶつかると、譲れなさが前に出やすいです。",advice:"相手をコントロールするより、信頼して役割を分けると愛が育ちます。"},
+      9:{base:"ふたりの関係は、包み込むような優しさを持つ流れです。",strength:"理解し合えた時の深さと癒やしが大きな魅力です。",caution:"過去の傷や不安を抱えたままだと、気持ちが揺れやすくなります。",advice:"許すことと手放すことを覚えると、関係はやわらかく強くなります。"}
+    };
 
     function uranai() {
       const myName = document.getElementById("myName").value.trim();
@@ -339,219 +400,7 @@
       const todaySeed = reduceNumber(myNum + myNameSeed + new Date().getDate());
 
       const myDate = new Date(myBirth);
-      const myMonth = myDate.getMonth() + 1;
-      const myDay = myDate.getDate();
-      const myZodiac = getZodiac(myMonth, myDay);
-
-      const lifeData = {
-        1: {
-          type: "開拓の生命線",
-          colorName: "ルビーレッド",
-          colorCode: "#d94b64",
-          base: "あなたは自分で道を切り開く力を持つ人です。止まるより動くことで運が育つタイプです。",
-          strength: "決断力、行動力、始める力が強みです。",
-          theme: "今の課題は、ひとりで抱え込みすぎないことです。",
-          release: "完璧を目指すより、まず小さく動くことでしがらみがほどけていきます。"
-        },
-        2: {
-          type: "調和の生命線",
-          colorName: "パールピンク",
-          colorCode: "#e08db0",
-          base: "あなたは人の気持ちを感じ取る力に優れ、やわらかく場を整える人です。",
-          strength: "共感力、気配り、つなぐ力が強みです。",
-          theme: "今の課題は、自分の本音を後回しにしすぎないことです。",
-          release: "相手に合わせる前に、自分の気持ちを認めることで流れが変わります。"
-        },
-        3: {
-          type: "表現の生命線",
-          colorName: "サンシャインオレンジ",
-          colorCode: "#f39b3d",
-          base: "あなたは明るい発想と表現力で周りに元気を与える人です。",
-          strength: "発信力、創造力、楽しませる力が強みです。",
-          theme: "今の課題は、気分の波にのまれず継続することです。",
-          release: "楽しいことを入口にすると、止まっていた流れが軽く動き始めます。"
-        },
-        4: {
-          type: "安定の生命線",
-          colorName: "フォレストグリーン",
-          colorCode: "#4d8b63",
-          base: "あなたは堅実で誠実。ひとつずつ積み上げて信頼をつくる人です。",
-          strength: "継続力、責任感、現実を整える力が強みです。",
-          theme: "今の課題は、変化を怖がりすぎないことです。",
-          release: "少しだけ新しいやり方を取り入れると、停滞が安心に変わっていきます。"
-        },
-        5: {
-          type: "変化の生命線",
-          colorName: "ターコイズブルー",
-          colorCode: "#3aa7b4",
-          base: "あなたは自由を愛し、新しい流れをつかむのが上手な人です。",
-          strength: "柔軟性、行動力、変化対応力が強みです。",
-          theme: "今の課題は、広げすぎた力を一点に集めることです。",
-          release: "本当に大切なものを一つ選ぶと、散らばっていた運がまとまり始めます。"
-        },
-        6: {
-          type: "慈愛の生命線",
-          colorName: "ローズベージュ",
-          colorCode: "#c98d8d",
-          base: "あなたは愛情深く、人を支えることで輝く人です。",
-          strength: "包容力、安心感、育てる力が強みです。",
-          theme: "今の課題は、人のために頑張りすぎて疲れないことです。",
-          release: "まず自分を満たすことが、まわりを幸せにする近道になります。"
-        },
-        7: {
-          type: "叡智の生命線",
-          colorName: "インディゴブルー",
-          colorCode: "#4d5aa6",
-          base: "あなたは深く考え、本質を見抜く静かな強さを持っています。",
-          strength: "洞察力、直感力、分析力が強みです。",
-          theme: "今の課題は、考えすぎて動けなくならないことです。",
-          release: "答えを探しすぎず、今の自分が納得する一歩を選ぶと道が開きます。"
-        },
-        8: {
-          type: "実現の生命線",
-          colorName: "ゴールドアンバー",
-          colorCode: "#c7952d",
-          base: "あなたは結果を形にする力が強く、現実を動かす人です。",
-          strength: "実行力、統率力、豊かさを引き寄せる力が強みです。",
-          theme: "今の課題は、力みすぎず余白を持つことです。",
-          release: "全部を自分で抱えず、人や流れを信じると運の器が大きくなります。"
-        },
-        9: {
-          type: "包容の生命線",
-          colorName: "アメジストパープル",
-          colorCode: "#8a62c7",
-          base: "あなたは広い視野と優しさで人を包み込む人です。",
-          strength: "受容力、癒やし、全体を見る力が強みです。",
-          theme: "今の課題は、終わったものを手放す勇気を持つことです。",
-          release: "過去への執着を少し緩めると、新しい光が自然に入ってきます。"
-        },
-        11: {
-          type: "直感の生命線",
-          colorName: "ミスティックシルバー",
-          colorCode: "#8f96b2",
-          base: "あなたは感性が鋭く、目に見えない流れを感じ取る人です。",
-          strength: "ひらめき、感受性、人に希望を与える力が強みです。",
-          theme: "今の課題は、感じすぎて心が疲れないようにすることです。",
-          release: "静かな時間をつくり、余計な刺激を減らすと本来の光が戻ります。"
-        },
-        22: {
-          type: "創造の生命線",
-          colorName: "ディープネイビー",
-          colorCode: "#42506f",
-          base: "あなたは大きな理想を現実へ落とし込める特別な力を持つ人です。",
-          strength: "構築力、実現力、大きな視点が強みです。",
-          theme: "今の課題は、理想の大きさに自分が押されないことです。",
-          release: "遠い未来ではなく、今日の一歩に集中すると大きな運が回り出します。"
-        },
-        33: {
-          type: "導きの生命線",
-          colorName: "ピュアホワイト",
-          colorCode: "#b8b8b8",
-          base: "あなたは深い愛と優しさで人を照らす特別な存在です。",
-          strength: "癒やし、奉仕、無償のあたたかさが強みです。",
-          theme: "今の課題は、背負いすぎず自然体でいることです。",
-          release: "助ける前に整える。これがあなたの力を長く守る鍵になります。"
-        }
-      };
-
-      const todayWords = {
-        1: "今日は『最初の一歩』が運を開きます。",
-        2: "今日は『やさしい距離感』が心を守ります。",
-        3: "今日は『笑顔と言葉』がチャンスを呼びます。",
-        4: "今日は『整えること』が流れを安定させます。",
-        5: "今日は『少し違う選択』が幸運の入口です。",
-        6: "今日は『自分も大事にすること』が開運になります。",
-        7: "今日は『静かな時間』が答えを連れてきます。",
-        8: "今日は『ひとつ終わらせること』で運が動きます。",
-        9: "今日は『手放し』が新しい運を招きます。"
-      };
-
-      const zodiacData = {
-        "牡羊座": {
-          base: "まっすぐで情熱的。恋も人生も、自分らしく進みたい星座です。",
-          love: "恋愛では気持ちがはっきりしていて、好きになると一途です。",
-          work: "仕事では決断力が強み。先頭に立つと魅力が光ります。",
-          money: "勢いで使いやすいので、目的を決めると金運が安定します。"
-        },
-        "牡牛座": {
-          base: "穏やかで愛情深く、安心できる関係を大切にする星座です。",
-          love: "恋愛では信頼をじっくり育てるタイプです。",
-          work: "仕事では継続力と丁寧さが武器になります。",
-          money: "堅実さがあり、コツコツ貯めると強い金運になります。"
-        },
-        "双子座": {
-          base: "軽やかで知的。会話や感性で人とつながる星座です。",
-          love: "恋愛では会話のテンポや感覚の一致が大切です。",
-          work: "仕事では情報力と柔軟性が強みです。",
-          money: "流れが速いので、使う目的を決めると安定します。"
-        },
-        "蟹座": {
-          base: "やさしく情が深く、大切な人を守ろうとする星座です。",
-          love: "恋愛では心の安心感が何より大切です。",
-          work: "仕事では支える力や気配りが評価されます。",
-          money: "身近な幸せに使うと満足度が高まります。"
-        },
-        "獅子座": {
-          base: "華やかであたたかく、自分らしく輝く力を持つ星座です。",
-          love: "恋愛では愛情表現が豊かで、相手を大切にします。",
-          work: "仕事では存在感と発信力が魅力になります。",
-          money: "自分を高めるための出費は良い循環を作ります。"
-        },
-        "乙女座": {
-          base: "誠実で細やか。丁寧な優しさを持つ星座です。",
-          love: "恋愛では小さな気遣いが愛情表現になります。",
-          work: "仕事では分析力と実務力が大きな強みです。",
-          money: "管理上手なので、計画的に増やしていけます。"
-        },
-        "天秤座": {
-          base: "バランス感覚に優れ、人との調和を大切にする星座です。",
-          love: "恋愛では心地よい距離感と美しい関係を望みます。",
-          work: "仕事では対人力や調整力が評価されます。",
-          money: "人付き合いの出費が増えやすいので配分が鍵です。"
-        },
-        "蠍座": {
-          base: "一途で深く、簡単には揺れない強い想いを持つ星座です。",
-          love: "恋愛では深い絆や本音のつながりを求めます。",
-          work: "仕事では集中力と探究心が武器になります。",
-          money: "大きく動かすより、着実に守るのが得意です。"
-        },
-        "射手座": {
-          base: "自由で前向き。広い世界へ進んでいく星座です。",
-          love: "恋愛では束縛より信頼と開放感が大切です。",
-          work: "仕事では挑戦心と行動力が光ります。",
-          money: "使う時は大きく使いやすいのでメリハリが大事です。"
-        },
-        "山羊座": {
-          base: "現実的で努力家。長い目で人生を築く星座です。",
-          love: "恋愛では軽さより誠実さを大切にします。",
-          work: "仕事では信頼感と責任感が大きな武器です。",
-          money: "計画性があり、積み上げる金運に強いです。"
-        },
-        "水瓶座": {
-          base: "個性的で自由。自分らしい考えを大切にする星座です。",
-          love: "恋愛では心の自由と理解し合える関係が大切です。",
-          work: "仕事では独自性やアイデアが魅力になります。",
-          money: "新しいことへの投資が運を動かします。"
-        },
-        "魚座": {
-          base: "感受性が豊かで、やさしさと想像力に満ちた星座です。",
-          love: "恋愛では心の共鳴や優しい空気を大切にします。",
-          work: "仕事では感性や寄り添う力が光ります。",
-          money: "気分で使いやすいので、見える化すると安定します。"
-        }
-      };
-
-      const nameKeywords = {
-        1: "名前の波動キーワード：はじまり・勇気・先導",
-        2: "名前の波動キーワード：調和・やさしさ・共鳴",
-        3: "名前の波動キーワード：魅力・表現・ひらめき",
-        4: "名前の波動キーワード：安定・信頼・積み重ね",
-        5: "名前の波動キーワード：自由・変化・広がり",
-        6: "名前の波動キーワード：愛情・守る力・ぬくもり",
-        7: "名前の波動キーワード：直感・探究・静かな強さ",
-        8: "名前の波動キーワード：実現・豊かさ・影響力",
-        9: "名前の波動キーワード：包容・癒やし・手放し"
-      };
+      const myZodiac = getZodiac(myDate.getMonth() + 1, myDate.getDate());
 
       const myLife = lifeData[myNum] || lifeData[9];
       const myToday = todayWords[todaySeed] || "今日は流れを静かに見つめると良い日です。";
@@ -562,9 +411,7 @@
       document.getElementById("starTag").innerText = "星座：" + myZodiac;
       document.getElementById("lifeTitle").innerText = myLife.type;
       document.getElementById("nameKeyword").innerHTML = "<strong>名前から見るテーマ：</strong>" + myNameKeyword;
-      document.getElementById("colorText").innerHTML =
-        "<strong>中心カラー：</strong>" + myLife.colorName +
-        '<span class="color-chip" style="background:' + myLife.colorCode + ';">' + myLife.colorName + '</span>';
+      document.getElementById("colorText").innerHTML = "<strong>中心カラー：</strong>" + myLife.colorName + '<span class="color-chip" style="background:' + myLife.colorCode + ';">' + myLife.colorName + '</span>';
       document.getElementById("baseText").innerHTML = "<strong>基本性質：</strong>" + myLife.base;
       document.getElementById("strengthText").innerHTML = "<strong>あなたの強み：</strong>" + myLife.strength;
       document.getElementById("themeText").innerHTML = "<strong>今の課題：</strong>" + myLife.theme;
@@ -580,11 +427,8 @@
         const partnerTotal = getBirthTotal(partnerBirth);
         const partnerNum = reduceNumber(partnerTotal);
         const partnerNameSeed = getTextSeed(partnerName);
-
         const partnerDate = new Date(partnerBirth);
-        const partnerMonth = partnerDate.getMonth() + 1;
-        const partnerDay = partnerDate.getDate();
-        const partnerZodiac = getZodiac(partnerMonth, partnerDay);
+        const partnerZodiac = getZodiac(partnerDate.getMonth() + 1, partnerDate.getDate());
 
         let score = 60 + (10 - Math.min(Math.abs((myNum % 9) - (partnerNum % 9)), 9)) * 4;
         if (myZodiac === partnerZodiac) score += 6;
@@ -592,81 +436,16 @@
         if (relationType === "片思い") score -= 2;
         if (relationType === "復縁") score -= 4;
         if (myNameSeed && partnerNameSeed && myNameSeed === partnerNameSeed) score += 3;
+        score = Math.max(52, Math.min(98, score));
 
-        if (score > 98) score = 98;
-        if (score < 52) score = 52;
-
-        const pairKey = reduceNumber(myNum + partnerNum);
-
-        const pairData = {
-          1: {
-            base: "ふたりの関係は、前へ進む力が強い組み合わせです。気持ちが通うと一気に距離が縮まりやすいでしょう。",
-            strength: "決断が早く、関係を形にしやすい強みがあります。",
-            caution: "お互いに主導権を握りたくなると、気持ちの押し合いが起きやすいです。",
-            advice: "勝ち負けではなく、どちらの気持ちも大切にする意識が愛を育てます。"
-          },
-          2: {
-            base: "ふたりの関係は、やさしさと安心感で育つ流れです。",
-            strength: "相手の気持ちを思いやることで、深い信頼が生まれやすいです。",
-            caution: "遠慮が増えると、本音が見えにくくなります。",
-            advice: "優しさの中に、少しだけ勇気ある本音を混ぜると絆が深まります。"
-          },
-          3: {
-            base: "ふたりの関係は、会話や楽しさが愛の鍵になる流れです。",
-            strength: "一緒にいると気持ちが明るくなり、自然体でつながりやすいです。",
-            caution: "楽しいだけで大事な話を後回しにすると、温度差が出やすいです。",
-            advice: "笑い合える空気を大切にしながら、本音も少しずつ共有すると長続きします。"
-          },
-          4: {
-            base: "ふたりの関係は、時間をかけて安定していく流れです。",
-            strength: "誠実さと安心感があり、地に足のついた関係を築きやすいです。",
-            caution: "慎重になりすぎると、進展のタイミングを逃しやすくなります。",
-            advice: "安心を大切にしつつ、節目では一歩進む勇気を持つと流れが整います。"
-          },
-          5: {
-            base: "ふたりの関係は、刺激と変化で動く流れです。",
-            strength: "新鮮さがあり、惹かれ合う力が強い組み合わせです。",
-            caution: "自由を大切にしすぎると、不安やすれ違いが生まれやすいです。",
-            advice: "自由と信頼のバランスを取ると、軽やかで心地よい愛になります。"
-          },
-          6: {
-            base: "ふたりの関係は、愛情を育て合うあたたかい流れです。",
-            strength: "支え合い、守り合う力が強く、心の居場所になりやすいです。",
-            caution: "尽くしすぎたり、期待しすぎると負担になりやすいです。",
-            advice: "頑張りすぎず、自然な優しさを循環させることが長続きの鍵です。"
-          },
-          7: {
-            base: "ふたりの関係は、深く静かにつながる流れです。",
-            strength: "言葉が多くなくても、心で感じ合える魅力があります。",
-            caution: "考えすぎたり距離を取りすぎると、誤解が生まれやすいです。",
-            advice: "静かな関係だからこそ、気持ちは言葉でも少し伝えると安定します。"
-          },
-          8: {
-            base: "ふたりの関係は、現実を動かす力のある組み合わせです。",
-            strength: "一緒に未来を形にしていく強さがあります。",
-            caution: "強さ同士がぶつかると、譲れなさが前に出やすいです。",
-            advice: "相手をコントロールするより、信頼して役割を分けると愛が育ちます。"
-          },
-          9: {
-            base: "ふたりの関係は、包み込むような優しさを持つ流れです。",
-            strength: "理解し合えた時の深さと癒やしが大きな魅力です。",
-            caution: "過去の傷や不安を抱えたままだと、気持ちが揺れやすくなります。",
-            advice: "許すことと手放すことを覚えると、関係はやわらかく強くなります。"
-          }
-        };
+        const key = reduceNumber(myNum + partnerNum);
 
         let extraLine = "";
-        if (relationType === "片思い") {
-          extraLine = "今は気持ちを急ぎすぎず、相手が安心できる空気を作ることが進展の鍵です。";
-        } else if (relationType === "復縁") {
-          extraLine = "復縁は過去を戻すより、新しい関係として向き合えるかが大切です。";
-        } else if (relationType === "友達以上恋人未満") {
-          extraLine = "曖昧さの中に優しさはありますが、少しずつ気持ちを見せることが転機になります。";
-        } else if (relationType === "気になる人") {
-          extraLine = "相手を知ろうとする自然な会話が、恋の入口を開きやすくします。";
-        } else {
-          extraLine = "今ある絆を言葉や行動で丁寧に育てるほど、関係は安定していきます。";
-        }
+        if (relationType === "片思い") extraLine = "今は気持ちを急ぎすぎず、相手が安心できる空気を作ることが進展の鍵です。";
+        else if (relationType === "復縁") extraLine = "復縁は過去を戻すより、新しい関係として向き合えるかが大切です。";
+        else if (relationType === "友達以上恋人未満") extraLine = "曖昧さの中に優しさはありますが、少しずつ気持ちを見せることが転機になります。";
+        else if (relationType === "気になる人") extraLine = "相手を知ろうとする自然な会話が、恋の入口を開きやすくします。";
+        else extraLine = "今ある絆を言葉や行動で丁寧に育てるほど、関係は安定していきます。";
 
         const displayMyName = myName || "あなた";
         const displayPartnerName = partnerName || "お相手";
@@ -680,10 +459,10 @@
           "<strong>ふたりの名前の響き：</strong>" + displayMyName + "さんと" + displayPartnerName +
           "さんは、それぞれの個性を持ちながらも、関係の中で新しい空気を作りやすい組み合わせです。";
 
-        document.getElementById("compatibilityBase").innerHTML = "<strong>ふたりの流れ：</strong>" + pairData[pairKey].base;
-        document.getElementById("compatibilityStrength").innerHTML = "<strong>関係の強み：</strong>" + pairData[pairKey].strength;
-        document.getElementById("compatibilityCaution").innerHTML = "<strong>気をつけたい点：</strong>" + pairData[pairKey].caution;
-        document.getElementById("compatibilityAdvice").innerHTML = "<strong>恋愛アドバイス：</strong>" + pairData[pairKey].advice + " " + extraLine;
+        document.getElementById("compatibilityBase").innerHTML = "<strong>ふたりの流れ：</strong>" + pairData[key].base;
+        document.getElementById("compatibilityStrength").innerHTML = "<strong>関係の強み：</strong>" + pairData[key].strength;
+        document.getElementById("compatibilityCaution").innerHTML = "<strong>気をつけたい点：</strong>" + pairData[key].caution;
+        document.getElementById("compatibilityAdvice").innerHTML = "<strong>恋愛アドバイス：</strong>" + pairData[key].advice + " " + extraLine;
       } else {
         document.getElementById("compatibilityScore").innerHTML = "<strong>相性度：</strong>お相手の生年月日を入れると表示されます。";
         document.getElementById("compatibilityName").innerHTML = "<strong>ふたりの名前の響き：</strong>お相手の名前を入れると表示されます。";
@@ -696,6 +475,5 @@
       document.getElementById("result").style.display = "block";
     }
   </script>
-
 </body>
 </html>
