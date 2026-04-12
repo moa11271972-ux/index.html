@@ -2,6 +2,95 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<meta charset="UTF-8">
+<title>運命占い</title>
+
+<style>
+body{
+background:url("images/bg.png") no-repeat center/cover;
+font-family:sans-serif;
+text-align:center;
+}
+
+.box{
+background:rgba(255,255,255,0.7);
+padding:20px;
+border-radius:20px;
+max-width:400px;
+margin:auto;
+margin-top:50px;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#ff69b4;
+color:white;
+border:none;
+border-radius:10px;
+margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>🌈運命診断</h2>
+
+<input type="date" id="birth">
+<button onclick="uranai()">診断する</button>
+
+<div id="result"></div>
+</div>
+
+<script>
+
+function getZodiac(year){
+const animals = ["申","酉","戌","亥","子","丑","寅","卯","辰","巳","午","未"];
+return animals[year % 12];
+}
+
+function uranai(){
+
+let birth = document.getElementById("birth").value;
+if(!birth) return alert("入力してください");
+
+let year = parseInt(birth.split("-")[0]);
+
+// 四柱推命（簡易）
+let animal = getZodiac(year);
+
+// 生命線
+let nums = birth.replace(/-/g,"").split("").map(Number);
+let sum = nums.reduce((a,b)=>a+b,0);
+let life = sum % 9 || 9;
+
+// 色
+let colors = ["赤","青","緑","紫","金","ピンク","オレンジ","白","黒"];
+
+// 結果
+document.getElementById("result").innerHTML = `
+🔮生命線：${life}<br>
+🎨色：${colors[life-1]}<br><br>
+
+あなたは【${animal}】の性質を持っています。<br>
+今は人生の転機です🔥<br><br>
+
+<button onclick="pay()">続きを見る（¥1000）</button>
+`;
+}
+
+function pay(){
+window.location.href="https://buy.stripe.com/あなたのURL";
+}
+
+</script>
+
+</body>
+</html>
+<html lang="ja">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>生命線・星座・恋愛相性占い</title>
