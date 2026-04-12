@@ -1,570 +1,1072 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>運命占い</title>
-
-<style>
-body{
-background:url("images/bg.png") no-repeat center/cover;
-font-family:sans-serif;
-text-align:center;
-}
-
-.box{
-background:rgba(255,255,255,0.7);
-padding:20px;
-border-radius:20px;
-max-width:400px;
-margin:auto;
-margin-top:50px;
-}
-
-button{
-width:100%;
-padding:15px;
-background:#ff69b4;
-color:white;
-border:none;
-border-radius:10px;
-margin-top:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="box">
-<h2>🌈運命診断</h2>
-
-<input type="date" id="birth">
-<button onclick="uranai()">診断する</button>
-
-<div id="result"></div>
-</div>
-
-<script>
-
-function getZodiac(year){
-const animals = ["申","酉","戌","亥","子","丑","寅","卯","辰","巳","午","未"];
-return animals[year % 12];
-}
-
-function uranai(){
-
-let birth = document.getElementById("birth").value;
-if(!birth) return alert("入力してください");
-
-let year = parseInt(birth.split("-")[0]);
-
-// 四柱推命（簡易）
-let animal = getZodiac(year);
-
-// 生命線
-let nums = birth.replace(/-/g,"").split("").map(Number);
-let sum = nums.reduce((a,b)=>a+b,0);
-let life = sum % 9 || 9;
-
-// 色
-let colors = ["赤","青","緑","紫","金","ピンク","オレンジ","白","黒"];
-
-// 結果
-document.getElementById("result").innerHTML = `
-🔮生命線：${life}<br>
-🎨色：${colors[life-1]}<br><br>
-
-あなたは【${animal}】の性質を持っています。<br>
-今は人生の転機です🔥<br><br>
-
-<button onclick="pay()">続きを見る（¥1000）</button>
-`;
-}
-
-function pay(){
-window.location.href="https://buy.stripe.com/あなたのURL";
-}
-
-</script>
-
-</body>
-</html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生命線・星座・恋愛相性占い</title>
-<style>
-  * {
-    box-sizing: border-box;
-  }
-
-  
-   
-    body {
-  margin: 0;
-  font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
-  background:
-   ,linear-gradient(rgba(0,0,0,0.０), rgba(0,0,0,0.０))    url("3d9a3d56-1716-4e06-8c90-26dfd561dbf6.png") no-repeat center center fixed;
-  background-size: cover;
-  color: #fff;
-}    
-
-  
-   .box{
-max-width:820px;
-margin:40px auto;
-
-/* 半透明 */
-background:rgba(255,255,255,0.15);
-
-backdrop-filter:blur(15px);
--webkit-backdrop-filter:blur(15px);
-
-border-radius:25px;
-padding:25px;
-
-border:1px solid rgba(255,255,255,0.3);
-box-shadow:0 10px 40px rgba(0,0,0,0.3);
-}
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-    border: 1px solid rgba(255, 210, 120, 0.28);
-  }
-
-  .hero-mark {
-    text-align: center;
-    color: #d39b2f;
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  h1 {
-    text-align: center;
-    color: #c85d88;
-    font-size: 32px;
-    margin: 0 0 10px;
-    line-height: 1.3;
-    text-shadow: 0 2px 8px rgba(255,255,255,0.35);
-  }
-
-  .sub {
-    text-align: center;
-    color: #5e4a58;
-    line-height: 1.9;
-    margin-bottom: 24px;
-    font-size: 14px;
-  }
-
-  h3 {
-    color: #6f42c1;
-    margin-top: 24px;
-    margin-bottom: 10px;
-    font-size: 18px;
-  }
-
-  label {
-    display: block;
-    margin-top: 12px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #6f42c1;
-  }
-
-  input,
-  select {
-    width: 100%;
-    padding: 12px;
-    margin-top: 4px;
-    border-radius: 12px;
-    border: 1px solid #d8caef;
-    box-sizing: border-box;
-    font-size: 16px;
-    background: #fff;
-    outline: none;
-  }
-
-  input:focus,
-  select:focus {
-    border-color: #b05cff;
-    box-shadow: 0 0 0 3px rgba(176, 92, 255, 0.12);
-  }
-
-  button {
-    width: 100%;
-    padding: 15px;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  .btn-main {
-    background: linear-gradient(90deg, #f08bb2 0%, #d96aa0 45%, #d4a437 100%);
-  }
-
-  .btn-sub {
-    background: background: url("images/tree-phoenix.png") no-repeat center center fixed;linear-gradient(90deg, #d96aa0 0%, #b94c85 100%);
-  }
-
-  button:hover {
-    opacity: 0.95;
-  }
-
-  .result {
-    margin-top: 24px;
-    display: none;
-    background: rgba(255, 248, 251, 0.90);
-    padding: 18px;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 214, 170, 0.35);
-  }
-
-  .section {
-    background: rgba(255,255,255,0.92);
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 14px;
-    border: 1px solid #f0d9e4;
-  }
-
-  .section h2 {
-    color: #c85d88;
-    margin: 0 0 12px;
-    font-size: 22px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(212,164,55,0.28);
-  }
-
-  .item {
-    margin-bottom: 12px;
-    line-height: 1.9;
-  }
-
-  .item strong {
-    color: #6f42c1;
-  }
-
-  .tag {
-    display: inline-block;
-    background: #efe2ff;
-    color: #7a3fe0;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    margin-right: 8px;
-  }
-
-  .color-chip {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: bold;
-    margin-left: 8px;
-  }
-
-  .footer {
-    margin-top: 20px;
-    text-align: center;
-    color: #777;
-    font-size: 12px;
-    line-height: 1.8;
-  }
-
-  @media (max-width: 640px) {
-    body {
-      padding: 14px;
-      background-size: cover;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOA 本格版 四柱推命 × 数秘術 × 生命線カラー診断</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg1:#fff6fb;
+      --bg2:#ffd7eb;
+      --bg3:#f8e7ae;
+      --deep:#5f2f4c;
+      --deep2:#7b4c67;
+      --gold:#d8ae35;
+      --gold2:#f5e7ae;
+      --line:rgba(255,255,255,.30);
+      --glass:rgba(255,255,255,.16);
+      --text:#fffdfb;
+      --muted:rgba(255,255,255,.88);
+      --shadow:0 14px 36px rgba(79,24,52,.22);
+      --ok:#5dd39e;
+      --warn:#ffd166;
     }
-
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(78,24,55,.34), rgba(60,20,48,.48)),
+        url("images/tree-phoenix.png") center center / cover no-repeat fixed,
+        linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 42%, var(--bg3) 100%);
+    }
+    .overlay {
+      min-height: 100vh;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 22px 14px 42px;
+      background: linear-gradient(180deg, rgba(89,22,63,.14), rgba(41,14,40,.40));
+    }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
     .box {
-      padding: 18px;
-      border-radius: 18px;
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
-
+    .hero, .card, .result-box, .share-box, .premium-box, .note-box {
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .hero {
+      text-align:center;
+      padding:30px 22px;
+      margin-bottom:18px;
+    }
+    .badge {
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.28);
+      color:#fff8d3;
+      font-size:12px;
+      letter-spacing:.08em;
+      margin-bottom:14px;
+    }
     h1 {
-      font-size: 26px;
+      margin:0 0 10px;
+      font-size:clamp(30px,4vw,46px);
+      line-height:1.18;
+      color:#fffde9;
+      text-shadow:0 2px 12px rgba(0,0,0,.15);
     }
-
-    .section h2 {
-      font-size: 20px;
+    .lead {
+      max-width:800px;
+      margin:0 auto;
+      color:var(--muted);
+      line-height:1.9;
+      font-size:15px;
     }
-  }
-</style>
+    .grid { display:grid; grid-template-columns:1fr; gap:18px; }
+    .card, .result-box, .share-box, .premium-box, .note-box { padding:22px; }
+    .section-title {
+      margin:0 0 14px;
+      font-size:21px;
+      color:#fff7cd;
+    }
+    .small-title {
+      margin:0 0 10px;
+      font-size:16px;
+      color:#fff5ba;
+    }
+    label {
+      display:block;
+      margin-bottom:8px;
+      font-weight:700;
+      font-size:14px;
+      color:#fff9f1;
+    }
+    input, select, textarea {
+      width:100%;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.28);
+      background:rgba(255,255,255,.17);
+      color:#fff;
+      font-size:16px;
+      outline:none;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    input::placeholder, textarea::placeholder { color:rgba(255,255,255,.7); }
+    input:focus, select:focus, textarea:focus {
+      border-color:rgba(255,236,161,.95);
+      box-shadow:0 0 0 3px rgba(255,236,161,.18);
+    }
+    .form-row {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .form-row.thirds { grid-template-columns:repeat(3, 1fr); }
+    .form-row.single { grid-template-columns:1fr; }
+    .checkbox-row {
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+      margin-top:8px;
+    }
+    .checkbox-row input {
+      width:18px;
+      height:18px;
+      margin-top:2px;
+    }
+    .actions, .share-actions {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:18px;
+    }
+    button, .button-link {
+      border:none;
+      cursor:pointer;
+      border-radius:16px;
+      min-height:52px;
+      padding:14px 18px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      font-weight:700;
+      transition:.2s ease;
+    }
+    button:hover, .button-link:hover { transform:translateY(-1px); opacity:.97; }
+    .btn-main {
+      color:#5a2948;
+      background:linear-gradient(135deg, #fff7cc 0%, #e8bf52 100%);
+      box-shadow:0 10px 22px rgba(216,174,53,.28);
+    }
+    .btn-sub {
+      color:#fffefb;
+      background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
+      border:1px solid rgba(255,255,255,.24);
+    }
+    .hidden { display:none; }
+    .tag-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+    .tag {
+      display:inline-flex;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.24);
+      color:#fff8d7;
+    }
+    .result-title {
+      margin:0 0 12px;
+      color:#fff8d8;
+      font-size:27px;
+    }
+    .result-text {
+      line-height:1.95;
+      font-size:15px;
+      color:#fffdfd;
+      white-space:pre-line;
+    }
+    .pillars-grid {
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+    .pillar {
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.22);
+      text-align:center;
+    }
+    .pillar small {
+      display:block;
+      color:rgba(255,255,255,.82);
+      margin-bottom:6px;
+    }
+    .pillar strong {
+      display:block;
+      font-size:24px;
+      color:#fff8d8;
+      letter-spacing:.08em;
+    }
+    .pillar span {
+      display:block;
+      margin-top:6px;
+      font-size:13px;
+      line-height:1.6;
+      color:rgba(255,255,255,.94);
+      white-space:pre-line;
+    }
+    .mini-grid {
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+    .mini-card {
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.22);
+    }
+    .mini-card h4 {
+      margin:0 0 8px;
+      font-size:14px;
+      color:#fff6c8;
+    }
+    .mini-card p {
+      margin:0;
+      font-size:14px;
+      line-height:1.75;
+      white-space:pre-line;
+      color:rgba(255,255,255,.96);
+    }
+    .luck-grid {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+    .status {
+      font-size:12px;
+      margin-top:10px;
+      color:rgba(255,255,255,.82);
+      line-height:1.7;
+    }
+    .ok { color:#d8ffd1; }
+    .warn { color:#fff1bf; }
+    .footer {
+      text-align:center;
+      color:rgba(255,255,255,.9);
+      font-size:13px;
+      margin-top:20px;
+      line-height:1.85;
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    @media (max-width: 860px) {
+      .form-row, .form-row.thirds, .actions, .share-actions, .pillars-grid, .mini-grid, .luck-grid { grid-template-columns:1fr; }
+      .hero, .card, .result-box, .share-box, .premium-box, .note-box { border-radius:20px; padding:18px; }
+    }
   </style>
 </head>
 <body>
+  <div class="overlay">
+    <div class="container">
+      <section class="hero">
+        <div class="badge">本格版 / 四柱推命・通変星・十二運・蔵干・大運・年運</div>
+        <h1>MOA 本格版 総合運命鑑定</h1>
+        <p class="lead">
+          生年月日と出生時間から、四柱推命の年柱・月柱・日柱・時柱、蔵干、通変星、十二運、五行バランス、大運、今年の流れまでまとめて表示する総合版です。<br>
+          生命線カラー診断と数秘術も一緒に入れて、無料版でも満足感を高くしつつ、有料鑑定へ自然につなげられる構成にしています。
+        </p>
+      </section>
 
-  <div class="box">
-    <div class="hero-mark">✦ Tree of Life Reading ✦</div>
-    <h1>生命線・星座・恋愛相性占い</h1>
-    <p class="sub">
-      生年月日と名前から、あなたの生命線、中心カラー、星座、恋愛の流れ、<br>
-      そしてお相手との相性をやさしく読み解きます。<br>
-      同性同士の恋愛にも自然に対応したオリジナル占いです。
-    </p>
+      <section class="grid">
+        <div class="card">
+          <h2 class="section-title">鑑定入力</h2>
 
-    <h3>あなたの情報</h3>
-    <label for="myName">あなたの名前</label>
-    <input type="text" id="myName" placeholder="例：もあ">
+          <div class="form-row">
+            <div>
+              <label for="name">お名前（ニックネーム可）</label>
+              <input id="name" type="text" placeholder="例：MOA" />
+            </div>
+            <div>
+              <label for="gender">性別</label>
+              <select id="gender">
+                <option value="女性">女性</option>
+                <option value="男性">男性</option>
+                <option value="その他">その他</option>
+              </select>
+            </div>
+          </div>
 
-    <label for="myBirth">あなたの生年月日</label>
-    <input type="date" id="myBirth">
+          <div class="form-row thirds">
+            <div>
+              <label for="birthdate">生年月日</label>
+              <input id="birthdate" type="date" />
+            </div>
+            <div>
+              <label for="birthtime">出生時間</label>
+              <input id="birthtime" type="time" value="12:00" />
+            </div>
+            <div>
+              <label for="theme">今いちばん知りたいこと</label>
+              <select id="theme">
+                <option value="総合運">総合運</option>
+                <option value="恋愛運">恋愛運</option>
+                <option value="仕事運">仕事運</option>
+                <option value="金運">金運</option>
+                <option value="人間関係">人間関係</option>
+                <option value="人生の転機">人生の転機</option>
+              </select>
+            </div>
+          </div>
 
-    <h3>お相手との相性を見る</h3>
-    <label for="partnerName">お相手の名前</label>
-    <input type="text" id="partnerName" placeholder="例：あい">
+          <div class="form-row single">
+            <div>
+              <label for="worry">今の悩み・気になること</label>
+              <textarea id="worry" rows="4" placeholder="例：今後の仕事の方向性が知りたい、恋愛の流れを見たい、停滞感を抜けたい"></textarea>
+            </div>
+          </div>
 
-    <label for="partnerBirth">お相手の生年月日</label>
-    <input type="date" id="partnerBirth">
+          <div class="checkbox-row">
+            <input id="timeUnknown" type="checkbox" />
+            <label for="timeUnknown" style="margin:0;font-weight:400;">出生時間が不明な場合はここをONにしてください。時柱・一部の星は参考表示になります。</label>
+          </div>
 
-    <label for="relationType">関係性</label>
-    <select id="relationType">
-      <option value="恋人">恋人</option>
-      <option value="片思い">片思い</option>
-      <option value="友達以上恋人未満">友達以上恋人未満</option>
-      <option value="復縁">復縁</option>
-      <option value="気になる人">気になる人</option>
-    </select>
+          <div class="actions">
+            <button class="btn-main" id="diagnoseBtn">本格鑑定する</button>
+            <button class="btn-sub" id="resetBtn" type="button">リセット</button>
+          </div>
 
-    <button onclick="uranai()">診断する</button>
+          <div class="status">
+            <span class="ok">● 本格表示：</span> 四柱・蔵干・通変星・十二運・大運・年運・五行・数秘・生命線カラー<br>
+            <span class="warn">● 補足：</span> 月柱切替は節入り日ベースの近似ロジックで動作します。公開用アプリとしては十分使える構成です。
+          </div>
+        </div>
 
-    <div class="result" id="result">
-      <div class="section">
-        <span class="tag" id="lifeTag"></span>
-        <span class="tag" id="starTag"></span>
-        <h2 id="lifeTitle"></h2>
-        <div class="item" id="nameKeyword"></div>
-        <div class="item" id="colorText"></div>
-        <div class="item" id="baseText"></div>
-        <div class="item" id="strengthText"></div>
-        <div class="item" id="themeText"></div>
-        <div class="item" id="releaseText"></div>
-        <div class="item" id="todayText"></div>
+        <div id="resultArea" class="hidden">
+          <div class="result-box">
+            <div class="tag-row">
+              <span class="tag" id="tagTheme">総合運</span>
+              <span class="tag" id="tagLifePath">数秘</span>
+              <span class="tag" id="tagDominant">五行</span>
+              <span class="tag" id="tagMainGod">通変星</span>
+            </div>
+
+            <h2 class="result-title" id="resultTitle">鑑定結果</h2>
+            <div class="result-text" id="resultText"></div>
+
+            <h3 class="small-title">四柱推命の柱</h3>
+            <div class="pillars-grid">
+              <div class="pillar">
+                <small>年柱</small>
+                <strong id="yearPillar">-</strong>
+                <span id="yearMeta">-</span>
+              </div>
+              <div class="pillar">
+                <small>月柱</small>
+                <strong id="monthPillar">-</strong>
+                <span id="monthMeta">-</span>
+              </div>
+              <div class="pillar">
+                <small>日柱</small>
+                <strong id="dayPillar">-</strong>
+                <span id="dayMeta">-</span>
+              </div>
+              <div class="pillar">
+                <small>時柱</small>
+                <strong id="timePillar">-</strong>
+                <span id="timeMeta">-</span>
+              </div>
+            </div>
+
+            <h3 class="small-title" style="margin-top:16px;">命式の読み解き</h3>
+            <div class="mini-grid">
+              <div class="mini-card">
+                <h4>生命線</h4>
+                <p id="lifelineText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>中心カラー</h4>
+                <p id="colorText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>五行バランス</h4>
+                <p id="balanceText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>日主の性質</h4>
+                <p id="dayMasterText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>主な通変星</h4>
+                <p id="mainGodText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>十二運の核</h4>
+                <p id="fortuneText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>しがらみから抜ける鍵</h4>
+                <p id="releaseText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>今の開運アクション</h4>
+                <p id="actionText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>向いている流れ</h4>
+                <p id="flowText"></p>
+              </div>
+            </div>
+
+            <h3 class="small-title" style="margin-top:16px;">運の流れ</h3>
+            <div class="luck-grid">
+              <div class="mini-card">
+                <h4>大運</h4>
+                <p id="majorLuckText"></p>
+              </div>
+              <div class="mini-card">
+                <h4>今年の年運</h4>
+                <p id="yearLuckText"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="premium-box">
+            <h3 class="section-title" style="font-size:20px; margin-bottom:10px;">有料版へつなぐ内容</h3>
+            <div class="result-text" id="premiumText"></div>
+            <div class="share-actions">
+              <a class="button-link btn-main" id="premiumLink" href="#" target="_blank" rel="noopener noreferrer">詳細鑑定を申し込む</a>
+              <button class="btn-sub" id="copyResultBtn" type="button">結果をコピー</button>
+            </div>
+          </div>
+
+          <div class="share-box">
+            <h3 class="section-title" style="font-size:20px; margin-bottom:10px;">Instagram・ホームページ導線</h3>
+            <div class="result-text">無料鑑定を見たあと、そのままプロフィールや申込み導線へ流せるようにしています。URLだけ差し替えれば公開できます。</div>
+            <div class="share-actions">
+              <a class="button-link btn-sub" id="instagramBtn" href="#" target="_blank" rel="noopener noreferrer">Instagramを見る</a>
+              <a class="button-link btn-sub" id="homeLinkBtn" href="#" target="_blank" rel="noopener noreferrer">ホームページを見る</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <h3 class="section-title" style="font-size:20px; margin-bottom:10px;">設置メモ</h3>
+          <div class="result-text">
+背景画像は <span class="mono">images/tree-phoenix.png</span> に置いてください。
+同じ階層なら CSS の <span class="mono">url("images/tree-phoenix.png")</span> を <span class="mono">url("tree-phoenix.png")</span> に変更すればOKです。
+
+有料導線URLは <span class="mono">PREMIUM_URL</span>、ホームページは <span class="mono">HOMEPAGE_URL</span>、Instagramは <span class="mono">INSTAGRAM_URL</span> をあなたのURLに差し替えてください。<br><br>GitHub Pagesで公開する場合は、このHTMLを <span class="mono">index.html</span> という名前で保存してアップロードすれば使えます。
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        © MOA Fortune App / MOA 本格版 総合運命鑑定<br>
+        四柱推命・通変星・十二運・蔵干・大運・年運・数秘術・生命線カラー統合版
       </div>
-
-      <div class="section">
-        <h2>星座メッセージ</h2>
-        <div class="item" id="starBase"></div>
-        <div class="item" id="loveText"></div>
-        <div class="item" id="workText"></div>
-        <div class="item" id="moneyText"></div>
-      </div>
-
-      <div class="section">
-        <h2>恋愛・相性占い</h2>
-        <div class="item" id="compatibilityScore"></div>
-        <div class="item" id="compatibilityName"></div>
-        <div class="item" id="compatibilityBase"></div>
-        <div class="item" id="compatibilityStrength"></div>
-        <div class="item" id="compatibilityCaution"></div>
-        <div class="item" id="compatibilityAdvice"></div>
-      </div>
-    </div>
-
-    <div class="footer">
-      この診断はオリジナルのエンターテインメント占いです。<br>
-      性別に関係なく、心のつながりと関係性の流れをやさしく読む設計です。
     </div>
   </div>
 
   <script>
-    function reduceNumber(num) {
-      while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
-        num = num.toString().split("").reduce((a, b) => a + Number(b), 0);
+    const PREMIUM_URL = "https://example.com/more-fortune"; // ← 有料鑑定ページURLに変更
+    const HOMEPAGE_URL = "https://example.com"; // ← あなたのホームページURLに変更
+    const INSTAGRAM_URL = "https://www.instagram.com/your_account/"; // ← あなたのInstagram URLに変更
+
+    const heavenlyStems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+    const earthlyBranches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+    const fiveElements = ["木","火","土","金","水"];
+    const yinYang = { "甲":"陽","乙":"陰","丙":"陽","丁":"陰","戊":"陽","己":"陰","庚":"陽","辛":"陰","壬":"陽","癸":"陰" };
+    const stemElement = { "甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水" };
+    const branchElement = { "子":"水","丑":"土","寅":"木","卯":"木","辰":"土","巳":"火","午":"火","未":"土","申":"金","酉":"金","戌":"土","亥":"水" };
+    const hiddenStems = {
+      "子":["癸"],
+      "丑":["己","癸","辛"],
+      "寅":["甲","丙","戊"],
+      "卯":["乙"],
+      "辰":["戊","乙","癸"],
+      "巳":["丙","戊","庚"],
+      "午":["丁","己"],
+      "未":["己","丁","乙"],
+      "申":["庚","壬","戊"],
+      "酉":["辛"],
+      "戌":["戊","辛","丁"],
+      "亥":["壬","甲"]
+    };
+
+    const monthBranchBySolar = ["寅","卯","辰","巳","午","未","申","酉","戌","亥","子","丑"];
+    const monthBoundary = [4,6,6,5,6,7,8,8,8,8,7,7];
+
+    const twelveFortunesOrder = ["長生","沐浴","冠帯","建禄","帝旺","衰","病","死","墓","絶","胎","養"];
+    const fortuneStartBranch = {
+      "甲":"亥","乙":"午","丙":"寅","丁":"酉","戊":"寅","己":"酉","庚":"巳","辛":"子","壬":"申","癸":"卯"
+    };
+
+    const elementGenerate = { "木":"火", "火":"土", "土":"金", "金":"水", "水":"木" };
+    const elementControl = { "木":"土", "火":"金", "土":"水", "金":"木", "水":"火" };
+
+    const stemDescriptions = {
+      "甲":"大樹のようにまっすぐ伸びる。信念と成長力。",
+      "乙":"草花のようにしなやか。柔軟性と気配り。",
+      "丙":"太陽のように明るい。表現力と華やかさ。",
+      "丁":"灯火のように繊細。感性と温かさ。",
+      "戊":"山のようにどっしり。安定感と責任感。",
+      "己":"畑の土のように育てる。面倒見と調整力。",
+      "庚":"鉄のように強い。決断力と突破力。",
+      "辛":"宝石のように繊細。美意識と洗練。",
+      "壬":"海のように大きい。自由さと包容力。",
+      "癸":"雨や霧のように静か。直感と深い洞察。"
+    };
+
+    const tenGodDescriptions = {
+      "比肩":"自立心が強く、自分の道を切り開く星。",
+      "劫財":"勝負勘と行動力が強く、流れを奪いに行く星。",
+      "食神":"楽しみ・表現・人を和ませる力の星。",
+      "傷官":"感性・美意識・言葉の鋭さを持つ星。",
+      "偏財":"社交性・商才・人脈の広がりを示す星。",
+      "正財":"堅実さ・信用・現実的な蓄積の星。",
+      "偏官":"勢い・決断・プレッシャーに強い星。",
+      "正官":"品格・責任感・社会的評価の星。",
+      "偏印":"ひらめき・個性・独特の発想の星。",
+      "印綬":"学び・保護・精神性・育てる力の星。"
+    };
+
+    const twelveFortuneDescriptions = {
+      "長生":"伸び始める運。新しい流れに乗りやすい。",
+      "沐浴":"変化が多く、魅力がにじみやすい。",
+      "冠帯":"見せ場に強く、存在感が出やすい。",
+      "建禄":"安定と実力を築く強い土台。",
+      "帝旺":"勢いが強く、中心に立ちやすい。",
+      "衰":"勢いを整理し、質を高める運。",
+      "病":"内面を整え、感受性が高まりやすい。",
+      "死":"区切りと再構築。古い形を終える運。",
+      "墓":"蓄積・内省・準備を深める運。",
+      "絶":"大きな転換期。手放しと刷新。",
+      "胎":"新しい可能性が芽吹く前段階。",
+      "養":"守られながら育つ運。基礎固めに良い。"
+    };
+
+    const colorProfiles = [
+      { name:"ローズピンク", hex:"#ef86b6", meaning:"愛情・包容力・癒し", release:"周囲を優先しすぎず、自分の本音を先に認めること。", action:"好きな香りや色を身近に置いて気を緩める。" },
+      { name:"サンゴールド", hex:"#d9ad29", meaning:"豊かさ・自信・現実化", release:"遠慮による自己制限を外すこと。", action:"今日やることを1つだけ先に片づける。" },
+      { name:"ラベンダー", hex:"#b49ae8", meaning:"直感・浄化・精神性", release:"考えすぎず休息を許すこと。", action:"3分深呼吸して頭の中を空にする。" },
+      { name:"エメラルド", hex:"#49b89a", meaning:"再生・調和・本音", release:"無理な人間関係から少し距離を取ること。", action:"自然や植物に触れて気を整える。" },
+      { name:"ルビーレッド", hex:"#cf4d64", meaning:"情熱・生命力・突破力", release:"我慢を美徳にしすぎないこと。", action:"本当にやりたいことを1つ動かす。" },
+      { name:"パールホワイト", hex:"#f5f4ef", meaning:"浄化・守護・新しい始まり", release:"過去への自己否定を終わらせること。", action:"不要な物を1つ手放して流れを変える。" }
+    ];
+
+    const lifeLines = [
+      "静かに周囲を照らす『癒しの生命線』",
+      "逆境をチャンスに変える『再生の生命線』",
+      "人を導いて流れを変える『開花の生命線』",
+      "願いを形にしていく『現実化の生命線』",
+      "愛と直感で道をひらく『共鳴の生命線』",
+      "不要な縁を整理し未来へ進む『解放の生命線』",
+      "迷いの中でも芯を守る『信念の生命線』",
+      "人生の節目で飛躍する『転機の生命線』",
+      "人とのつながりで運を広げる『縁結びの生命線』"
+    ];
+
+    const themeMessages = {
+      "総合運":"今は人生全体の流れを整え直すタイミングです。焦って結論を出すより、命式に合う動き方へ戻すほど運が動きます。",
+      "恋愛運":"恋愛は追うより、あなた本来の魅力を整えるほど流れが変わります。自然体がご縁の質を上げます。",
+      "仕事運":"仕事運は継続が評価につながる流れです。命式の強みを出す場に乗ると結果が早くなります。",
+      "金運":"金運は使い方と器を整えると伸びやすい時期です。堅実さと循環が鍵になります。",
+      "人間関係":"人間関係は距離感の調整が大切です。必要な縁と不要な縁が自然に分かれていきます。",
+      "人生の転機":"転機はすでに始まっています。命式の弱い部分を補うほど、新しい流れが現実化しやすくなります。"
+    };
+
+    function digitSum(text) {
+      return text.replace(/-/g, "").split("").reduce((sum, n) => sum + Number(n), 0);
+    }
+
+    function reduceNumerology(num) {
+      let current = num;
+      while (![11,22,33].includes(current) && current > 9) {
+        current = String(current).split("").reduce((a,b) => a + Number(b), 0);
       }
-      return num;
+      return current;
     }
 
-    function getBirthTotal(dateStr) {
-      return dateStr.replace(/-/g, "").split("").reduce((a, b) => a + Number(b), 0);
+    function formatDateJP(dateStr) {
+      const [y,m,d] = dateStr.split("-");
+      return `${y}年${Number(m)}月${Number(d)}日`;
     }
 
-    function getTextSeed(text) {
-      if (!text) return 0;
-      let total = 0;
-      for (let i = 0; i < text.length; i++) {
-        total += text.charCodeAt(i);
-      }
-      return reduceNumber(total);
-    }    function getZodiac(month, day) {
-      if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "牡羊座";
-      if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "牡牛座";
-      if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) return "双子座";
-      if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return "蟹座";
-      if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "獅子座";
-      if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "乙女座";
-      if ((month === 9 && day >= 23) || (month === 10 && day <= 23)) return "天秤座";
-      if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return "蠍座";
-      if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return "射手座";
-      if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "山羊座";
-      if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "水瓶座";
-      return "魚座";
+    function stemIndex(stem) { return heavenlyStems.indexOf(stem); }
+    function branchIndex(branch) { return earthlyBranches.indexOf(branch); }
+
+    function getYearPillar(date) {
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      const springStartDay = 4;
+      let adjustedYear = y;
+      if (m < 2 || (m === 2 && d < springStartDay)) adjustedYear = y - 1;
+      const stem = heavenlyStems[(adjustedYear - 4) % 10];
+      const branch = earthlyBranches[(adjustedYear - 4) % 12];
+      return { stem, branch, text: stem + branch };
     }
 
-    const lifeData = {
-      1:{type:"開拓の生命線",colorName:"ルビーレッド",colorCode:"#d94b64",base:"あなたは自分で道を切り開く力を持つ人です。止まるより動くことで運が育つタイプです。",strength:"決断力、行動力、始める力が強みです。",theme:"今の課題は、ひとりで抱え込みすぎないことです。",release:"完璧を目指すより、まず小さく動くことでしがらみがほどけていきます。"},
-      2:{type:"調和の生命線",colorName:"パールピンク",colorCode:"#e08db0",base:"あなたは人の気持ちを感じ取る力に優れ、やわらかく場を整える人です。",strength:"共感力、気配り、つなぐ力が強みです。",theme:"今の課題は、自分の本音を後回しにしすぎないことです。",release:"相手に合わせる前に、自分の気持ちを認めることで流れが変わります。"},
-      3:{type:"表現の生命線",colorName:"サンシャインオレンジ",colorCode:"#f39b3d",base:"あなたは明るい発想と表現力で周りに元気を与える人です。",strength:"発信力、創造力、楽しませる力が強みです。",theme:"今の課題は、気分の波にのまれず継続することです。",release:"楽しいことを入口にすると、止まっていた流れが軽く動き始めます。"},
-      4:{type:"安定の生命線",colorName:"フォレストグリーン",colorCode:"#4d8b63",base:"あなたは堅実で誠実。ひとつずつ積み上げて信頼をつくる人です。",strength:"継続力、責任感、現実を整える力が強みです。",theme:"今の課題は、変化を怖がりすぎないことです。",release:"少しだけ新しいやり方を取り入れると、停滞が安心に変わっていきます。"},
-      5:{type:"変化の生命線",colorName:"ターコイズブルー",colorCode:"#3aa7b4",base:"あなたは自由を愛し、新しい流れをつかむのが上手な人です。",strength:"柔軟性、行動力、変化対応力が強みです。",theme:"今の課題は、広げすぎた力を一点に集めることです。",release:"本当に大切なものを一つ選ぶと、散らばっていた運がまとまり始めます。"},
-      6:{type:"慈愛の生命線",colorName:"ローズベージュ",colorCode:"#c98d8d",base:"あなたは愛情深く、人を支えることで輝く人です。",strength:"包容力、安心感、育てる力が強みです。",theme:"今の課題は、人のために頑張りすぎて疲れないことです。",release:"まず自分を満たすことが、まわりを幸せにする近道になります。"},
-      7:{type:"叡智の生命線",colorName:"インディゴブルー",colorCode:"#4d5aa6",base:"あなたは深く考え、本質を見抜く静かな強さを持っています。",strength:"洞察力、直感力、分析力が強みです。",theme:"今の課題は、考えすぎて動けなくならないことです。",release:"答えを探しすぎず、今の自分が納得する一歩を選ぶと道が開きます。"},
-      8:{type:"実現の生命線",colorName:"ゴールドアンバー",colorCode:"#c7952d",base:"あなたは結果を形にする力が強く、現実を動かす人です。",strength:"実行力、統率力、豊かさを引き寄せる力が強みです。",theme:"今の課題は、力みすぎず余白を持つことです。",release:"全部を自分で抱えず、人や流れを信じると運の器が大きくなります。"},
-      9:{type:"包容の生命線",colorName:"アメジストパープル",colorCode:"#8a62c7",base:"あなたは広い視野と優しさで人を包み込む人です。",strength:"受容力、癒やし、全体を見る力が強みです。",theme:"今の課題は、終わったものを手放す勇気を持つことです。",release:"過去への執着を少し緩めると、新しい光が自然に入ってきます。"},
-      11:{type:"直感の生命線",colorName:"ミスティックシルバー",colorCode:"#8f96b2",base:"あなたは感性が鋭く、目に見えない流れを感じ取る人です。",strength:"ひらめき、感受性、人に希望を与える力が強みです。",theme:"今の課題は、感じすぎて心が疲れないようにすることです。",release:"静かな時間をつくり、余計な刺激を減らすと本来の光が戻ります。"},
-      22:{type:"創造の生命線",colorName:"ディープネイビー",colorCode:"#42506f",base:"あなたは大きな理想を現実へ落とし込める特別な力を持つ人です。",strength:"構築力、実現力、大きな視点が強みです。",theme:"今の課題は、理想の大きさに自分が押されないことです。",release:"遠い未来ではなく、今日の一歩に集中すると大きな運が回り出します。"},
-      33:{type:"導きの生命線",colorName:"ピュアホワイト",colorCode:"#b8b8b8",base:"あなたは深い愛と優しさで人を照らす特別な存在です。",strength:"癒やし、奉仕、無償のあたたかさが強みです。",theme:"今の課題は、背負いすぎず自然体でいることです。",release:"助ける前に整える。これがあなたの力を長く守る鍵になります。"}
-    };
+    function getMonthBranch(date) {
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      let idx;
+      if (d < monthBoundary[m - 1]) idx = (m + 10) % 12;
+      else idx = (m + 11) % 12;
+      return earthlyBranches[(idx + 2) % 12];
+    }
 
-    const todayWords = {
-      1:"今日は『最初の一歩』が運を開きます。",
-      2:"今日は『やさしい距離感』が心を守ります。",
-      3:"今日は『笑顔と言葉』がチャンスを呼びます。",
-      4:"今日は『整えること』が流れを安定させます。",
-      5:"今日は『少し違う選択』が幸運の入口です。",
-      6:"今日は『自分も大事にすること』が開運になります。",
-      7:"今日は『静かな時間』が答えを連れてきます。",
-      8:"今日は『ひとつ終わらせること』で運が動きます。",
-      9:"今日は『手放し』が新しい運を招きます。"
-    };
+    function getMonthPillar(date, yearStem) {
+      const branch = getMonthBranch(date);
+      const yearStemIndex = stemIndex(yearStem);
+      const monthStemStartMap = {
+        0:2, 5:2,
+        1:4, 6:4,
+        2:6, 7:6,
+        3:8, 8:8,
+        4:0, 9:0
+      };
+      const startStemIndex = monthStemStartMap[yearStemIndex];
+      const monthOrder = (branchIndex(branch) - 2 + 12) % 12;
+      const stem = heavenlyStems[(startStemIndex + monthOrder) % 10];
+      return { stem, branch, text: stem + branch };
+    }
 
-    const zodiacData = {
-      "牡羊座":{base:"まっすぐで情熱的。恋も人生も、自分らしく進みたい星座です。",love:"恋愛では気持ちがはっきりしていて、好きになると一途です。",work:"仕事では決断力が強み。先頭に立つと魅力が光ります。",money:"勢いで使いやすいので、目的を決めると金運が安定します。"},
-      "牡牛座":{base:"穏やかで愛情深く、安心できる関係を大切にする星座です。",love:"恋愛では信頼をじっくり育てるタイプです。",work:"仕事では継続力と丁寧さが武器になります。",money:"堅実さがあり、コツコツ貯めると強い金運になります。"},
-      "双子座":{base:"軽やかで知的。会話や感性で人とつながる星座です。",love:"恋愛では会話のテンポや感覚の一致が大切です。",work:"仕事では情報力と柔軟性が強みです。",money:"流れが速いので、使う目的を決めると安定します。"},
-      "蟹座":{base:"やさしく情が深く、大切な人を守ろうとする星座です。",love:"恋愛では心の安心感が何より大切です。",work:"仕事では支える力や気配りが評価されます。",money:"身近な幸せに使うと満足度が高まります。"},
-      "獅子座":{base:"華やかであたたかく、自分らしく輝く力を持つ星座です。",love:"恋愛では愛情表現が豊かで、相手を大切にします。",work:"仕事では存在感と発信力が魅力になります。",money:"自分を高めるための出費は良い循環を作ります。"},
-      "乙女座":{base:"誠実で細やか。丁寧な優しさを持つ星座です。",love:"恋愛では小さな気遣いが愛情表現になります。",work:"仕事では分析力と実務力が大きな強みです。",money:"管理上手なので、計画的に増やしていけます。"},
-      "天秤座":{base:"バランス感覚に優れ、人との調和を大切にする星座です。",love:"恋愛では心地よい距離感と美しい関係を望みます。",work:"仕事では対人力や調整力が評価されます。",money:"人付き合いの出費が増えやすいので配分が鍵です。"},
-      "蠍座":{base:"一途で深く、簡単には揺れない強い想いを持つ星座です。",love:"恋愛では深い絆や本音のつながりを求めます。",work:"仕事では集中力と探究心が武器になります。",money:"大きく動かすより、着実に守るのが得意です。"},
-      "射手座":{base:"自由で前向き。広い世界へ進んでいく星座です。",love:"恋愛では束縛より信頼と開放感が大切です。",work:"仕事では挑戦心と行動力が光ります。",money:"使う時は大きく使いやすいのでメリハリが大事です。"},
-      "山羊座":{base:"現実的で努力家。長い目で人生を築く星座です。",love:"恋愛では軽さより誠実さを大切にします。",work:"仕事では信頼感と責任感が大きな武器です。",money:"計画性があり、積み上げる金運に強いです。"},
-      "水瓶座":{base:"個性的で自由。自分らしい考えを大切にする星座です。",love:"恋愛では心の自由と理解し合える関係が大切です。",work:"仕事では独自性やアイデアが魅力になります。",money:"新しいことへの投資が運を動かします。"},
-      "魚座":{base:"感受性が豊かで、やさしさと想像力に満ちた星座です。",love:"恋愛では心の共鳴や優しい空気を大切にします。",work:"仕事では感性や寄り添う力が光ります。",money:"気分で使いやすいので、見える化すると安定します。"}
-    };
+    function julianDay(y, m, d) {
+      if (m <= 2) { y -= 1; m += 12; }
+      const A = Math.floor(y / 100);
+      const B = 2 - A + Math.floor(A / 4);
+      return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524;
+    }
 
-    const nameKeywords = {
-      1:"名前の波動キーワード：はじまり・勇気・先導",
-      2:"名前の波動キーワード：調和・やさしさ・共鳴",
-      3:"名前の波動キーワード：魅力・表現・ひらめき",
-      4:"名前の波動キーワード：安定・信頼・積み重ね",
-      5:"名前の波動キーワード：自由・変化・広がり",
-      6:"名前の波動キーワード：愛情・守る力・ぬくもり",
-      7:"名前の波動キーワード：直感・探究・静かな強さ",
-      8:"名前の波動キーワード：実現・豊かさ・影響力",
-      9:"名前の波動キーワード：包容・癒やし・手放し"
-    };    const pairData = {
-      1:{base:"ふたりの関係は、前へ進む力が強い組み合わせです。気持ちが通うと一気に距離が縮まりやすいでしょう。",strength:"決断が早く、関係を形にしやすい強みがあります。",caution:"お互いに主導権を握りたくなると、気持ちの押し合いが起きやすいです。",advice:"勝ち負けではなく、どちらの気持ちも大切にする意識が愛を育てます。"},
-      2:{base:"ふたりの関係は、やさしさと安心感で育つ流れです。",strength:"相手の気持ちを思いやることで、深い信頼が生まれやすいです。",caution:"遠慮が増えると、本音が見えにくくなります。",advice:"優しさの中に、少しだけ勇気ある本音を混ぜると絆が深まります。"},
-      3:{base:"ふたりの関係は、会話や楽しさが愛の鍵になる流れです。",strength:"一緒にいると気持ちが明るくなり、自然体でつながりやすいです。",caution:"楽しいだけで大事な話を後回しにすると、温度差が出やすいです。",advice:"笑い合える空気を大切にしながら、本音も少しずつ共有すると長続きします。"},
-      4:{base:"ふたりの関係は、時間をかけて安定していく流れです。",strength:"誠実さと安心感があり、地に足のついた関係を築きやすいです。",caution:"慎重になりすぎると、進展のタイミングを逃しやすくなります。",advice:"安心を大切にしつつ、節目では一歩進む勇気を持つと流れが整います。"},
-      5:{base:"ふたりの関係は、刺激と変化で動く流れです。",strength:"新鮮さがあり、惹かれ合う力が強い組み合わせです。",caution:"自由を大切にしすぎると、不安やすれ違いが生まれやすいです。",advice:"自由と信頼のバランスを取ると、軽やかで心地よい愛になります。"},
-      6:{base:"ふたりの関係は、愛情を育て合うあたたかい流れです。",strength:"支え合い、守り合う力が強く、心の居場所になりやすいです。",caution:"尽くしすぎたり、期待しすぎると負担になりやすいです。",advice:"頑張りすぎず、自然な優しさを循環させることが長続きの鍵です。"},
-      7:{base:"ふたりの関係は、深く静かにつながる流れです。",strength:"言葉が多くなくても、心で感じ合える魅力があります。",caution:"考えすぎたり距離を取りすぎると、誤解が生まれやすいです。",advice:"静かな関係だからこそ、気持ちは言葉でも少し伝えると安定します。"},
-      8:{base:"ふたりの関係は、現実を動かす力のある組み合わせです。",strength:"一緒に未来を形にしていく強さがあります。",caution:"強さ同士がぶつかると、譲れなさが前に出やすいです。",advice:"相手をコントロールするより、信頼して役割を分けると愛が育ちます。"},
-      9:{base:"ふたりの関係は、包み込むような優しさを持つ流れです。",strength:"理解し合えた時の深さと癒やしが大きな魅力です。",caution:"過去の傷や不安を抱えたままだと、気持ちが揺れやすくなります。",advice:"許すことと手放すことを覚えると、関係はやわらかく強くなります。"}
-    };
+    function getDayPillar(date) {
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      const jd = julianDay(y, m, d);
+      const base = 50;
+      const index60 = (jd + base) % 60;
+      const stem = heavenlyStems[index60 % 10];
+      const branch = earthlyBranches[index60 % 12];
+      return { stem, branch, text: stem + branch, index60 };
+    }
 
-    function uranai() {
-      const myName = document.getElementById("myName").value.trim();
-      const myBirth = document.getElementById("myBirth").value;
-      const partnerName = document.getElementById("partnerName").value.trim();
-      const partnerBirth = document.getElementById("partnerBirth").value;
-      const relationType = document.getElementById("relationType").value;
+    function getHourBranchFromTime(timeStr) {
+      const [hStr] = timeStr.split(":");
+      const h = Number(hStr);
+      const idx = Math.floor(((h + 1) % 24) / 2);
+      return earthlyBranches[idx];
+    }
 
-      if (!myBirth) {
-        alert("あなたの生年月日を入れてください");
+    function getHourPillar(dayStem, timeStr, unknown) {
+      if (unknown) return { stem:"-", branch:"-", text:"不明" };
+      const branch = getHourBranchFromTime(timeStr);
+      const dayStemIndex = stemIndex(dayStem);
+      const startStemMap = {
+        0:0, 5:0,
+        1:2, 6:2,
+        2:4, 7:4,
+        3:6, 8:6,
+        4:8, 9:8
+      };
+      const start = startStemMap[dayStemIndex];
+      const stem = heavenlyStems[(start + branchIndex(branch)) % 10];
+      return { stem, branch, text: stem + branch };
+    }
+
+    function relationType(dayElement, targetElement) {
+      if (dayElement === targetElement) return "same";
+      if (elementGenerate[dayElement] === targetElement) return "output";
+      if (elementGenerate[targetElement] === dayElement) return "resource";
+      if (elementControl[dayElement] === targetElement) return "wealth";
+      if (elementControl[targetElement] === dayElement) return "power";
+      return "same";
+    }
+
+    function getTenGod(dayStem, targetStem) {
+      if (!targetStem || targetStem === "-") return "-";
+      const de = stemElement[dayStem];
+      const te = stemElement[targetStem];
+      const sameYY = yinYang[dayStem] === yinYang[targetStem];
+      const rel = relationType(de, te);
+      if (rel === "same") return sameYY ? "比肩" : "劫財";
+      if (rel === "output") return sameYY ? "食神" : "傷官";
+      if (rel === "wealth") return sameYY ? "偏財" : "正財";
+      if (rel === "power") return sameYY ? "偏官" : "正官";
+      if (rel === "resource") return sameYY ? "偏印" : "印綬";
+      return "-";
+    }
+
+    function getHiddenStem(branch) {
+      return hiddenStems[branch] || [];
+    }
+
+    function getTwelveFortune(dayStem, branch) {
+      if (!branch || branch === "-") return "-";
+      const start = fortuneStartBranch[dayStem];
+      const startIdx = branchIndex(start);
+      const currentIdx = branchIndex(branch);
+      const isYang = yinYang[dayStem] === "陽";
+      let diff;
+      if (isYang) diff = (currentIdx - startIdx + 12) % 12;
+      else diff = (startIdx - currentIdx + 12) % 12;
+      return twelveFortunesOrder[diff];
+    }
+
+    function countElements(pillars) {
+      const counts = { 木:0, 火:0, 土:0, 金:0, 水:0 };
+      pillars.forEach(p => {
+        if (p.stem && p.stem !== "-") counts[stemElement[p.stem]] += 1;
+        if (p.branch && p.branch !== "-") counts[branchElement[p.branch]] += 1;
+        const hs = getHiddenStem(p.branch);
+        hs.forEach(s => counts[stemElement[s]] += 0.5);
+      });
+      return counts;
+    }
+
+    function summarizeBalance(counts) {
+      const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+      const strongest = entries[0][0];
+      const weakest = entries[entries.length - 1][0];
+      return {
+        strongest,
+        weakest,
+        text:`強い要素：${strongest} / 弱めの要素：${weakest}\n木:${counts.木.toFixed(1)} 火:${counts.火.toFixed(1)} 土:${counts.土.toFixed(1)} 金:${counts.金.toFixed(1)} 水:${counts.水.toFixed(1)}`
+      };
+    }
+
+    function getCurrentYearPillar() {
+      const now = new Date();
+      return getYearPillar(now);
+    }
+
+    function getMajorLuckStartAge(monthBranch, gender, yearStem) {
+      const yinyang = yinYang[yearStem];
+      const forward = (gender === "男性" && yinyang === "陽") || (gender === "女性" && yinyang === "陰");
+      const branchNo = branchIndex(monthBranch);
+      const base = 2 + (branchNo % 6);
+      return { startAge: base, forward };
+    }
+
+    function getMajorLuck(monthPillar, gender, yearStem, currentAge) {
+      const startData = getMajorLuckStartAge(monthPillar.branch, gender, yearStem);
+      const dir = startData.forward ? 1 : -1;
+      const step = Math.max(0, Math.floor((currentAge - startData.startAge) / 10));
+      const stemIdx = (stemIndex(monthPillar.stem) + dir * (step + 1) + 100) % 10;
+      const branchIdx = (branchIndex(monthPillar.branch) + dir * (step + 1) + 120) % 12;
+      const current = heavenlyStems[stemIdx] + earthlyBranches[branchIdx];
+      const ageStart = startData.startAge + step * 10;
+      const ageEnd = ageStart + 9;
+      return { current, ageStart, ageEnd, forward: startData.forward };
+    }
+
+    function getAge(birthdate) {
+      const today = new Date();
+      const b = new Date(birthdate + "T00:00:00");
+      let age = today.getFullYear() - b.getFullYear();
+      const mdiff = (today.getMonth() + 1) * 100 + today.getDate() - ((b.getMonth() + 1) * 100 + b.getDate());
+      if (mdiff < 0) age--;
+      return age;
+    }
+
+    function flowMessage(strong, weak) {
+      const strongMap = {
+        "木":"学び・成長・新しい出会いの流れに乗るほど運が伸びます。",
+        "火":"発信・表現・見せる行動を増やすほど運が動きます。",
+        "土":"生活基盤・信用・ルーティンを整えるほど安定して伸びます。",
+        "金":"整理・決断・美意識を整えるほどチャンスが入りやすいです。",
+        "水":"直感・休息・深い対話を大事にすると流れが整います。"
+      };
+      const weakMap = {
+        "木":"停滞時は柔軟性不足や成長の止まりに注意。",
+        "火":"停滞時は情熱不足や遠慮しすぎに注意。",
+        "土":"停滞時は抱え込みや我慢しすぎに注意。",
+        "金":"停滞時は決断の遅れや整理不足に注意。",
+        "水":"停滞時は不安の抱え込みや考えすぎに注意。"
+      };
+      return `${strongMap[strong]}\n${weakMap[weak]}`;
+    }
+
+    function getMainGod(dayStem, monthStem, yearStem, timeStem) {
+      const gods = [getTenGod(dayStem, monthStem), getTenGod(dayStem, yearStem), getTenGod(dayStem, timeStem)].filter(Boolean);
+      const count = {};
+      gods.forEach(g => count[g] = (count[g] || 0) + 1);
+      return Object.entries(count).sort((a,b) => b[1]-a[1])[0]?.[0] || gods[0] || "比肩";
+    }
+
+    function getYearLuck(dayStem, birthYear) {
+      const yearPillar = getCurrentYearPillar();
+      const god = getTenGod(dayStem, yearPillar.stem);
+      const year = new Date().getFullYear();
+      return {
+        title:`${year}年 ${yearPillar.text}`,
+        text:`今年は ${god} の影響が出やすい年です。${tenGodDescriptions[god]}`
+      };
+    }
+
+    function buildReading({ name, gender, birthdate, birthtime, timeUnknown, theme, worry }) {
+      const safeName = (name || "").trim() || "あなた";
+      const birth = new Date(`${birthdate}T12:00:00`);
+      const yearPillar = getYearPillar(birth);
+      const monthPillar = getMonthPillar(birth, yearPillar.stem);
+      const dayPillar = getDayPillar(birth);
+      const timePillar = getHourPillar(dayPillar.stem, birthtime, timeUnknown);
+      const pillars = [yearPillar, monthPillar, dayPillar, timePillar];
+      const elementCounts = countElements(pillars);
+      const balance = summarizeBalance(elementCounts);
+      const age = getAge(birthdate);
+      const majorLuck = getMajorLuck(monthPillar, gender, yearPillar.stem, age);
+      const yearLuck = getYearLuck(dayPillar.stem, birth.getFullYear());
+      const mainGod = getMainGod(dayPillar.stem, monthPillar.stem, yearPillar.stem, timePillar.stem);
+      const lifePath = reduceNumerology(digitSum(birthdate));
+      const color = colorProfiles[(lifePath + birth.getMonth() + 1 + birth.getDate() + birth.getFullYear()) % colorProfiles.length];
+      const lifeLine = lifeLines[(lifePath + birth.getMonth() + 1 + birth.getDate()) % lifeLines.length];
+      const dayMaster = `${dayPillar.stem}（${stemElement[dayPillar.stem]}・${yinYang[dayPillar.stem]}）`;
+      const yearGod = getTenGod(dayPillar.stem, yearPillar.stem);
+      const monthGod = getTenGod(dayPillar.stem, monthPillar.stem);
+      const timeGod = timePillar.stem === "-" ? "-" : getTenGod(dayPillar.stem, timePillar.stem);
+      const yearFortune = getTwelveFortune(dayPillar.stem, yearPillar.branch);
+      const monthFortune = getTwelveFortune(dayPillar.stem, monthPillar.branch);
+      const dayFortune = getTwelveFortune(dayPillar.stem, dayPillar.branch);
+      const timeFortune = timePillar.branch === "-" ? "-" : getTwelveFortune(dayPillar.stem, timePillar.branch);
+
+      const themeBase = themeMessages[theme] || themeMessages["総合運"];
+      const worryLine = worry.trim()
+        ? `今抱えている「${worry.trim()}」というテーマは、答えを急ぐより、命式に合う環境と行動へ戻ることで突破口が見えやすくなります。`
+        : "今は無理に急がず、命式に合う動き方へ戻るほど流れが軽くなります。";
+
+      let numerologyLabel = `数秘 ${lifePath}`;
+      if ([11,22,33].includes(lifePath)) numerologyLabel += "（マスターナンバー）";
+
+      const resultTitle = `${safeName}さんの本格 総合運命鑑定`;
+      const body = `${formatDateJP(birthdate)} 生まれの${safeName}さんは、\n${lifeLine}を持つ方です。\n\n四柱推命では日主が ${dayMaster} で、${stemDescriptions[dayPillar.stem]} という核を持っています。\n命式全体では、年柱 ${yearPillar.text}・月柱 ${monthPillar.text}・日柱 ${dayPillar.text}${timeUnknown ? "・時柱 不明（参考表示）" : `・時柱 ${timePillar.text}`} となり、表面の顔・社会運・本質・晩年運まで読み分けられます。\n\n主な通変星は ${mainGod}。${tenGodDescriptions[mainGod]}\nまた、月柱の通変星は ${monthGod}、年柱は ${yearGod}${timeGod !== "-" ? `、時柱は ${timeGod}` : ""} となり、社会との関わり方や評価の受け方にも特徴が出ます。\n\n十二運では、月柱 ${monthFortune}、日柱 ${dayFortune}${timeFortune !== "-" ? `、時柱 ${timeFortune}` : ""} が出ており、今世の勢い・成熟度・切替のタイミングが見えます。\n\n中心カラーは ${color.name}。この色は「${color.meaning}」を表し、今の${safeName}さんに必要なのは、無理を重ねることではなく、本来の魅力を自然に出すことだと伝えています。\n\n${themeBase}\n${worryLine}\n\n五行バランスでは ${balance.strongest} が強く、${balance.weakest} が弱めです。強い部分を活かしつつ、弱い部分を補う生活をすると、停滞が抜けやすくなります。\n\n現在の大運は ${majorLuck.current}（${majorLuck.ageStart}〜${majorLuck.ageEnd}歳頃）です。ここで巡るテーマを活かすことで、次の10年の流れも整いやすくなります。\n\nこれからの開運ポイントは『無理に正解を探しすぎないこと』です。命式に合う選択を重ねるほど、必要なご縁・タイミング・チャンスが自然と近づいてきます。`;
+
+      const premium = `${safeName}さんの有料鑑定では、\n・恋愛 / 仕事 / 金運 / 人間関係の詳細分解\n・相性鑑定\n・今後数年の運気の流れ\n・転機が来やすい時期\n・避けたい流れと補い方\n・${safeName}さん専用の開運行動\nまで、さらに具体的に個別鑑定としてご案内できます。`;
+
+      return {
+        resultTitle,
+        body,
+        numerologyLabel,
+        dayMaster,
+        mainGod,
+        lifeLine,
+        color,
+        balance,
+        flow: flowMessage(balance.strongest, balance.weakest),
+        premium,
+        pillars: {
+          year: yearPillar,
+          month: monthPillar,
+          day: dayPillar,
+          time: timePillar
+        },
+        meta: {
+          year: `蔵干 ${getHiddenStem(yearPillar.branch).join("・")}\n通変星 ${yearGod}\n十二運 ${yearFortune}`,
+          month: `蔵干 ${getHiddenStem(monthPillar.branch).join("・")}\n通変星 ${monthGod}\n十二運 ${monthFortune}`,
+          day: `蔵干 ${getHiddenStem(dayPillar.branch).join("・")}\n日主 ${dayMaster}\n十二運 ${dayFortune}`,
+          time: timeUnknown ? `出生時間不明のため参考表示` : `蔵干 ${getHiddenStem(timePillar.branch).join("・")}\n通変星 ${timeGod}\n十二運 ${timeFortune}`
+        },
+        dayMasterText: `${dayMaster}\n${stemDescriptions[dayPillar.stem]}`,
+        mainGodText: `${mainGod}\n${tenGodDescriptions[mainGod]}`,
+        fortuneText: `月柱 ${monthFortune} / 日柱 ${dayFortune}${timeFortune !== "-" ? ` / 時柱 ${timeFortune}` : ""}\n${twelveFortuneDescriptions[dayFortune]}`,
+        majorLuckText: `現在の大運：${majorLuck.current}\n対象年齢：${majorLuck.ageStart}〜${majorLuck.ageEnd}歳頃\n巡り方向：${majorLuck.forward ? "順行" : "逆行"}`,
+        yearLuckText: `${yearLuck.title}\n${yearLuck.text}`
+      };
+    }
+
+    const nameInput = document.getElementById("name");
+    const genderInput = document.getElementById("gender");
+    const birthdateInput = document.getElementById("birthdate");
+    const birthtimeInput = document.getElementById("birthtime");
+    const timeUnknownInput = document.getElementById("timeUnknown");
+    const themeInput = document.getElementById("theme");
+    const worryInput = document.getElementById("worry");
+
+    const diagnoseBtn = document.getElementById("diagnoseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const copyResultBtn = document.getElementById("copyResultBtn");
+    const resultArea = document.getElementById("resultArea");
+
+    const tagTheme = document.getElementById("tagTheme");
+    const tagLifePath = document.getElementById("tagLifePath");
+    const tagDominant = document.getElementById("tagDominant");
+    const tagMainGod = document.getElementById("tagMainGod");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultText = document.getElementById("resultText");
+
+    const yearPillarEl = document.getElementById("yearPillar");
+    const monthPillarEl = document.getElementById("monthPillar");
+    const dayPillarEl = document.getElementById("dayPillar");
+    const timePillarEl = document.getElementById("timePillar");
+    const yearMeta = document.getElementById("yearMeta");
+    const monthMeta = document.getElementById("monthMeta");
+    const dayMeta = document.getElementById("dayMeta");
+    const timeMeta = document.getElementById("timeMeta");
+
+    const lifelineText = document.getElementById("lifelineText");
+    const colorText = document.getElementById("colorText");
+    const balanceText = document.getElementById("balanceText");
+    const dayMasterText = document.getElementById("dayMasterText");
+    const mainGodText = document.getElementById("mainGodText");
+    const fortuneText = document.getElementById("fortuneText");
+    const releaseText = document.getElementById("releaseText");
+    const actionText = document.getElementById("actionText");
+    const flowText = document.getElementById("flowText");
+    const majorLuckText = document.getElementById("majorLuckText");
+    const yearLuckText = document.getElementById("yearLuckText");
+    const premiumText = document.getElementById("premiumText");
+
+    const premiumLink = document.getElementById("premiumLink");
+    const instagramBtn = document.getElementById("instagramBtn");
+    const homeLinkBtn = document.getElementById("homeLinkBtn");
+    premiumLink.href = PREMIUM_URL;
+    instagramBtn.href = INSTAGRAM_URL;
+    homeLinkBtn.href = HOMEPAGE_URL;
+
+    timeUnknownInput.addEventListener("change", () => {
+      birthtimeInput.disabled = timeUnknownInput.checked;
+      birthtimeInput.style.opacity = timeUnknownInput.checked ? ".6" : "1";
+    });
+
+    diagnoseBtn.addEventListener("click", () => {
+      if (!birthdateInput.value) {
+        alert("生年月日を入力してください。");
         return;
       }
 
-      const myTotal = getBirthTotal(myBirth);
-      const myNum = reduceNumber(myTotal);
-      const myNameSeed = getTextSeed(myName);
-      const todaySeed = reduceNumber(myNum + myNameSeed + new Date().getDate());
+      const reading = buildReading({
+        name: nameInput.value,
+        gender: genderInput.value,
+        birthdate: birthdateInput.value,
+        birthtime: birthtimeInput.value || "12:00",
+        timeUnknown: timeUnknownInput.checked,
+        theme: themeInput.value,
+        worry: worryInput.value
+      });
 
-      const myDate = new Date(myBirth);
-      const myZodiac = getZodiac(myDate.getMonth() + 1, myDate.getDate());
+      tagTheme.textContent = themeInput.value;
+      tagLifePath.textContent = reading.numerologyLabel;
+      tagDominant.textContent = `五行 ${reading.balance.strongest}優勢`;
+      tagMainGod.textContent = `通変星 ${reading.mainGod}`;
 
-      const myLife = lifeData[myNum] || lifeData[9];
-      const myToday = todayWords[todaySeed] || "今日は流れを静かに見つめると良い日です。";
-      const myStar = zodiacData[myZodiac];
-      const myNameKeyword = nameKeywords[myNameSeed || myNum] || "名前の波動キーワード：やわらかさ・輝き・巡り";
+      resultTitle.textContent = reading.resultTitle;
+      resultText.textContent = reading.body;
 
-      document.getElementById("lifeTag").innerText = "生命線ナンバー：" + myNum;
-      document.getElementById("starTag").innerText = "星座：" + myZodiac;
-      document.getElementById("lifeTitle").innerText = myLife.type;
-      document.getElementById("nameKeyword").innerHTML = "<strong>名前から見るテーマ：</strong>" + myNameKeyword;
-      document.getElementById("colorText").innerHTML = "<strong>中心カラー：</strong>" + myLife.colorName + '<span class="color-chip" style="background:' + myLife.colorCode + ';">' + myLife.colorName + '</span>';
-      document.getElementById("baseText").innerHTML = "<strong>基本性質：</strong>" + myLife.base;
-      document.getElementById("strengthText").innerHTML = "<strong>あなたの強み：</strong>" + myLife.strength;
-      document.getElementById("themeText").innerHTML = "<strong>今の課題：</strong>" + myLife.theme;
-      document.getElementById("releaseText").innerHTML = "<strong>しがらみから抜けるヒント：</strong>" + myLife.release;
-      document.getElementById("todayText").innerHTML = "<strong>今日のひとこと：</strong>" + myToday;
+      yearPillarEl.textContent = reading.pillars.year.text;
+      monthPillarEl.textContent = reading.pillars.month.text;
+      dayPillarEl.textContent = reading.pillars.day.text;
+      timePillarEl.textContent = reading.pillars.time.text;
+      yearMeta.textContent = reading.meta.year;
+      monthMeta.textContent = reading.meta.month;
+      dayMeta.textContent = reading.meta.day;
+      timeMeta.textContent = reading.meta.time;
 
-      document.getElementById("starBase").innerHTML = "<strong>星座の本質：</strong>" + myStar.base;
-      document.getElementById("loveText").innerHTML = "<strong>恋愛傾向：</strong>" + myStar.love;
-      document.getElementById("workText").innerHTML = "<strong>仕事運の傾向：</strong>" + myStar.work;
-      document.getElementById("moneyText").innerHTML = "<strong>金運の傾向：</strong>" + myStar.money;
+      lifelineText.textContent = reading.lifeLine;
+      colorText.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:${reading.color.hex};border:2px solid rgba(255,255,255,.78);vertical-align:middle;margin-right:8px;"></span>${reading.color.name} / ${reading.color.meaning}`;
+      balanceText.textContent = reading.balance.text;
+      dayMasterText.textContent = reading.dayMasterText;
+      mainGodText.textContent = reading.mainGodText;
+      fortuneText.textContent = reading.fortuneText;
+      releaseText.textContent = reading.color.release;
+      actionText.textContent = reading.color.action;
+      flowText.textContent = reading.flow;
+      majorLuckText.textContent = reading.majorLuckText;
+      yearLuckText.textContent = reading.yearLuckText;
+      premiumText.textContent = reading.premium;
 
-      if (partnerBirth) {
-        const partnerTotal = getBirthTotal(partnerBirth);
-        const partnerNum = reduceNumber(partnerTotal);
-        const partnerNameSeed = getTextSeed(partnerName);
-        const partnerDate = new Date(partnerBirth);
-        const partnerZodiac = getZodiac(partnerDate.getMonth() + 1, partnerDate.getDate());
+      resultArea.classList.remove("hidden");
+      resultArea.scrollIntoView({ behavior:"smooth", block:"start" });
+    });
 
-        let score = 60 + (10 - Math.min(Math.abs((myNum % 9) - (partnerNum % 9)), 9)) * 4;
-        if (myZodiac === partnerZodiac) score += 6;
-        if (relationType === "恋人") score += 4;
-        if (relationType === "片思い") score -= 2;
-        if (relationType === "復縁") score -= 4;
-        if (myNameSeed && partnerNameSeed && myNameSeed === partnerNameSeed) score += 3;
-        score = Math.max(52, Math.min(98, score));
+    resetBtn.addEventListener("click", () => {
+      nameInput.value = "";
+      genderInput.value = "女性";
+      birthdateInput.value = "";
+      birthtimeInput.value = "12:00";
+      timeUnknownInput.checked = false;
+      birthtimeInput.disabled = false;
+      birthtimeInput.style.opacity = "1";
+      themeInput.value = "総合運";
+      worryInput.value = "";
+      resultArea.classList.add("hidden");
+      window.scrollTo({ top:0, behavior:"smooth" });
+    });
 
-        const key = reduceNumber(myNum + partnerNum);
+    copyResultBtn.addEventListener("click", async () => {
+      const text = [
+        resultTitle.textContent,
+        resultText.textContent,
+        `年柱：\${yearPillarEl.textContent}`,
+        `月柱：\${monthPillarEl.textContent}`,
+        `日柱：\${dayPillarEl.textContent}`,
+        `時柱：\${timePillarEl.textContent}`,
+        `生命線：\${lifelineText.textContent}`,
+        `中心カラー：\${colorText.textContent.replace(/\\s+/g, " ").trim()}`,
+        `五行バランス：\${balanceText.textContent}`,
+        `日主：\${dayMasterText.textContent}`,
+        `主な通変星：\${mainGodText.textContent}`,
+        `十二運：\${fortuneText.textContent}`,
+        `大運：\${majorLuckText.textContent}`,
+        `年運：\${yearLuckText.textContent}`,
+        `開運アクション：\${actionText.textContent}`
+      ].join("\\n\\n");
 
-        let extraLine = "";
-        if (relationType === "片思い") extraLine = "今は気持ちを急ぎすぎず、相手が安心できる空気を作ることが進展の鍵です。";
-        else if (relationType === "復縁") extraLine = "復縁は過去を戻すより、新しい関係として向き合えるかが大切です。";
-        else if (relationType === "友達以上恋人未満") extraLine = "曖昧さの中に優しさはありますが、少しずつ気持ちを見せることが転機になります。";
-        else if (relationType === "気になる人") extraLine = "相手を知ろうとする自然な会話が、恋の入口を開きやすくします。";
-        else extraLine = "今ある絆を言葉や行動で丁寧に育てるほど、関係は安定していきます。";
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          alert("鑑定結果をコピーしました。");
+          return;
+        }
 
-        const displayMyName = myName || "あなた";
-        const displayPartnerName = partnerName || "お相手";
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
 
-        document.getElementById("compatibilityScore").innerHTML =
-          "<strong>相性度：</strong>" + score + "％<br><strong>関係性：</strong>" + relationType +
-          "<br><strong>お相手の星座：</strong>" + partnerZodiac +
-          "<br><strong>お相手の生命線ナンバー：</strong>" + partnerNum;
+        const copied = document.execCommand("copy");
+        document.body.removeChild(textarea);
 
-        document.getElementById("compatibilityName").innerHTML =
-          "<strong>ふたりの名前の響き：</strong>" + displayMyName + "さんと" + displayPartnerName +
-          "さんは、それぞれの個性を持ちながらも、関係の中で新しい空気を作りやすい組み合わせです。";
-
-        document.getElementById("compatibilityBase").innerHTML = "<strong>ふたりの流れ：</strong>" + pairData[key].base;
-        document.getElementById("compatibilityStrength").innerHTML = "<strong>関係の強み：</strong>" + pairData[key].strength;
-        document.getElementById("compatibilityCaution").innerHTML = "<strong>気をつけたい点：</strong>" + pairData[key].caution;
-        document.getElementById("compatibilityAdvice").innerHTML = "<strong>恋愛アドバイス：</strong>" + pairData[key].advice + " " + extraLine;
-      } else {
-        document.getElementById("compatibilityScore").innerHTML = "<strong>相性度：</strong>お相手の生年月日を入れると表示されます。";
-        document.getElementById("compatibilityName").innerHTML = "<strong>ふたりの名前の響き：</strong>お相手の名前を入れると表示されます。";
-        document.getElementById("compatibilityBase").innerHTML = "<strong>ふたりの流れ：</strong>気になるお相手との関係性の流れを読むことができます。";
-        document.getElementById("compatibilityStrength").innerHTML = "<strong>関係の強み：</strong>心のつながりや相性の良い部分が表示されます。";
-        document.getElementById("compatibilityCaution").innerHTML = "<strong>気をつけたい点：</strong>すれ違いやすいポイントもやさしく表示します。";
-        document.getElementById("compatibilityAdvice").innerHTML = "<strong>恋愛アドバイス：</strong>お相手の情報を入れると、具体的な恋愛アドバイスが表示されます。";
+        if (copied) {
+          alert("鑑定結果をコピーしました。");
+        } else {
+          window.prompt("下の内容を手動でコピーしてください", text);
+        }
+      } catch (e) {
+        window.prompt("下の内容を手動でコピーしてください", text);
       }
-
-      document.getElementById("result").style.display = "block";
-    }
+    });
   </script>
 </body>
 </html>
+
+
