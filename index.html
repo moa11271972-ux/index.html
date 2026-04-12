@@ -7,329 +7,352 @@
   <style>
     * { box-sizing: border-box; }
 
-:root {
-  --bg1: #fff6fb;
-  --bg2: #ffd7eb;
-  --bg3: #f8e7ae;
-  --deep: #5f2f4c;
-  --deep2: #7b4c67;
-  --gold: #d8ae35;
-  --gold2: #f5e7ae;
-  --line: rgba(255,255,255,.30);
-  --glass: rgba(255,255,255,.22);
-  --text: #ffffff;
-  --muted: rgba(255,255,255,.92);
-  --shadow: 0 14px 36px rgba(79,24,52,.18);
-  --ok: #5dd39e;
-  --warn: #ffd166;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
-  color: var(--text);
-  background:
-    linear-gradient(rgba(255,255,255,.18), rgba(255,255,255,.10)),
-    url("画像.png") center center / cover no-repeat fixed,
-    linear-gradient(135deg, #fff6fb 0%, #ffd9ec 45%, #f5e6a6 100%);
-}
-
-.overlay {
-  min-height: 100vh;
-  padding: 22px 14px 42px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,215,160,.08));
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-}
-
-.hero, .card, .result-box, .share-box, .premium-box, .note-box {
-  background: rgba(255,255,255,.20);
-  border: 1px solid rgba(255,255,255,.30);
-  border-radius: 24px;
-  box-shadow: 0 14px 36px rgba(79,24,52,.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-h1, h2, h3, h4, label, .result-title, .section-title, .small-title {
-  color: #fffdf5;
-}
-
-.lead, .result-text, .mini-card p, .status, .footer, .tag, .pillar span, .pillar small {
-  color: rgba(255,255,255,.95);
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.32);
-  background: rgba(255,255,255,.18);
-  color: #ffffff;
-  font-size: 16px;
-  outline: none;
-}
-
-input::placeholder, textarea::placeholder {
-  color: rgba(255,255,255,.75);
-}
-    body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
-  color: var(--text);
-  background:
-    linear-gradient(rgba(255,255,255,.05), rgba(0,0,0,.20)),
-      url("phoenix.png")("phoenix.png")" / cover no-repeat fixed,
-    linear-gradient(135deg, #fff6fb 0%, #ffd9ec 45%, #f5e6a6 100%);
-}
-    
-    .box {
-      background: var(--glass);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    :root {
+      --bg1:#fff6fb;
+      --bg2:#ffd7eb;
+      --bg3:#f8e7ae;
+      --deep:#5f2f4c;
+      --deep2:#7b4c67;
+      --gold:#d8ae35;
+      --gold2:#f5e7ae;
+      --line:rgba(255,255,255,.30);
+      --glass:rgba(255,255,255,.20);
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.92);
+      --shadow:0 14px 36px rgba(79,24,52,.18);
+      --ok:#5dd39e;
+      --warn:#ffd166;
     }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(255,255,255,.18), rgba(0,0,0,.12)),
+        url("画像.png") center center / cover no-repeat fixed,
+        linear-gradient(135deg, #fff6fb 0%, #ffd9ec 45%, #f5e6a6 100%);
+    }
+
+    .overlay {
+      min-height: 100vh;
+      padding: 22px 14px 42px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,215,160,.08));
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .box,
     .hero, .card, .result-box, .share-box, .premium-box, .note-box {
       background: var(--glass);
       border: 1px solid var(--line);
       border-radius: 24px;
       box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
     .hero {
-      text-align:center;
-      padding:30px 22px;
-      margin-bottom:18px;
+      text-align: center;
+      padding: 30px 22px;
+      margin-bottom: 18px;
     }
+
     .badge {
-      display:inline-block;
-      padding:8px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.18);
-      border:1px solid rgba(255,255,255,.28);
-      color:#fff8d3;
-      font-size:12px;
-      letter-spacing:.08em;
-      margin-bottom:14px;
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.28);
+      color: #fff8d3;
+      font-size: 12px;
+      letter-spacing: .08em;
+      margin-bottom: 14px;
     }
+
     h1 {
-      margin:0 0 10px;
-      font-size:clamp(30px,4vw,46px);
-      line-height:1.18;
-      color:#fffde9;
-      text-shadow:0 2px 12px rgba(0,0,0,.15);
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.18;
+      color: #fffdf5;
+      text-shadow: 0 2px 12px rgba(0,0,0,.18);
     }
+
     .lead {
-      max-width:800px;
-      margin:0 auto;
-      color:var(--muted);
-      line-height:1.9;
-      font-size:15px;
+      max-width: 800px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 15px;
     }
-    .grid { display:grid; grid-template-columns:1fr; gap:18px; }
-    .card, .result-box, .share-box, .premium-box, .note-box { padding:22px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .card, .result-box, .share-box, .premium-box, .note-box {
+      padding: 22px;
+    }
+
     .section-title {
-      margin:0 0 14px;
-      font-size:21px;
-      color:#fff7cd;
+      margin: 0 0 14px;
+      font-size: 21px;
+      color: #fff7cd;
     }
+
     .small-title {
-      margin:0 0 10px;
-      font-size:16px;
-      color:#fff5ba;
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #fff5ba;
     }
+
     label {
-      display:block;
-      margin-bottom:8px;
-      font-weight:700;
-      font-size:14px;
-      color:#fff9f1;
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff9f1;
     }
+
     input, select, textarea {
-      width:100%;
-      padding:14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.28);
-      background:rgba(255,255,255,.17);
-      color:#fff;
-      font-size:16px;
-      outline:none;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.32);
+      background: rgba(255,255,255,.18);
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
     }
-    input::placeholder, textarea::placeholder { color:rgba(255,255,255,.7); }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(255,255,255,.75);
+    }
+
     input:focus, select:focus, textarea:focus {
-      border-color:rgba(255,236,161,.95);
-      box-shadow:0 0 0 3px rgba(255,236,161,.18);
+      border-color: rgba(255,236,161,.95);
+      box-shadow: 0 0 0 3px rgba(255,236,161,.18);
     }
+
     .form-row {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-      margin-bottom:14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .form-row.thirds { grid-template-columns:repeat(3, 1fr); }
-    .form-row.single { grid-template-columns:1fr; }
+
+    .form-row.thirds {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-row.single {
+      grid-template-columns: 1fr;
+    }
+
     .checkbox-row {
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-      margin-top:8px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 8px;
     }
+
     .checkbox-row input {
-      width:18px;
-      height:18px;
-      margin-top:2px;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
     }
+
     .actions, .share-actions {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
     }
+
     button, .button-link {
-      border:none;
-      cursor:pointer;
-      border-radius:16px;
-      min-height:52px;
-      padding:14px 18px;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
-      font-weight:700;
-      transition:.2s ease;
+      border: none;
+      cursor: pointer;
+      border-radius: 16px;
+      min-height: 52px;
+      padding: 14px 18px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      transition: .2s ease;
     }
-    button:hover, .button-link:hover { transform:translateY(-1px); opacity:.97; }
+
+    button:hover, .button-link:hover {
+      transform: translateY(-1px);
+      opacity: .97;
+    }
+
     .btn-main {
-      color:#5a2948;
-      background:linear-gradient(135deg, #fff7cc 0%, #e8bf52 100%);
-      box-shadow:0 10px 22px rgba(216,174,53,.28);
+      color: #5a2948;
+      background: linear-gradient(135deg, #fff7cc 0%, #e8bf52 100%);
+      box-shadow: 0 10px 22px rgba(216,174,53,.28);
     }
+
     .btn-sub {
-      color:#fffefb;
-      background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
-      border:1px solid rgba(255,255,255,.24);
+      color: #fffefb;
+      background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
+      border: 1px solid rgba(255,255,255,.24);
     }
-    .hidden { display:none; }
+
+    .hidden {
+      display: none;
+    }
+
     .tag-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      margin-bottom:16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
     }
+
     .tag {
-      display:inline-flex;
-      align-items:center;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:700;
-      background:rgba(255,255,255,.15);
-      border:1px solid rgba(255,255,255,.24);
-      color:#fff8d7;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.24);
+      color: #fff8d7;
     }
+
     .result-title {
-      margin:0 0 12px;
-      color:#fff8d8;
-      font-size:27px;
+      margin: 0 0 12px;
+      color: #fff8d8;
+      font-size: 27px;
     }
+
     .result-text {
-      line-height:1.95;
-      font-size:15px;
-      color:#fffdfd;
-      white-space:pre-line;
+      line-height: 1.95;
+      font-size: 15px;
+      color: rgba(255,255,255,.97);
+      white-space: pre-line;
     }
+
     .pillars-grid {
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-      margin-top:16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
     }
+
     .pillar {
-      padding:14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.13);
-      border:1px solid rgba(255,255,255,.22);
-      text-align:center;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.22);
+      text-align: center;
     }
+
     .pillar small {
-      display:block;
-      color:rgba(255,255,255,.82);
-      margin-bottom:6px;
+      display: block;
+      color: rgba(255,255,255,.85);
+      margin-bottom: 6px;
     }
+
     .pillar strong {
-      display:block;
-      font-size:24px;
-      color:#fff8d8;
-      letter-spacing:.08em;
+      display: block;
+      font-size: 24px;
+      color: #fff8d8;
+      letter-spacing: .08em;
     }
+
     .pillar span {
-      display:block;
-      margin-top:6px;
-      font-size:13px;
-      line-height:1.6;
-      color:rgba(255,255,255,.94);
-      white-space:pre-line;
+      display: block;
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.95);
+      white-space: pre-line;
     }
+
     .mini-grid {
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:12px;
-      margin-top:16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
     }
+
     .mini-card {
-      padding:14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.13);
-      border:1px solid rgba(255,255,255,.22);
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.22);
     }
+
     .mini-card h4 {
-      margin:0 0 8px;
-      font-size:14px;
-      color:#fff6c8;
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #fff6c8;
     }
+
     .mini-card p {
-      margin:0;
-      font-size:14px;
-      line-height:1.75;
-      white-space:pre-line;
-      color:rgba(255,255,255,.96);
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.75;
+      white-space: pre-line;
+      color: rgba(255,255,255,.96);
     }
+
     .luck-grid {
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:12px;
-      margin-top:16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
     }
+
     .status {
-      font-size:12px;
-      margin-top:10px;
-      color:rgba(255,255,255,.82);
-      line-height:1.7;
+      font-size: 12px;
+      margin-top: 10px;
+      color: rgba(255,255,255,.88);
+      line-height: 1.7;
     }
-    .ok { color:#d8ffd1; }
-    .warn { color:#fff1bf; }
+
+    .ok { color: #d8ffd1; }
+    .warn { color: #fff1bf; }
+
     .footer {
-      text-align:center;
-      color:rgba(255,255,255,.9);
-      font-size:13px;
-      margin-top:20px;
-      line-height:1.85;
+      text-align: center;
+      color: rgba(255,255,255,.94);
+      font-size: 13px;
+      margin-top: 20px;
+      line-height: 1.85;
     }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
     @media (max-width: 860px) {
-      .form-row, .form-row.thirds, .actions, .share-actions, .pillars-grid, .mini-grid, .luck-grid { grid-template-columns:1fr; }
-      .hero, .card, .result-box, .share-box, .premium-box, .note-box { border-radius:20px; padding:18px; }
+      .form-row, .form-row.thirds, .actions, .share-actions, .pillars-grid, .mini-grid, .luck-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero, .card, .result-box, .share-box, .premium-box, .note-box {
+        border-radius: 20px;
+        padding: 18px;
+      }
     }
   </style>
 </head>
@@ -447,54 +470,21 @@ input::placeholder, textarea::placeholder {
 
             <h3 class="small-title" style="margin-top:16px;">命式の読み解き</h3>
             <div class="mini-grid">
-              <div class="mini-card">
-                <h4>生命線</h4>
-                <p id="lifelineText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>中心カラー</h4>
-                <p id="colorText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>五行バランス</h4>
-                <p id="balanceText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>日主の性質</h4>
-                <p id="dayMasterText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>主な通変星</h4>
-                <p id="mainGodText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>十二運の核</h4>
-                <p id="fortuneText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>しがらみから抜ける鍵</h4>
-                <p id="releaseText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>今の開運アクション</h4>
-                <p id="actionText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>向いている流れ</h4>
-                <p id="flowText"></p>
-              </div>
+              <div class="mini-card"><h4>生命線</h4><p id="lifelineText"></p></div>
+              <div class="mini-card"><h4>中心カラー</h4><p id="colorText"></p></div>
+              <div class="mini-card"><h4>五行バランス</h4><p id="balanceText"></p></div>
+              <div class="mini-card"><h4>日主の性質</h4><p id="dayMasterText"></p></div>
+              <div class="mini-card"><h4>主な通変星</h4><p id="mainGodText"></p></div>
+              <div class="mini-card"><h4>十二運の核</h4><p id="fortuneText"></p></div>
+              <div class="mini-card"><h4>しがらみから抜ける鍵</h4><p id="releaseText"></p></div>
+              <div class="mini-card"><h4>今の開運アクション</h4><p id="actionText"></p></div>
+              <div class="mini-card"><h4>向いている流れ</h4><p id="flowText"></p></div>
             </div>
 
             <h3 class="small-title" style="margin-top:16px;">運の流れ</h3>
             <div class="luck-grid">
-              <div class="mini-card">
-                <h4>大運</h4>
-                <p id="majorLuckText"></p>
-              </div>
-              <div class="mini-card">
-                <h4>今年の年運</h4>
-                <p id="yearLuckText"></p>
-              </div>
+              <div class="mini-card"><h4>大運</h4><p id="majorLuckText"></p></div>
+              <div class="mini-card"><h4>今年の年運</h4><p id="yearLuckText"></p></div>
             </div>
           </div>
 
@@ -520,10 +510,8 @@ input::placeholder, textarea::placeholder {
         <div class="note-box">
           <h3 class="section-title" style="font-size:20px; margin-bottom:10px;">設置メモ</h3>
           <div class="result-text">
-背景画像は <span class="mono">images/tree-phoenix.png</span> に置いてください。
-同じ階層なら CSS の <span class="mono">url("images/tree-phoenix.png")</span> を <span class="mono">url("tree-phoenix.png")</span> に変更すればOKです。
-
-有料導線URLは <span class="mono">PREMIUM_URL</span>、ホームページは <span class="mono">HOMEPAGE_URL</span>、Instagramは <span class="mono">INSTAGRAM_URL</span> をあなたのURLに差し替えてください。<br><br>GitHub Pagesで公開する場合は、このHTMLを <span class="mono">index.html</span> という名前で保存してアップロードすれば使えます。
+背景画像は <span class="mono">画像.png</span> を使っています。<br>
+有料導線URLは <span class="mono">PREMIUM_URL</span>、ホームページは <span class="mono">HOMEPAGE_URL</span>、Instagramは <span class="mono">INSTAGRAM_URL</span> をあなたのURLに差し替えてください。
           </div>
         </div>
       </section>
@@ -536,34 +524,23 @@ input::placeholder, textarea::placeholder {
   </div>
 
   <script>
-    const PREMIUM_URL = "https://example.com/more-fortune"; // ← 有料鑑定ページURLに変更
-    const HOMEPAGE_URL = "https://example.com"; // ← あなたのホームページURLに変更
-    const INSTAGRAM_URL = "https://www.instagram.com/your_account/"; // ← あなたのInstagram URLに変更
+    const PREMIUM_URL = "https://example.com/more-fortune";
+    const HOMEPAGE_URL = "https://example.com";
+    const INSTAGRAM_URL = "https://www.instagram.com/your_account/";
 
     const heavenlyStems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
     const earthlyBranches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
-    const fiveElements = ["木","火","土","金","水"];
     const yinYang = { "甲":"陽","乙":"陰","丙":"陽","丁":"陰","戊":"陽","己":"陰","庚":"陽","辛":"陰","壬":"陽","癸":"陰" };
     const stemElement = { "甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水" };
     const branchElement = { "子":"水","丑":"土","寅":"木","卯":"木","辰":"土","巳":"火","午":"火","未":"土","申":"金","酉":"金","戌":"土","亥":"水" };
+
     const hiddenStems = {
-      "子":["癸"],
-      "丑":["己","癸","辛"],
-      "寅":["甲","丙","戊"],
-      "卯":["乙"],
-      "辰":["戊","乙","癸"],
-      "巳":["丙","戊","庚"],
-      "午":["丁","己"],
-      "未":["己","丁","乙"],
-      "申":["庚","壬","戊"],
-      "酉":["辛"],
-      "戌":["戊","辛","丁"],
-      "亥":["壬","甲"]
+      "子":["癸"], "丑":["己","癸","辛"], "寅":["甲","丙","戊"], "卯":["乙"],
+      "辰":["戊","乙","癸"], "巳":["丙","戊","庚"], "午":["丁","己"], "未":["己","丁","乙"],
+      "申":["庚","壬","戊"], "酉":["辛"], "戌":["戊","辛","丁"], "亥":["壬","甲"]
     };
 
-    const monthBranchBySolar = ["寅","卯","辰","巳","午","未","申","酉","戌","亥","子","丑"];
     const monthBoundary = [4,6,6,5,6,7,8,8,8,8,7,7];
-
     const twelveFortunesOrder = ["長生","沐浴","冠帯","建禄","帝旺","衰","病","死","墓","絶","胎","養"];
     const fortuneStartBranch = {
       "甲":"亥","乙":"午","丙":"寅","丁":"酉","戊":"寅","己":"酉","庚":"巳","辛":"子","壬":"申","癸":"卯"
@@ -667,9 +644,8 @@ input::placeholder, textarea::placeholder {
       const y = date.getFullYear();
       const m = date.getMonth() + 1;
       const d = date.getDate();
-      const springStartDay = 4;
       let adjustedYear = y;
-      if (m < 2 || (m === 2 && d < springStartDay)) adjustedYear = y - 1;
+      if (m < 2 || (m === 2 && d < 4)) adjustedYear = y - 1;
       const stem = heavenlyStems[(adjustedYear - 4) % 10];
       const branch = earthlyBranches[(adjustedYear - 4) % 12];
       return { stem, branch, text: stem + branch };
@@ -687,13 +663,7 @@ input::placeholder, textarea::placeholder {
     function getMonthPillar(date, yearStem) {
       const branch = getMonthBranch(date);
       const yearStemIndex = stemIndex(yearStem);
-      const monthStemStartMap = {
-        0:2, 5:2,
-        1:4, 6:4,
-        2:6, 7:6,
-        3:8, 8:8,
-        4:0, 9:0
-      };
+      const monthStemStartMap = { 0:2, 5:2, 1:4, 6:4, 2:6, 7:6, 3:8, 8:8, 4:0, 9:0 };
       const startStemIndex = monthStemStartMap[yearStemIndex];
       const monthOrder = (branchIndex(branch) - 2 + 12) % 12;
       const stem = heavenlyStems[(startStemIndex + monthOrder) % 10];
@@ -712,11 +682,10 @@ input::placeholder, textarea::placeholder {
       const m = date.getMonth() + 1;
       const d = date.getDate();
       const jd = julianDay(y, m, d);
-      const base = 50;
-      const index60 = (jd + base) % 60;
+      const index60 = (jd + 50) % 60;
       const stem = heavenlyStems[index60 % 10];
       const branch = earthlyBranches[index60 % 12];
-      return { stem, branch, text: stem + branch, index60 };
+      return { stem, branch, text: stem + branch };
     }
 
     function getHourBranchFromTime(timeStr) {
@@ -730,13 +699,7 @@ input::placeholder, textarea::placeholder {
       if (unknown) return { stem:"-", branch:"-", text:"不明" };
       const branch = getHourBranchFromTime(timeStr);
       const dayStemIndex = stemIndex(dayStem);
-      const startStemMap = {
-        0:0, 5:0,
-        1:2, 6:2,
-        2:4, 7:4,
-        3:6, 8:6,
-        4:8, 9:8
-      };
+      const startStemMap = { 0:0, 5:0, 1:2, 6:2, 2:4, 7:4, 3:6, 8:6, 4:8, 9:8 };
       const start = startStemMap[dayStemIndex];
       const stem = heavenlyStems[(start + branchIndex(branch)) % 10];
       return { stem, branch, text: stem + branch };
@@ -775,9 +738,9 @@ input::placeholder, textarea::placeholder {
       const startIdx = branchIndex(start);
       const currentIdx = branchIndex(branch);
       const isYang = yinYang[dayStem] === "陽";
-      let diff;
-      if (isYang) diff = (currentIdx - startIdx + 12) % 12;
-      else diff = (startIdx - currentIdx + 12) % 12;
+      let diff = isYang
+        ? (currentIdx - startIdx + 12) % 12
+        : (startIdx - currentIdx + 12) % 12;
       return twelveFortunesOrder[diff];
     }
 
@@ -786,8 +749,7 @@ input::placeholder, textarea::placeholder {
       pillars.forEach(p => {
         if (p.stem && p.stem !== "-") counts[stemElement[p.stem]] += 1;
         if (p.branch && p.branch !== "-") counts[branchElement[p.branch]] += 1;
-        const hs = getHiddenStem(p.branch);
-        hs.forEach(s => counts[stemElement[s]] += 0.5);
+        getHiddenStem(p.branch).forEach(s => counts[stemElement[s]] += 0.5);
       });
       return counts;
     }
@@ -804,15 +766,13 @@ input::placeholder, textarea::placeholder {
     }
 
     function getCurrentYearPillar() {
-      const now = new Date();
-      return getYearPillar(now);
+      return getYearPillar(new Date());
     }
 
     function getMajorLuckStartAge(monthBranch, gender, yearStem) {
-      const yinyang = yinYang[yearStem];
-      const forward = (gender === "男性" && yinyang === "陽") || (gender === "女性" && yinyang === "陰");
-      const branchNo = branchIndex(monthBranch);
-      const base = 2 + (branchNo % 6);
+      const yy = yinYang[yearStem];
+      const forward = (gender === "男性" && yy === "陽") || (gender === "女性" && yy === "陰");
+      const base = 2 + (branchIndex(monthBranch) % 6);
       return { startAge: base, forward };
     }
 
@@ -822,10 +782,12 @@ input::placeholder, textarea::placeholder {
       const step = Math.max(0, Math.floor((currentAge - startData.startAge) / 10));
       const stemIdx = (stemIndex(monthPillar.stem) + dir * (step + 1) + 100) % 10;
       const branchIdx = (branchIndex(monthPillar.branch) + dir * (step + 1) + 120) % 12;
-      const current = heavenlyStems[stemIdx] + earthlyBranches[branchIdx];
-      const ageStart = startData.startAge + step * 10;
-      const ageEnd = ageStart + 9;
-      return { current, ageStart, ageEnd, forward: startData.forward };
+      return {
+        current: heavenlyStems[stemIdx] + earthlyBranches[branchIdx],
+        ageStart: startData.startAge + step * 10,
+        ageEnd: startData.startAge + step * 10 + 9,
+        forward: startData.forward
+      };
     }
 
     function getAge(birthdate) {
@@ -856,13 +818,17 @@ input::placeholder, textarea::placeholder {
     }
 
     function getMainGod(dayStem, monthStem, yearStem, timeStem) {
-      const gods = [getTenGod(dayStem, monthStem), getTenGod(dayStem, yearStem), getTenGod(dayStem, timeStem)].filter(Boolean);
+      const gods = [
+        getTenGod(dayStem, monthStem),
+        getTenGod(dayStem, yearStem),
+        getTenGod(dayStem, timeStem)
+      ].filter(Boolean);
       const count = {};
       gods.forEach(g => count[g] = (count[g] || 0) + 1);
-      return Object.entries(count).sort((a,b) => b[1]-a[1])[0]?.[0] || gods[0] || "比肩";
+      return Object.entries(count).sort((a,b) => b[1] - a[1])[0]?.[0] || gods[0] || "比肩";
     }
 
-    function getYearLuck(dayStem, birthYear) {
+    function getYearLuck(dayStem) {
       const yearPillar = getCurrentYearPillar();
       const god = getTenGod(dayStem, yearPillar.stem);
       const year = new Date().getFullYear();
@@ -879,20 +845,23 @@ input::placeholder, textarea::placeholder {
       const monthPillar = getMonthPillar(birth, yearPillar.stem);
       const dayPillar = getDayPillar(birth);
       const timePillar = getHourPillar(dayPillar.stem, birthtime, timeUnknown);
+
       const pillars = [yearPillar, monthPillar, dayPillar, timePillar];
-      const elementCounts = countElements(pillars);
-      const balance = summarizeBalance(elementCounts);
+      const balance = summarizeBalance(countElements(pillars));
       const age = getAge(birthdate);
       const majorLuck = getMajorLuck(monthPillar, gender, yearPillar.stem, age);
-      const yearLuck = getYearLuck(dayPillar.stem, birth.getFullYear());
+      const yearLuck = getYearLuck(dayPillar.stem);
       const mainGod = getMainGod(dayPillar.stem, monthPillar.stem, yearPillar.stem, timePillar.stem);
+
       const lifePath = reduceNumerology(digitSum(birthdate));
       const color = colorProfiles[(lifePath + birth.getMonth() + 1 + birth.getDate() + birth.getFullYear()) % colorProfiles.length];
       const lifeLine = lifeLines[(lifePath + birth.getMonth() + 1 + birth.getDate()) % lifeLines.length];
+
       const dayMaster = `${dayPillar.stem}（${stemElement[dayPillar.stem]}・${yinYang[dayPillar.stem]}）`;
       const yearGod = getTenGod(dayPillar.stem, yearPillar.stem);
       const monthGod = getTenGod(dayPillar.stem, monthPillar.stem);
       const timeGod = timePillar.stem === "-" ? "-" : getTenGod(dayPillar.stem, timePillar.stem);
+
       const yearFortune = getTwelveFortune(dayPillar.stem, yearPillar.branch);
       const monthFortune = getTwelveFortune(dayPillar.stem, monthPillar.branch);
       const dayFortune = getTwelveFortune(dayPillar.stem, dayPillar.branch);
@@ -922,12 +891,7 @@ input::placeholder, textarea::placeholder {
         balance,
         flow: flowMessage(balance.strongest, balance.weakest),
         premium,
-        pillars: {
-          year: yearPillar,
-          month: monthPillar,
-          day: dayPillar,
-          time: timePillar
-        },
+        pillars: { year: yearPillar, month: monthPillar, day: dayPillar, time: timePillar },
         meta: {
           year: `蔵干 ${getHiddenStem(yearPillar.branch).join("・")}\n通変星 ${yearGod}\n十二運 ${yearFortune}`,
           month: `蔵干 ${getHiddenStem(monthPillar.branch).join("・")}\n通変星 ${monthGod}\n十二運 ${monthFortune}`,
@@ -959,7 +923,7 @@ input::placeholder, textarea::placeholder {
     const tagLifePath = document.getElementById("tagLifePath");
     const tagDominant = document.getElementById("tagDominant");
     const tagMainGod = document.getElementById("tagMainGod");
-    const resultTitle = document.getElementById("resultTitle");
+    const resultTitleEl = document.getElementById("resultTitle");
     const resultText = document.getElementById("resultText");
 
     const yearPillarEl = document.getElementById("yearPillar");
@@ -1017,13 +981,14 @@ input::placeholder, textarea::placeholder {
       tagDominant.textContent = `五行 ${reading.balance.strongest}優勢`;
       tagMainGod.textContent = `通変星 ${reading.mainGod}`;
 
-      resultTitle.textContent = reading.resultTitle;
+      resultTitleEl.textContent = reading.resultTitle;
       resultText.textContent = reading.body;
 
       yearPillarEl.textContent = reading.pillars.year.text;
       monthPillarEl.textContent = reading.pillars.month.text;
       dayPillarEl.textContent = reading.pillars.day.text;
       timePillarEl.textContent = reading.pillars.time.text;
+
       yearMeta.textContent = reading.meta.year;
       monthMeta.textContent = reading.meta.month;
       dayMeta.textContent = reading.meta.day;
@@ -1062,22 +1027,22 @@ input::placeholder, textarea::placeholder {
 
     copyResultBtn.addEventListener("click", async () => {
       const text = [
-        resultTitle.textContent,
+        resultTitleEl.textContent,
         resultText.textContent,
-        `年柱：\${yearPillarEl.textContent}`,
-        `月柱：\${monthPillarEl.textContent}`,
-        `日柱：\${dayPillarEl.textContent}`,
-        `時柱：\${timePillarEl.textContent}`,
-        `生命線：\${lifelineText.textContent}`,
-        `中心カラー：\${colorText.textContent.replace(/\\s+/g, " ").trim()}`,
-        `五行バランス：\${balanceText.textContent}`,
-        `日主：\${dayMasterText.textContent}`,
-        `主な通変星：\${mainGodText.textContent}`,
-        `十二運：\${fortuneText.textContent}`,
-        `大運：\${majorLuckText.textContent}`,
-        `年運：\${yearLuckText.textContent}`,
-        `開運アクション：\${actionText.textContent}`
-      ].join("\\n\\n");
+        `年柱：${yearPillarEl.textContent}`,
+        `月柱：${monthPillarEl.textContent}`,
+        `日柱：${dayPillarEl.textContent}`,
+        `時柱：${timePillarEl.textContent}`,
+        `生命線：${lifelineText.textContent}`,
+        `中心カラー：${colorText.textContent.replace(/\s+/g, " ").trim()}`,
+        `五行バランス：${balanceText.textContent}`,
+        `日主：${dayMasterText.textContent}`,
+        `主な通変星：${mainGodText.textContent}`,
+        `十二運：${fortuneText.textContent}`,
+        `大運：${majorLuckText.textContent}`,
+        `年運：${yearLuckText.textContent}`,
+        `開運アクション：${actionText.textContent}`
+      ].join("\n\n");
 
       try {
         if (navigator.clipboard && window.isSecureContext) {
