@@ -4,276 +4,553 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MOA 占いアプリ</title>
-
 <style>
 *{box-sizing:border-box;}
-
 body{
 margin:0;
 font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-background:#f9f9fb;
-color:#2c1b26;
+background:#f7f7f9;
+color:#2e1d28;
 }
-
 .wrap{
-max-width:1100px;
-margin:auto;
-padding:20px;
+max-width:1140px;
+margin:0 auto;
+padding:24px 16px 40px;
 }
-
-h1{
+.hero{
+background:#fff;
+border:1px solid #ece7eb;
+border-radius:24px;
+padding:32px 24px;
+box-shadow:0 12px 30px rgba(0,0,0,.05);
+margin-bottom:18px;
 text-align:center;
-margin-bottom:20px;
 }
-
+.badge{
+display:inline-block;
+padding:8px 14px;
+border-radius:999px;
+background:#fff4cf;
+color:#8a6400;
+font-size:12px;
+font-weight:700;
+letter-spacing:.08em;
+margin-bottom:12px;
+}
+h1{
+margin:0 0 10px;
+font-size:clamp(30px,4vw,44px);
+color:#472634;
+}
+.lead{
+margin:0 auto;
+max-width:760px;
+line-height:1.9;
+color:#6a5460;
+font-size:15px;
+}
 .tabs{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
-margin-bottom:20px;
+gap:12px;
+margin:18px 0;
 }
-
 .tab-btn{
-padding:15px;
 border:none;
-border-radius:14px;
-font-weight:bold;
+border-radius:18px;
+padding:16px;
+font-size:16px;
+font-weight:700;
 cursor:pointer;
+transition:.2s ease;
 }
-
-.active{
-background:linear-gradient(135deg,#f5e7ae,#d8ae35);
-color:#3a1f2d;
+.tab-btn.active{
+background:linear-gradient(135deg,#f7e8b2,#ddb14a);
+color:#4a2b35;
+box-shadow:0 10px 22px rgba(221,177,74,.25);
 }
-
-.inactive{
+.tab-btn.inactive{
 background:#fff;
-border:1px solid #ddd;
+color:#6f5662;
+border:1px solid #e7dfe4;
 }
-
 .panel{display:none;}
 .panel.active{display:block;}
-
 .layout{
 display:grid;
-grid-template-columns:1fr 1fr;
-gap:24px;
+grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);
+gap:18px;
+align-items:start;
 }
-
 .card{
 background:#fff;
 padding:24px;
-border-radius:20px;
-border:1px solid #eee;
-box-shadow:0 10px 30px rgba(0,0,0,0.05);
+border-radius:24px;
+border:1px solid #ece7eb;
+box-shadow:0 12px 30px rgba(0,0,0,.05);
 }
-
+.sticky{position:sticky;top:16px;}
 .section-title{
-font-size:20px;
-margin-bottom:12px;
-color:#3a1f2d;
+margin:0 0 10px;
+font-size:24px;
+color:#472634;
 }
-
+.sub{
+margin:0 0 16px;
+line-height:1.85;
+font-size:14px;
+color:#705a66;
+}
 label{
 display:block;
-margin-top:10px;
-font-weight:bold;
+margin-bottom:8px;
+font-size:14px;
+font-weight:700;
+color:#533241;
 }
-
-input,textarea,select{
-width:100%;
-padding:12px;
-margin-top:5px;
-border-radius:10px;
-border:1px solid #ddd;
-}
-
-button{
+input,select,textarea{
 width:100%;
 padding:14px;
-margin-top:15px;
+border-radius:14px;
+border:1px solid #ddd4da;
+background:#fff;
+font-size:16px;
+color:#2e1d28;
+outline:none;
+}
+input:focus,select:focus,textarea:focus{
+border-color:#ddb14a;
+box-shadow:0 0 0 3px rgba(221,177,74,.12);
+}
+textarea{resize:vertical;min-height:120px;}
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:12px;
+}
+.row.one{grid-template-columns:1fr;}
+.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:16px;
+}
+button,.button-link{
 border:none;
-border-radius:12px;
-font-weight:bold;
+border-radius:16px;
+padding:14px 18px;
+min-height:52px;
+font-size:16px;
+font-weight:700;
 cursor:pointer;
+text-decoration:none;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+transition:.2s ease;
 }
-
+button:hover,.button-link:hover{transform:translateY(-1px);}
 .btn-main{
-background:linear-gradient(135deg,#f5e7ae,#d8ae35);
+background:linear-gradient(135deg,#f7e8b2,#ddb14a);
+color:#4a2b35;
+box-shadow:0 8px 18px rgba(221,177,74,.22);
 }
-
 .btn-sub{
 background:#fff;
-border:1px solid #ddd;
+color:#6f5662;
+border:1px solid #ddd4da;
 }
-
-.result{
-margin-top:20px;
-padding:15px;
-border-radius:15px;
-background:#fff;
-border:1px solid #eee;
-line-height:1.8;
+.result-box{
+margin-top:16px;
+padding:18px;
+border-radius:18px;
+background:#fffdf8;
+border:1px solid #eee4c8;
+line-height:1.9;
 white-space:pre-line;
+color:#35222d;
 }
-
+.hidden{display:none;}
+.pill{
+display:inline-block;
+padding:7px 12px;
+border-radius:999px;
+background:#f9f2d9;
+color:#8a6400;
+font-size:12px;
+font-weight:700;
+margin-bottom:12px;
+}
 .price-box{
-margin-top:20px;
+margin-top:16px;
 padding:20px;
-border-radius:15px;
-background:#fff8dc;
+border-radius:20px;
+background:linear-gradient(135deg,#fff8de,#fff);
+border:1px solid #ecd998;
 }
-
+.price-title{
+font-size:14px;
+color:#7e5e1d;
+font-weight:700;
+}
 .price{
-font-size:28px;
-font-weight:bold;
-margin:10px 0;
+font-size:34px;
+font-weight:800;
+color:#8a6400;
+margin:8px 0;
 }
-
-@media(max-width:800px){
-.layout{grid-template-columns:1fr;}
+.list{
+margin:14px 0 0;
+padding-left:18px;
+line-height:1.9;
+color:#654d59;
+}
+.notice{
+margin-top:14px;
+padding:14px;
+border-radius:16px;
+background:#faf6f8;
+border:1px solid #ece3e8;
+line-height:1.8;
+font-size:13px;
+color:#7a6570;
+}
+.cta{
+display:grid;
+gap:10px;
+margin-top:16px;
+}
+.footer{
+text-align:center;
+margin-top:18px;
+color:#8a7480;
+font-size:13px;
+line-height:1.8;
+}
+@media (max-width:900px){
+.layout,.row,.actions,.tabs{grid-template-columns:1fr;}
+.sticky{position:static;}
 }
 </style>
-
 </head>
-
 <body>
 <div class="wrap">
+  <section class="hero">
+    <div class="badge">無料版 + 有料版 + 易</div>
+    <h1>MOA 占いアプリ</h1>
+    <p class="lead">無料版では気軽に運勢と易の答えを確認し、有料版ではより詳しいメッセージと個別鑑定への導線を表示できる構成です。白を基調に、見やすく上品な画面にまとめています。</p>
+  </section>
 
-<h1>MOA 占いアプリ</h1>
+  <div class="tabs">
+    <button id="freeTabBtn" class="tab-btn active" type="button">無料版アプリ</button>
+    <button id="paidTabBtn" class="tab-btn inactive" type="button">有料版アプリ</button>
+  </div>
 
-<div class="tabs">
-<button id="freeBtn" class="tab-btn active">無料版</button>
-<button id="paidBtn" class="tab-btn inactive">有料版</button>
-</div>
+  <section id="freePanel" class="panel active">
+    <div class="layout">
+      <div class="card">
+        <div class="pill">FREE</div>
+        <h2 class="section-title">無料診断</h2>
+        <p class="sub">名前と生年月日から、今の流れ・開運ヒント・易の答えを表示します。無料版は入口として使いやすく、有料版への導線づくりに向いています。</p>
 
-<div id="freePanel" class="panel active">
-<div class="layout">
+        <div class="row">
+          <div>
+            <label for="freeName">お名前</label>
+            <input id="freeName" type="text" placeholder="例：MOA">
+          </div>
+          <div>
+            <label for="freeBirth">生年月日</label>
+            <input id="freeBirth" type="date">
+          </div>
+        </div>
 
-<div class="card">
-<h2 class="section-title">無料診断</h2>
+        <div class="row one">
+          <div>
+            <label for="freeTheme">知りたいこと</label>
+            <select id="freeTheme">
+              <option value="総合運">総合運</option>
+              <option value="恋愛運">恋愛運</option>
+              <option value="仕事運">仕事運</option>
+              <option value="金運">金運</option>
+            </select>
+          </div>
+        </div>
 
-<label>名前</label>
-<input id="freeName">
+        <div class="actions">
+          <button id="freeDiagnoseBtn" class="btn-main" type="button">無料で診断する</button>
+          <button id="freeResetBtn" class="btn-sub" type="button">リセット</button>
+        </div>
 
-<label>生年月日</label>
-<input id="freeBirth" type="date">
+        <div id="freeResultBox" class="result-box hidden"></div>
+      </div>
 
-<button class="btn-main" onclick="freeCheck()">診断する</button>
-<button class="btn-sub" onclick="freeReset()">リセット</button>
+      <div class="card sticky">
+        <div class="pill">FREE MENU</div>
+        <h2 class="section-title">無料版でわかること</h2>
+        <ul class="list">
+          <li>今の運勢の流れ</li>
+          <li>すぐ使える開運ヒント</li>
+          <li>易から見た今の答え</li>
+          <li>有料版への自然な導線</li>
+        </ul>
+        <div class="notice">無料版は、気軽に試してもらう入口に最適です。結果の最後に有料版へつながる一文を入れると、申し込み導線が自然になります。</div>
+      </div>
+    </div>
+  </section>
 
-<div id="freeResult" class="result"></div>
+  <section id="paidPanel" class="panel">
+    <div class="layout">
+      <div class="card">
+        <div class="pill">PAID</div>
+        <h2 class="section-title">有料版鑑定</h2>
+        <p class="sub">有料版は出生時間と悩みまで入れて、より深いメッセージと易の答えを表示します。正式申込み前の体験画面としても使えます。</p>
 
-</div>
+        <div class="row">
+          <div>
+            <label for="paidName">お名前</label>
+            <input id="paidName" type="text" placeholder="例：MOA">
+          </div>
+          <div>
+            <label for="paidBirth">生年月日</label>
+            <input id="paidBirth" type="date">
+          </div>
+        </div>
 
-<div class="card">
-<h2 class="section-title">無料でわかること</h2>
-<ul>
-<li>簡単な運勢</li>
-<li>今の流れ</li>
-<li>開運ヒント</li>
-</ul>
-</div>
+        <div class="row">
+          <div>
+            <label for="paidTime">出生時間</label>
+            <input id="paidTime" type="time" value="12:00">
+          </div>
+          <div>
+            <label for="paidTheme">知りたいこと</label>
+            <select id="paidTheme">
+              <option value="総合運">総合運</option>
+              <option value="恋愛運">恋愛運</option>
+              <option value="仕事運">仕事運</option>
+              <option value="金運">金運</option>
+              <option value="人間関係">人間関係</option>
+            </select>
+          </div>
+        </div>
 
-</div>
-</div>
+        <div class="row one">
+          <div>
+            <label for="paidWorry">悩み・相談内容</label>
+            <textarea id="paidWorry" placeholder="例：仕事の方向性、恋愛の流れ、転機の時期を知りたい"></textarea>
+          </div>
+        </div>
 
-<div id="paidPanel" class="panel">
-<div class="layout">
+        <div class="actions">
+          <button id="paidDiagnoseBtn" class="btn-main" type="button">有料版を体験する</button>
+          <button id="paidResetBtn" class="btn-sub" type="button">リセット</button>
+        </div>
 
-<div class="card">
-<h2 class="section-title">有料鑑定</h2>
+        <div id="paidResultBox" class="result-box hidden"></div>
+      </div>
 
-<label>名前</label>
-<input id="paidName">
+      <div class="card sticky">
+        <div class="pill">PAID MENU</div>
+        <h2 class="section-title">有料版メニュー</h2>
+        <div class="price-box">
+          <div class="price-title">詳細鑑定</div>
+          <div class="price">¥4,980</div>
+          <div>まずは申し込みされやすい価格帯にしています。あとで自由に変更できます。</div>
+        </div>
+        <ul class="list">
+          <li>詳しい運勢メッセージ</li>
+          <li>恋愛・仕事・金運・人間関係の深掘り</li>
+          <li>今の停滞原因と流れの変え方</li>
+          <li>あなた専用の開運アクション</li>
+          <li>易から見た今の答え</li>
+        </ul>
+        <div class="cta">
+          <a id="paidApplyLink" class="button-link btn-main" href="#" target="_blank" rel="noopener noreferrer">今すぐ詳細鑑定を申し込む</a>
+          <a id="instagramLink" class="button-link btn-sub" href="#" target="_blank" rel="noopener noreferrer">Instagramを見る</a>
+          <a id="homepageLink" class="button-link btn-sub" href="#" target="_blank" rel="noopener noreferrer">ホームページを見る</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<label>生年月日</label>
-<input id="paidBirth" type="date">
+  <div class="card" style="margin-top:18px;">
+    <div class="pill">SALES TEXT</div>
+    <h2 class="section-title">有料版のおすすめ文言</h2>
+    <div class="result-box" style="margin-top:0;">
+無料診断の結果を見て、もっと詳しく知りたくなった方へ。
 
-<label>悩み</label>
-<textarea id="paidWorry"></textarea>
+有料版では、今の運気だけでなく、恋愛・仕事・金運・人間関係の流れまで、あなた専用の内容で詳しく読み解きます。
 
-<button class="btn-main" onclick="paidCheck()">鑑定する</button>
-<button class="btn-sub" onclick="paidReset()">リセット</button>
+こんな方におすすめです。
+・今の迷いを整理したい
+・これからの流れを知って安心したい
+・自分に合う開運行動を知りたい
+・本当に必要なメッセージを受け取りたい
 
-<div id="paidResult" class="result"></div>
+表面的な結果だけではなく、今のあなたに必要な答えを、わかりやすく丁寧にお届けします。
+    </div>
+  </div>
 
-</div>
-
-<div class="card">
-<h2 class="section-title">有料版</h2>
-
-<div class="price-box">
-<div>詳細鑑定</div>
-<div class="price">¥4,980</div>
-</div>
-
-<ul>
-<li>詳しい運勢</li>
-<li>恋愛・仕事・金運</li>
-<li>開運方法</li>
-</ul>
-
-</div>
-
-</div>
-</div>
-
+  <div class="footer">
+    © MOA Fortune App<br>
+    無料版アプリと有料版アプリを1つのHTMLで切り替えられる形です。
+  </div>
 </div>
 
 <script>
+const PAID_URL = "https://example.com";
+const INSTAGRAM_URL = "https://www.instagram.com/";
+const HOMEPAGE_URL = "https://example.com";
 
-const freeBtn=document.getElementById("freeBtn");
-const paidBtn=document.getElementById("paidBtn");
-const freePanel=document.getElementById("freePanel");
-const paidPanel=document.getElementById("paidPanel");
+const ekiList = [
+  "大吉：今すぐ動いて良い流れです。自信を持って進んでください。",
+  "中吉：慎重に進めば良い結果につながります。焦らないことが大切です。",
+  "吉：小さく行動することで運が開きます。まず一歩が鍵です。",
+  "末吉：タイミングを見ながら進めると安定しやすいです。",
+  "凶：今は動くより準備の時です。流れを整えることが先です。",
+  "大凶：方向転換や見直しが必要なサインです。無理をしないでください。"
+];
 
-freeBtn.onclick=()=>{
-freePanel.classList.add("active");
-paidPanel.classList.remove("active");
-freeBtn.classList.add("active");
-paidBtn.classList.remove("active");
-};
+const freeTabBtn = document.getElementById("freeTabBtn");
+const paidTabBtn = document.getElementById("paidTabBtn");
+const freePanel = document.getElementById("freePanel");
+const paidPanel = document.getElementById("paidPanel");
 
-paidBtn.onclick=()=>{
-paidPanel.classList.add("active");
-freePanel.classList.remove("active");
-paidBtn.classList.add("active");
-freeBtn.classList.remove("active");
-};
+const paidApplyLink = document.getElementById("paidApplyLink");
+const instagramLink = document.getElementById("instagramLink");
+const homepageLink = document.getElementById("homepageLink");
 
-function freeCheck(){
-let name=document.getElementById("freeName").value||"あなた";
-let birth=document.getElementById("freeBirth").value;
-if(!birth){alert("入力して下さい");return;}
+paidApplyLink.href = PAID_URL;
+instagramLink.href = INSTAGRAM_URL;
+homepageLink.href = HOMEPAGE_URL;
 
-document.getElementById("freeResult").textContent=
-name+"さん\n運気が上昇しています。\n直感を信じて行動してください。";
+function showFreePanel() {
+  freePanel.classList.add("active");
+  paidPanel.classList.remove("active");
+  freeTabBtn.classList.add("active");
+  freeTabBtn.classList.remove("inactive");
+  paidTabBtn.classList.add("inactive");
+  paidTabBtn.classList.remove("active");
 }
 
-function paidCheck(){
-let name=document.getElementById("paidName").value||"あなた";
-let birth=document.getElementById("paidBirth").value;
-if(!birth){alert("入力して下さい");return;}
-
-document.getElementById("paidResult").textContent=
-name+"さん\n今は人生の転機です。\nあなたに必要な流れを整えることで未来が変わります。";
+function showPaidPanel() {
+  paidPanel.classList.add("active");
+  freePanel.classList.remove("active");
+  paidTabBtn.classList.add("active");
+  paidTabBtn.classList.remove("inactive");
+  freeTabBtn.classList.add("inactive");
+  freeTabBtn.classList.remove("active");
 }
 
-function freeReset(){
-document.getElementById("freeName").value="";
-document.getElementById("freeBirth").value="";
-document.getElementById("freeResult").textContent="";
+freeTabBtn.addEventListener("click", showFreePanel);
+paidTabBtn.addEventListener("click", showPaidPanel);
+
+function sumDigits(text) {
+  return String(text).replace(/[^0-9]/g, "").split("").reduce((sum, n) => sum + Number(n), 0);
 }
 
-function paidReset(){
-document.getElementById("paidName").value="";
-document.getElementById("paidBirth").value="";
-document.getElementById("paidWorry").value="";
-document.getElementById("paidResult").textContent="";
+function pickEki(seed) {
+  return ekiList[seed % ekiList.length];
 }
 
+function simpleFreeMessage(name, birth, theme) {
+  const seed = sumDigits(birth);
+  const patterns = [
+    "今は流れを整えることで運気が動きやすい時です。",
+    "今のあなたには、本来の魅力を出す流れが来ています。",
+    "小さな一歩を重ねるほど運が味方しやすい時期です。",
+    "迷いよりも直感を大切にすると道が開きやすいです。"
+  ];
+  const actions = [
+    "朝に今日やることを1つ決める",
+    "心が軽くなる行動を優先する",
+    "人と比べず自分のペースを守る",
+    "不要なものを1つ手放す"
+  ];
+  const eki = pickEki(seed);
+  return `${name}さんの無料診断結果\n\n${theme}を見ると、${patterns[seed % patterns.length]}\n\n開運ヒント：${actions[seed % actions.length]}\n\n易の答え：${eki}\n\nさらに詳しい流れや個別のアドバイスは、有料版でご案内できます。`;
+}
+
+function simplePaidMessage(name, birth, time, theme, worry) {
+  const seed = sumDigits(birth + time);
+  const detailA = [
+    "今は守りより整え直しが大切な時期です。",
+    "これからの流れは、人との縁で大きく動きやすいです。",
+    "本来の魅力を前に出すほど結果につながりやすいです。",
+    "焦りを手放すことで良い選択が見えやすくなります。"
+  ];
+  const detailB = [
+    "恋愛は自然体が鍵です。",
+    "仕事は継続が評価につながります。",
+    "金運は整理整頓で流れが変わります。",
+    "人間関係は距離感の見直しが大切です。"
+  ];
+  const action = [
+    "今日ひとつだけ前に進める",
+    "今の悩みを書き出して整理する",
+    "本音でYESと言える選択を増やす",
+    "生活リズムを整えて運の土台を作る"
+  ];
+  const eki = pickEki(seed);
+  const worryText = worry.trim()
+    ? `相談内容「${worry.trim()}」については、今すぐ結論を急ぐより、まず流れを整えることが近道です。`
+    : "今は流れに逆らわず、自分に合う動き方を選ぶことが大切です。";
+  return `${name}さんの有料版体験結果\n\n${theme}を見ると、${detailA[seed % detailA.length]} ${detailB[seed % detailB.length]}\n\n${worryText}\n\nおすすめ開運アクション：${action[seed % action.length]}\n\n易の答え：${eki}\n\nこの先の詳しい流れ、あなたに必要な選択、今後の動き方までしっかり知りたい方は、詳細鑑定へお進みください。`;
+}
+
+const freeName = document.getElementById("freeName");
+const freeBirth = document.getElementById("freeBirth");
+const freeTheme = document.getElementById("freeTheme");
+const freeResultBox = document.getElementById("freeResultBox");
+const freeDiagnoseBtn = document.getElementById("freeDiagnoseBtn");
+const freeResetBtn = document.getElementById("freeResetBtn");
+
+freeDiagnoseBtn.addEventListener("click", () => {
+  if (!freeBirth.value) {
+    alert("生年月日を入力してください。");
+    return;
+  }
+  const name = freeName.value.trim() || "あなた";
+  freeResultBox.textContent = simpleFreeMessage(name, freeBirth.value, freeTheme.value);
+  freeResultBox.classList.remove("hidden");
+});
+
+freeResetBtn.addEventListener("click", () => {
+  freeName.value = "";
+  freeBirth.value = "";
+  freeTheme.value = "総合運";
+  freeResultBox.classList.add("hidden");
+  freeResultBox.textContent = "";
+});
+
+const paidName = document.getElementById("paidName");
+const paidBirth = document.getElementById("paidBirth");
+const paidTime = document.getElementById("paidTime");
+const paidTheme = document.getElementById("paidTheme");
+const paidWorry = document.getElementById("paidWorry");
+const paidResultBox = document.getElementById("paidResultBox");
+const paidDiagnoseBtn = document.getElementById("paidDiagnoseBtn");
+const paidResetBtn = document.getElementById("paidResetBtn");
+
+paidDiagnoseBtn.addEventListener("click", () => {
+  if (!paidBirth.value) {
+    alert("生年月日を入力してください。");
+    return;
+  }
+  const name = paidName.value.trim() || "あなた";
+  paidResultBox.textContent = simplePaidMessage(name, paidBirth.value, paidTime.value || "12:00", paidTheme.value, paidWorry.value);
+  paidResultBox.classList.remove("hidden");
+});
+
+paidResetBtn.addEventListener("click", () => {
+  paidName.value = "";
+  paidBirth.value = "";
+  paidTime.value = "12:00";
+  paidTheme.value = "総合運";
+  paidWorry.value = "";
+  paidResultBox.classList.add("hidden");
+  paidResultBox.textContent = "";
+});
 </script>
-
 </body>
 </html>
