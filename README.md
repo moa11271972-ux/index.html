@@ -2,42 +2,48 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>占い師専用アプリ 高級鑑定書版</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>占い師専用アプリ</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero no-print">
-      <h1>占い師専用アプリ 高級鑑定書版</h1>
-      <p>
-        通常鑑定・相性鑑定・顧客管理・予約台帳・売上管理に対応。<br>
-        お客様にそのまま渡せる上質な鑑定書レイアウトです。
-      </p>
-      <div class="badgeRow">
-        <span class="badge">通常鑑定</span>
-        <span class="badge">相性鑑定</span>
-        <span class="badge">四柱推命</span>
-        <span class="badge">易</span>
-        <span class="badge">ルーン</span>
-        <span class="badge">タロット</span>
-        <span class="badge">顧客管理</span>
-        <span class="badge">高級鑑定書</span>
+  <div class="appShell">
+    <header class="appHeader no-print">
+      <div class="appHeaderTop">
+        <div class="appLogo">✶</div>
+        <div class="appTitleArea">
+          <div class="appSub">FORTUNE APP</div>
+          <h1>占い師専用アプリ</h1>
+        </div>
+        <div class="appStatus">PRO</div>
       </div>
-    </section>
 
-    <section class="dashboard no-print">
-      <div class="statCard"><strong>全体売上合計</strong><div class="statValue money" id="totalSales">¥0</div></div>
-      <div class="statCard"><strong>今月売上</strong><div class="statValue money" id="currentMonthSales">¥0</div></div>
-      <div class="statCard"><strong>顧客数</strong><div class="statValue" id="totalCustomers">0</div></div>
-      <div class="statCard"><strong>鑑定履歴数</strong><div class="statValue" id="totalReadings">0</div></div>
-      <div class="statCard"><strong>今日の予約件数</strong><div class="statValue" id="todayReservations">0</div></div>
-      <div class="statCard"><strong>フォロー候補</strong><div class="statValue" id="followupCount">0</div></div>
-    </section>
+      <div class="appQuickStats">
+        <div class="miniStat">
+          <span>全体売上</span>
+          <strong id="totalSales">¥0</strong>
+        </div>
+        <div class="miniStat">
+          <span>今月売上</span>
+          <strong id="currentMonthSales">¥0</strong>
+        </div>
+        <div class="miniStat">
+          <span>顧客数</span>
+          <strong id="totalCustomers">0</strong>
+        </div>
+        <div class="miniStat">
+          <span>予約</span>
+          <strong id="todayReservations">0</strong>
+        </div>
+      </div>
+    </header>
 
-    <div class="layout">
-      <aside class="card leftCol no-print">
-        <h2>鑑定入力</h2>
+    <main class="mobileAppLayout">
+      <section class="appPanel inputPanel no-print">
+        <div class="panelHeader">
+          <h2>鑑定入力</h2>
+          <span class="panelBadge">入力</span>
+        </div>
 
         <div class="sectionTitle">鑑定モード</div>
         <div class="switchRow">
@@ -182,20 +188,20 @@
         <div class="toolGrid">
           <button type="button" class="subBtn" id="saveCustomerBtn">顧客を保存</button>
           <button type="button" class="subBtn" id="saveHistoryBtn">履歴に保存</button>
-          <button type="button" class="subBtn" id="saveReservationBtn">予約台帳に保存</button>
-          <button type="button" class="subBtn" id="printCustomerBtn">お客様控えを印刷</button>
+          <button type="button" class="subBtn" id="saveReservationBtn">予約保存</button>
+          <button type="button" class="subBtn" id="printCustomerBtn">お客様控え</button>
         </div>
 
         <div class="toolGrid">
-          <button type="button" class="subBtn" id="printInternalBtn">内部控えを印刷</button>
+          <button type="button" class="subBtn" id="printInternalBtn">内部控え</button>
           <button type="button" class="subBtn" id="backupBtn">JSON保存</button>
           <button type="button" class="subBtn" id="restoreBtn">JSON復元</button>
-          <button type="button" class="subBtn" id="exportCustomersBtn">顧客CSV出力</button>
+          <button type="button" class="subBtn" id="exportCustomersBtn">顧客CSV</button>
         </div>
 
         <div class="toolGrid">
-          <button type="button" class="subBtn" id="exportHistoryBtn">履歴CSV出力</button>
-          <button type="button" class="subBtn" id="exportReservationsBtn">予約CSV出力</button>
+          <button type="button" class="subBtn" id="exportHistoryBtn">履歴CSV</button>
+          <button type="button" class="subBtn" id="exportReservationsBtn">予約CSV</button>
           <button type="button" class="dangerBtn" id="clearAllBtn">全データ削除</button>
         </div>
 
@@ -205,32 +211,42 @@
         <div class="menuBox" id="menuSuggestion">
           まだ鑑定前です。鑑定後におすすめの有料メニュー案内を表示します。
         </div>
-      </aside>
+      </section>
 
-      <main class="card reportCard">
-        <h2 class="no-print">鑑定結果</h2>
+      <section class="appPanel previewPanel">
+        <div class="panelHeader no-print">
+          <h2>鑑定プレビュー</h2>
+          <span class="panelBadge gold">出力</span>
+        </div>
 
         <div class="resultBox" id="result">
-          <div class="reportCoverLine"></div>
+          <div class="reportPaperEdge top"></div>
 
           <div class="reportHeader">
-            <div class="coverMark">FORTUNE REPORT</div>
-            <div>
-              <div class="reportBrand">鑑定書</div>
-              <div class="reportSub">Premium Reading Document</div>
+            <div class="reportHeaderLeft">
+              <div class="reportMark">✶</div>
+              <div>
+                <div class="reportBrand">鑑定書</div>
+                <div class="reportSub">Premium Reading Document</div>
+              </div>
             </div>
-            <div class="reportMetaLine">
-              <span>鑑定番号：<span id="reportNumber">未発行</span></span>
-              <span>発行日：<span id="reportDate">未発行</span></span>
-              <span>控え種別：<span id="reportCopyType">お客様控え</span></span>
+
+            <div class="reportMetaPanel">
+              <div>鑑定番号：<span id="reportNumber">未発行</span></div>
+              <div>発行日：<span id="reportDate">未発行</span></div>
+              <div>控え種別：<span id="reportCopyType">お客様控え</span></div>
             </div>
+          </div>
+
+          <div class="reportIntro">
+            この鑑定書は、選択された占術をもとに現在の流れ・本質・行動指針を整理した記録です。
           </div>
 
           <div id="resultInner">
             <h3>まだ鑑定結果はありません</h3>
             <p>
-              左側に情報を入力し、<span class="hl">「鑑定結果を作成する」</span>を押してください。<br>
-              この版は商品っぽい高級鑑定書デザインになっています。
+              左側に情報を入力し、「鑑定結果を作成する」を押してください。<br>
+              この版は商品っぽいアプリデザインと高級鑑定書デザインになっています。
             </p>
           </div>
 
@@ -242,24 +258,28 @@
             </div>
           </div>
 
-          <div class="reportSealArea">
-            <div class="reportSeal">鑑定済</div>
+          <div class="reportFooter">
+            <div class="reportFooterLine"></div>
+            <div class="reportFooterText">
+              <div>本鑑定書は参考メッセージを含みます。</div>
+              <div id="reportSigner">占い師専用アプリ</div>
+            </div>
           </div>
 
-          <div class="reportFooter">
-            <div>本鑑定書は参考メッセージを含みます。</div>
-            <div id="reportSigner">占い師専用アプリ</div>
-          </div>
+          <div class="reportPaperEdge bottom"></div>
         </div>
 
         <div class="sectionTitle no-print">月別売上</div>
         <div class="miniCard no-print" id="monthlySalesTable">
           <div class="small">履歴を保存すると、ここに月別売上が表示されます。</div>
         </div>
-      </main>
+      </section>
 
-      <aside class="card rightCol no-print">
-        <h2>運用管理</h2>
+      <section class="appPanel sidePanel no-print">
+        <div class="panelHeader">
+          <h2>運用管理</h2>
+          <span class="panelBadge">管理</span>
+        </div>
 
         <div class="sectionTitle">顧客検索</div>
         <input id="customerSearch" class="input" placeholder="名前で検索">
@@ -302,8 +322,8 @@
 
         <div class="sectionTitle">全体履歴</div>
         <div class="listWrap" id="historyList"></div>
-      </aside>
-    </div>
+      </section>
+    </main>
   </div>
 
   <script src="app.js"></script>
