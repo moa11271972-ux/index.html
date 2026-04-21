@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>陰陽師和風豪華版 本格計算強化</title>
+  <style>
+*{box-sizing:border-box}
+:root{
+  --bg:#0f0b08; --bg2:#1c140f; --paper:#fffaf0; --paper2:#f7f0e1;
+  --gold:#d8b36a; --gold2:#8b6422; --line:rgba(216,179,106,.28);
+  --text:#f2e8d2; --ink:#2a2015; --sub:#bca889; --shadow:0 18px 40px rgba(0,0,0,.28);
+}
+body{
+  margin:0;font-family:"Hiragino Mincho ProN","Yu Mincho","Yu Gothic",serif;color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(216,179,106,.08), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(216,179,106,.06), transparent 26%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+}
+.app{max-width:1380px;margin:0 auto;padding:14px}
+.topbar{
+  display:flex;align-items:center;gap:16px;padding:18px 20px;border:1px solid var(--line);border-radius:24px;
+  background:linear-gradient(135deg, rgba(255,255,255,.03), rgba(216,179,106,.05)), linear-gradient(135deg, #120d0a, #2a1e15);
+  box-shadow:var(--shadow);margin-bottom:14px;
+}
+.crest{
+  width:66px;height:66px;border-radius:20px;display:grid;place-items:center;font-size:30px;font-weight:700;
+  background:radial-gradient(circle at 30% 30%, #f2d8a4, #b3822d 70%);color:#24180b;
+  box-shadow: inset 0 0 0 2px rgba(255,248,230,.35);
+}
+.sub{font-size:11px;letter-spacing:.24em;color:#e8d4ae}
+h1,h2,h3{margin:0}
+h1{font-size:26px;font-weight:700;color:#fff3d6}
+h2{font-size:20px;color:#e6c884;margin-bottom:10px}
+h3{font-size:18px;color:#7a5a1c}
+.layout{display:grid;grid-template-columns:430px 1fr;gap:14px}
+@media(max-width:1020px){.layout{grid-template-columns:1fr}}
+.card{
+  border:1px solid var(--line);border-radius:24px;padding:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), linear-gradient(180deg, rgba(31,22,17,.94), rgba(20,15,11,.96));
+  box-shadow:var(--shadow);
+}
+.label{font-size:13px;font-weight:700;color:#e3c687;margin:14px 0 8px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:720px){.row2{grid-template-columns:1fr}}
+.input,.textarea{
+  width:100%;padding:12px 14px;border:1px solid rgba(216,179,106,.24);border-radius:16px;
+  background:rgba(255,250,240,.95);color:#23180f;font-size:15px;
+}
+.textarea{min-height:96px;resize:vertical;line-height:1.8}
+.btn{
+  width:100%;padding:12px 14px;border-radius:16px;border:1px solid rgba(216,179,106,.34);
+  background:rgba(255,250,240,.98);color:#674816;font-weight:700;cursor:pointer;
+}
+.btn.primary{background:linear-gradient(135deg,#6f4d14,#d8b36a);color:#fff8ed;border:none}
+.btn.toggle.active{background:linear-gradient(135deg,#6f4d14,#d8b36a);color:#fff8ed;border:none}
+.mt8{margin-top:8px}.mt12{margin-top:12px}
+.hidden{display:none !important}
+.noteBox{
+  margin-top:10px;padding:13px 15px;border:1px solid rgba(216,179,106,.22);border-radius:16px;
+  background:rgba(255,250,240,.08);color:#e7d6b8;line-height:1.8;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:10px 14px;border-radius:999px;border:1px solid rgba(216,179,106,.3);
+  background:rgba(255,250,240,.92);color:#6a4c1a;font-weight:700;cursor:pointer;
+}
+.meta{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:#7c6848;margin-bottom:14px}
+.paperWrap{
+  position:relative;border-radius:24px;padding:18px;background:
+    radial-gradient(circle at top right, rgba(216,179,106,.14), transparent 18%),
+    linear-gradient(180deg,var(--paper),var(--paper2));
+  box-shadow:var(--shadow);
+}
+.paperSeal{
+  position:absolute;top:18px;right:18px;width:86px;height:86px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle, rgba(216,179,106,.22), rgba(139,100,34,.15));
+  border:1px solid rgba(139,100,34,.26);color:#7a5a1c;font-size:12px;text-align:center;line-height:1.3;
+}
+.paper{min-height:760px;color:var(--ink);line-height:2;padding:12px}
+.paperHeader{border-bottom:2px solid rgba(139,100,34,.22);padding-bottom:14px;margin-bottom:16px}
+.paperBrand{font-size:30px;font-weight:700;color:#6f4d14;letter-spacing:.08em}
+.paperSub{font-size:11px;letter-spacing:.18em;color:#9a7a45}
+.internal{margin-top:16px;padding:14px;border:1px dashed #d2bb8d;border-radius:16px;background:#fff9ee;color:#2a2015}
+.block{border:1px solid #eadbc0;border-radius:16px;background:#fffefb;padding:14px;margin-top:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:720px){.grid2,.grid3,.grid5{grid-template-columns:1fr}}
+.mini{border:1px solid #eadbc0;border-radius:14px;background:#fff;padding:10px 12px}
+.tag{display:inline-block;padding:6px 10px;border-radius:999px;background:#f4ecdd;color:#765414;font-size:12px;font-weight:700;margin:0 6px 6px 0}
+.tip{font-size:12px;color:#bfae8b;margin-top:8px}
+.callout{padding:12px 14px;border-left:4px solid #b88934;background:#fff8ea;border-radius:10px;color:#5f471d}
+.print-customer #internalBlock{display:none}
+.print-internal #internalBlock{display:block}
+@media print{
+  body{background:#fff}
+  .no-print,.layout>.card:first-child{display:none !important}
+  .layout{display:block}
+  .card{border:none;box-shadow:none;padding:0;background:#fff}
+  .paperWrap{box-shadow:none;background:#fff;padding:0}
+  .paper{border:none;padding:0;background:#fff}
+  .paperSeal{display:none}
+}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="crest">☯</div>
+      <div>
+        <div class="sub">ONMYOJI LUXURY EDITION / HONKAKU CALC</div>
+        <h1>陰陽師和風豪華版 本格計算強化</h1>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="card no-print">
+        <h2>鑑定入力</h2>
+
+        <div class="label">鑑定形式</div>
+        <div class="row2">
+          <button id="singleBtn" class="btn toggle active" type="button">通常鑑定</button>
+          <button id="compatBtn" class="btn toggle" type="button">相性鑑定</button>
+        </div>
+
+        <div class="label">文章量</div>
+        <div class="row2">
+          <button id="normalBtn" class="btn toggle active" type="button">標準</button>
+          <button id="longBtn" class="btn toggle" type="button">長文</button>
+        </div>
+
+        <div class="noteBox">
+          東洋計算を強化しています。<br>
+          <b>年柱・月柱・日柱・時柱 / 陰陽 / 五行 / 九星 / 易</b> を本格寄りに計算します。<br>
+          西洋は太陽星座・元素・区分を実計算、月傾向・外的印象は補助指標です。
+        </div>
+
+        <div class="label">ご本人情報</div>
+        <div class="row2">
+          <input id="name" class="input" placeholder="お名前">
+          <input id="birthDate" class="input" type="date">
+        </div>
+        <div class="row2">
+          <input id="birthTime" class="input" type="time">
+          <input id="birthPlace" class="input" placeholder="出生地（例：大阪府大阪市）">
+        </div>
+        <div class="row2">
+          <select id="topic" class="input">
+            <option value="">相談テーマ</option>
+            <option>恋愛</option>
+            <option>復縁</option>
+            <option>片思い</option>
+            <option>仕事</option>
+            <option>転職</option>
+            <option>独立</option>
+            <option>お金</option>
+            <option>人間関係</option>
+            <option>結婚</option>
+            <option>家庭</option>
+            <option>健康</option>
+            <option>総合運</option>
+          </select>
+          <select id="gender" class="input">
+            <option value="">性別</option>
+            <option>女性</option>
+            <option>男性</option>
+            <option>その他</option>
+          </select>
+        </div>
+
+        <div id="partnerSection" class="hidden">
+          <div class="label">お相手情報</div>
+          <div class="row2">
+            <input id="partnerName" class="input" placeholder="お相手名">
+            <input id="partnerBirthDate" class="input" type="date">
+          </div>
+          <div class="row2">
+            <input id="partnerBirthTime" class="input" type="time">
+            <input id="partnerBirthPlace" class="input" placeholder="出生地（例：東京都）">
+          </div>
+        </div>
+
+        <div class="label">相談テンプレ</div>
+        <div class="chips">
+          <button type="button" class="chip" data-template="恋愛">恋愛</button>
+          <button type="button" class="chip" data-template="復縁">復縁</button>
+          <button type="button" class="chip" data-template="片思い">片思い</button>
+          <button type="button" class="chip" data-template="仕事">仕事</button>
+          <button type="button" class="chip" data-template="転職">転職</button>
+          <button type="button" class="chip" data-template="独立">独立</button>
+        </div>
+
+        <div class="label">相談内容</div>
+        <textarea id="question" class="textarea" placeholder="例：今後の恋愛運と、動くべき時期を知りたいです。"></textarea>
+
+        <div class="label">占い師メモ</div>
+        <textarea id="memo" class="textarea" placeholder="内部メモ"></textarea>
+        <textarea id="proposalMemo" class="textarea mt8" placeholder="次回提案メモ"></textarea>
+
+        <button id="generateBtn" class="btn primary mt12" type="button">鑑定結果を作成する</button>
+
+        <div class="row2 mt12">
+          <button id="pdfCustomerBtn" class="btn" type="button">お客様控えPDF</button>
+          <button id="pdfInternalBtn" class="btn" type="button">内部控えPDF</button>
+        </div>
+        <div class="tip">PDFボタンを押すと印刷画面が開きます。保存先で「PDFに保存」を選んでください。</div>
+      </section>
+
+      <section class="card">
+        <h2>鑑定書</h2>
+        <div class="meta">
+          <span>鑑定番号：<b id="reportNumber">未発行</b></span>
+          <span>発行日：<b id="reportDate">未発行</b></span>
+          <span>控え種別：<b id="copyType">お客様控え</b></span>
+        </div>
+
+        <div class="paperWrap">
+          <div class="paperSeal">HONKAKU<br>CALC</div>
+          <div id="result" class="paper">
+            <div class="paperHeader">
+              <div class="paperBrand">本格鑑定書</div>
+              <div class="paperSub">HONKAKU CALCULATION READING DOCUMENT</div>
+            </div>
+            <h3>まだ鑑定結果はありません</h3>
+            <p>左の情報を入力して、鑑定結果を作成してください。</p>
+          </div>
+        </div>
+
+        <div id="internalBlock" class="internal">
+          <h3>内部記録</h3>
+          <p><b>占い師メモ：</b><span id="memoView">未入力</span></p>
+          <p><b>次回提案メモ：</b><span id="proposalMemoView">未入力</span></p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
