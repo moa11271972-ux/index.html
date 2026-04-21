@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -183,7 +184,7 @@
         <input id="lineUrl" class="input draftField" placeholder="LINE URL" style="margin-top:10px">
 
         <button class="mainBtn" id="generateBtn">鑑定結果を作成する</button>
-        <div class="loading" id="loading">命式・相性・五行・易を計算しています…</div>
+        <div class="loading" id="loading">鑑定計算中です…</div>
 
         <div class="toolGrid">
           <button type="button" class="subBtn" id="saveCustomerBtn">顧客を保存</button>
@@ -220,8 +221,6 @@
         </div>
 
         <div class="resultBox" id="result">
-          <div class="reportPaperEdge top"></div>
-
           <div class="reportHeader">
             <div class="reportHeaderLeft">
               <div class="reportMark">✶</div>
@@ -244,10 +243,7 @@
 
           <div id="resultInner">
             <h3>まだ鑑定結果はありません</h3>
-            <p>
-              左側に情報を入力し、「鑑定結果を作成する」を押してください。<br>
-              この版は商品っぽいアプリデザインと高級鑑定書デザインになっています。
-            </p>
+            <p>左側に情報を入力し、「鑑定結果を作成する」を押してください。</p>
           </div>
 
           <div class="internalSection" id="internalOnlyBlock">
@@ -265,8 +261,6 @@
               <div id="reportSigner">占い師専用アプリ</div>
             </div>
           </div>
-
-          <div class="reportPaperEdge bottom"></div>
         </div>
 
         <div class="sectionTitle no-print">月別売上</div>
