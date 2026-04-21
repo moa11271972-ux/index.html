@@ -99,32 +99,25 @@ const branchCompat = {
   "亥":{"子":3,"丑":0,"寅":3,"卯":2,"辰":1,"巳":-2,"午":1,"未":1,"申":-2,"酉":1,"戌":1,"亥":2}
 };
 
+function getStore(key){
+  try {
+    return JSON.parse(localStorage.getItem(key) || "[]");
+  } catch {
+    return [];
+  }
+}
+function setStore(key, value){
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
 function escapeHtml(str){
   return String(str || "").replace(/[&<>"']/g, (m)=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[m]));
 }
-function parseYen(input){
-  const n = Number(String(input).replace(/[^\d.-]/g,""));
-  return isNaN(n) ? 0 : n;
-}
-function formatYen(n){
-  return "¥" + Number(n || 0).toLocaleString("ja-JP");
-}
-function selectedFortunes(){
-  return [...document.querySelectorAll(".fortuneCheck:checked")].map(el=>el.value);
-}
-function parseBirthData(dateStr){
-  if(!dateStr) return null;
+function parseBirthSafe(dateStr){
   const d = new Date(dateStr);
-  if(isNaN(d)) return null;
-  return { year:d.getFullYear(), month:d.getMonth()+1, day:d.getDate() };
-}
-function getWesternSign(month, day){
-  for(const [name,m,d] of zodiacBorders){
-    if(month < m || (month === m && day < d)) return name;
-  }
-  return "山羊座";
+  return isNaN(d) ? null : d;
 }
 function seededIndex(str, len, salt=""){
   const s = (str || "seed") + salt;
@@ -137,6 +130,7 @@ function seededIndex(str, len, salt=""){
 }
 function getRuneSeeded(seed){ return runeList[seededIndex(seed, runeList.length, "rune")]; }
 function getTarotSeeded(seed, salt=""){ return tarotList[seededIndex(seed, tarotList.length, "tarot" + salt)]; }
+
 function getTarotMeaning(card, pos){
   const map = {
     "愚者":"新しい流れへの一歩","魔術師":"行動と創造の開始","女教皇":"直感と静かな見極め",
@@ -148,14 +142,22 @@ function getTarotMeaning(card, pos){
   };
   return `${pos ? pos + "：" : ""}${map[card] || "流れの変化"}`;
 }
+
+function getWesternSign(month, day){
+  for(const [name,m,d] of zodiacBorders){
+    if(month < m || (month === m && day < d)) return name;
+  }
+  return "山羊座";
+}
+
+function sexagenaryName(index){
+  return stems[index % 10] + branches[index % 12];
+}
 function julianDay(y, m, d){
   if(m <= 2){ y -= 1; m += 12; }
   const A = Math.floor(y / 100);
   const B = 2 - A + Math.floor(A / 4);
   return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
-}
-function sexagenaryName(index){
-  return stems[index % 10] + branches[index % 12];
 }
 function getYearPillar(dateObj){
   const y = dateObj.getFullYear();
@@ -210,52 +212,6 @@ function calcFourPillars(dateStr, timeStr){
   const hourP = getHourPillar(dayP.stem, hour);
   return { yearP, monthP, dayP, hourP };
 }
-function countFiveElements(pillars){
-  const counts = { 木:0, 火:0, 土:0, 金:0, 水:0 };
-  [pillars.yearP, pillars.monthP, pillars.dayP, pillars.hourP].forEach(p => {
-    counts[stemElements[stems.indexOf(p.stem)]] += 1;
-    counts[branchElements[p.branch]] += 1;
-  });
-  return counts;
-}
-function getKyusei(year, month, day){
-  const effectiveYear = (month < 2 || (month === 2 && day < 4)) ? year - 1 : year;
-  let num = 11 - (effectiveYear % 9);
-  if(num > 9) num -= 9;
-  if(num === 0) num = 9;
-  const names = {
-    1:"一白水星",2:"二黒土星",3:"三碧木星",4:"四緑木星",5:"五黄土星",
-    6:"六白金星",7:"七赤金星",8:"八白土星",9:"九紫火星"
-  };
-  return names[num];
-}
-function calcIChing(seed){
-  const base = seededIndex(seed, 64, "hex");
-  const changing = seededIndex(seed, 6, "line") + 1;
-  const changed = base ^ (1 << (changing - 1));
-  return {
-    hexName: ichingNames[base],
-    changedName: ichingNames[changed],
-    changingLine: changing,
-    hexMeaning: ichingMeanings[ichingNames[base]] || "流れを観察することが大切。",
-    changedMeaning: ichingMeanings[ichingNames[changed]] || "変化後の流れを整えることが大切。"
-  };
-}
-function getShichuProfileByDayMaster(dayStem){
-  const map = {
-    "甲":"まっすぐ伸びる木のように理想と成長を重視するタイプ",
-    "乙":"しなやかな草花のように柔軟で空気を読む力が高いタイプ",
-    "丙":"太陽のように明るく外へ力を出すタイプ",
-    "丁":"灯火のように繊細で深い感性を持つタイプ",
-    "戊":"山のように安定感と責任感の強いタイプ",
-    "己":"畑の土のように受容力と調整力が高いタイプ",
-    "庚":"鉄のように決断力と切り替えの速いタイプ",
-    "辛":"宝石のように繊細で審美眼のあるタイプ",
-    "壬":"海のように大きく柔らかい流れを持つタイプ",
-    "癸":"雨露のように静かで観察力の高いタイプ"
-  };
-  return map[dayStem] || "内面を丁寧に見極めるタイプ";
-}
 function getZokan(branch){ return zokanMap[branch] || []; }
 function getStemMeta(stem){
   const idx = stems.indexOf(stem);
@@ -278,6 +234,55 @@ function getTsuhen(dayStem, otherStem){
 function getJuniun(dayStem, branch){
   return (juniunMap[dayStem] && juniunMap[dayStem][branch]) ? juniunMap[dayStem][branch] : "―";
 }
+function enrichPillars(pillars){
+  pillars.yearP.zokan = getZokan(pillars.yearP.branch);
+  pillars.monthP.zokan = getZokan(pillars.monthP.branch);
+  pillars.dayP.zokan = getZokan(pillars.dayP.branch);
+  pillars.hourP.zokan = getZokan(pillars.hourP.branch);
+
+  const dayMaster = pillars.dayP.stem;
+  pillars.yearP.tsuhen = getTsuhen(dayMaster, pillars.yearP.stem);
+  pillars.monthP.tsuhen = getTsuhen(dayMaster, pillars.monthP.stem);
+  pillars.dayP.tsuhen = "日元";
+  pillars.hourP.tsuhen = getTsuhen(dayMaster, pillars.hourP.stem);
+
+  pillars.yearP.juniun = getJuniun(dayMaster, pillars.yearP.branch);
+  pillars.monthP.juniun = getJuniun(dayMaster, pillars.monthP.branch);
+  pillars.dayP.juniun = getJuniun(dayMaster, pillars.dayP.branch);
+  pillars.hourP.juniun = getJuniun(dayMaster, pillars.hourP.branch);
+  return pillars;
+}
+function countFiveElements(pillars){
+  const counts = { 木:0, 火:0, 土:0, 金:0, 水:0 };
+  [pillars.yearP, pillars.monthP, pillars.dayP, pillars.hourP].forEach(p => {
+    counts[stemElements[stems.indexOf(p.stem)]] += 1;
+    counts[branchElements[p.branch]] += 1;
+  });
+  return counts;
+}
+function getKyusei(year, month, day){
+  const effectiveYear = (month < 2 || (month === 2 && day < 4)) ? year - 1 : year;
+  let num = 11 - (effectiveYear % 9);
+  if(num > 9) num -= 9;
+  if(num === 0) num = 9;
+  const names = {1:"一白水星",2:"二黒土星",3:"三碧木星",4:"四緑木星",5:"五黄土星",6:"六白金星",7:"七赤金星",8:"八白土星",9:"九紫火星"};
+  return names[num];
+}
+function getShichuProfileByDayMaster(dayStem){
+  const map = {
+    "甲":"まっすぐ伸びる木のように理想と成長を重視するタイプ",
+    "乙":"しなやかな草花のように柔軟で空気を読む力が高いタイプ",
+    "丙":"太陽のように明るく外へ力を出すタイプ",
+    "丁":"灯火のように繊細で深い感性を持つタイプ",
+    "戊":"山のように安定感と責任感の強いタイプ",
+    "己":"畑の土のように受容力と調整力が高いタイプ",
+    "庚":"鉄のように決断力と切り替えの速いタイプ",
+    "辛":"宝石のように繊細で審美眼のあるタイプ",
+    "壬":"海のように大きく柔らかい流れを持つタイプ",
+    "癸":"雨露のように静かで観察力の高いタイプ"
+  };
+  return map[dayStem] || "内面を丁寧に見極めるタイプ";
+}
 function getFiveElementAdvice(counts){
   const entries = Object.entries(counts).sort((a,b)=>a[1]-b[1]);
   const weak = entries[0][0];
@@ -298,35 +303,31 @@ function getFiveElementAdvice(counts){
   };
   return `五行では「${weak}」がやや弱く「${strong}」が強めです。${weakMap[weak]} また、${strongMap[strong]}`;
 }
-function enrichPillars(pillars){
-  pillars.yearP.zokan = getZokan(pillars.yearP.branch);
-  pillars.monthP.zokan = getZokan(pillars.monthP.branch);
-  pillars.dayP.zokan = getZokan(pillars.dayP.branch);
-  pillars.hourP.zokan = getZokan(pillars.hourP.branch);
-
-  const dayMaster = pillars.dayP.stem;
-  pillars.yearP.tsuhen = getTsuhen(dayMaster, pillars.yearP.stem);
-  pillars.monthP.tsuhen = getTsuhen(dayMaster, pillars.monthP.stem);
-  pillars.dayP.tsuhen = "日元";
-  pillars.hourP.tsuhen = getTsuhen(dayMaster, pillars.hourP.stem);
-
-  pillars.yearP.juniun = getJuniun(dayMaster, pillars.yearP.branch);
-  pillars.monthP.juniun = getJuniun(dayMaster, pillars.monthP.branch);
-  pillars.dayP.juniun = getJuniun(dayMaster, pillars.dayP.branch);
-  pillars.hourP.juniun = getJuniun(dayMaster, pillars.hourP.branch);
-  return pillars;
-}
 function analyzePerson(dateStr, timeStr, question, seedBase){
-  const birth = parseBirthData(dateStr);
-  const sign = getWesternSign(birth.month, birth.day);
+  const birth = parseBirthSafe(dateStr);
+  if(!birth) return null;
+  const sign = getWesternSign(birth.getMonth()+1, birth.getDate());
   const pillars = enrichPillars(calcFourPillars(dateStr, timeStr || "12:00"));
   const fiveCounts = countFiveElements(pillars);
-  const kyusei = getKyusei(birth.year, birth.month, birth.day);
+  const kyusei = getKyusei(birth.getFullYear(), birth.getMonth()+1, birth.getDate());
   const dayMaster = pillars.dayP.stem;
   const dayMasterProfile = getShichuProfileByDayMaster(dayMaster);
   const fiveElementAdvice = getFiveElementAdvice(fiveCounts);
   const seed = `${seedBase}|${dateStr}|${timeStr}|${question}`;
-  return { birth, sign, pillars, fiveCounts, kyusei, dayMaster, dayMasterProfile, fiveElementAdvice, seed };
+  return { sign, pillars, fiveCounts, kyusei, dayMaster, dayMasterProfile, fiveElementAdvice, seed };
+}
+
+function calcIChing(seed){
+  const base = seededIndex(seed, 64, "hex");
+  const changing = seededIndex(seed, 6, "line") + 1;
+  const changed = base ^ (1 << (changing - 1));
+  return {
+    hexName: ichingNames[base],
+    changedName: ichingNames[changed],
+    changingLine: changing,
+    hexMeaning: ichingMeanings[ichingNames[base]] || "流れを観察することが大切。",
+    changedMeaning: ichingMeanings[ichingNames[changed]] || "変化後の流れを整えることが大切。"
+  };
 }
 
 function normalizeQuestion(text){
@@ -448,64 +449,16 @@ function getNarrativeOpening(name, subTopic){
   return map[subTopic] || map["総合運"];
 }
 function getPremiumNarrative(name, subTopic, dayMaster, core, action, timing, fiveAdvice, ichingText, tarotText){
-  const themeNoteMap = {
-    "復縁":"過去に戻りたい気持ちと、未来へ進まなければならない現実の間で、心が揺れやすい流れです。",
-    "片思い":"相手を思う気持ちが強いほど、自分の価値を相手の反応で測りやすくなるので注意が必要です。",
-    "不倫":"気持ちの深さがそのまま幸せにつながるとは限らず、現実との折り合いが大きな課題になります。",
-    "恋愛":"相手の気持ちを知ること以上に、自分がどんな恋愛なら幸せかを知ることが大切です。",
-    "転職":"今の不満だけで動くと同じ悩みを繰り返しやすく、本当に変えるべきポイントを見極める必要があります。",
-    "独立":"理想だけでは続かず、現実だけでも広がらないため、両方を整えることが成功の鍵です。",
-    "仕事":"能力不足ではなく、立つ場所が今の自分と合っているかどうかが問われやすい時です。",
-    "お金":"お金の問題の奥には、自分の価値や受け取り方への迷いが隠れていることが多いです。",
-    "人間関係":"優しさがある人ほど、自分を後回しにして疲れやすい流れが出ます。",
-    "結婚":"形を焦るほど本質を見落としやすく、安心感を基準にした方がうまくいきやすいです。",
-    "家庭":"気遣いで成り立たせてきた関係ほど、心の疲れが見えにくくなります。",
-    "健康":"頑張れる人ほど止まるタイミングを失いやすいので、意識的な調整が必要です。",
-    "総合運":"今は勢いで突破するより、整えることの方が結果的に大きな前進につながります。"
-  };
-  const cautionMap = {
-    "復縁":"相手の言葉ひとつで一喜一憂しやすく、冷静な判断がぶれやすい時でもあります。",
-    "片思い":"相手に合わせすぎると、本来の魅力が見えにくくなりやすいです。",
-    "不倫":"感情の強さだけで関係を支えようとすると、後から心が消耗しやすくなります。",
-    "恋愛":"不安から答えを急ぐほど、必要な見極めを飛ばしやすいです。",
-    "転職":"焦りから決めると、条件だけで選んでしまい長期的な満足につながりにくいです。",
-    "独立":"準備不足のまま始めると、最初の不安定さで自信を削られやすいです。",
-    "仕事":"我慢で耐え続けるほど、本来の判断力が鈍りやすくなります。",
-    "お金":"不安を消すためだけに守りへ入りすぎると、必要なチャンスまで遠ざけやすいです。",
-    "人間関係":"相手の期待を背負いすぎると、ご自身の気力が先に減ってしまいます。",
-    "結婚":"周囲の流れに合わせて急ぐほど、ご自身の本音が置き去りになりやすいです。",
-    "家庭":"表面を丸く収めることを優先すると、本当の問題が長引きやすいです。",
-    "健康":"無理が習慣化していると、限界のサインに気づきにくくなります。",
-    "総合運":"今の時期は、頑張り方を間違えると空回りしやすい傾向があります。"
-  };
-  const closingMap = {
-    "復縁":"このご縁を戻すか手放すかではなく、どうすれば自分が穏やかでいられるかを軸に考えるほど、答えは見えやすくなります。",
-    "片思い":"恋を叶えるために自分を小さくする必要はありません。ご自身らしさを保ったまま近づける道の方が、結果として長続きしやすいです。",
-    "不倫":"心の強い結びつきがあっても、現実が伴わなければ苦しみが増えやすいです。だからこそ、感情と現実の両方を見てください。",
-    "恋愛":"ご縁は追うものというより、整った人のところへ自然に寄ってくるものです。今はその整えを大切にしてください。",
-    "転職":"環境を変えることが目的ではなく、あなたの力が自然に活きる場所へ移ることが目的です。その視点を忘れないでください。",
-    "独立":"理想を現実にするには、夢を守るための仕組みが必要です。丁寧に土台を作るほど、未来は強くなります。",
-    "仕事":"今の迷いは停滞ではなく、次へ進むための見直しです。ここで自分の力の使い方を整えるほど道が開きます。",
-    "お金":"豊かさは我慢だけでは増えません。受け取ることを恐れない姿勢が、次の流れを作ります。",
-    "人間関係":"すべての人に好かれることより、心が安らぐ関係を守ることの方が長い目で見て運を整えます。",
-    "結婚":"焦らなくても、合うご縁は必要なタイミングで形になっていきます。大事なのは見極めの軸を失わないことです。",
-    "家庭":"関係を守るためには、我慢ではなく整え方が必要です。少しずつでも本音を扱ってください。",
-    "健康":"元気を取り戻すには、まず無理が当たり前になっている感覚を緩めることが大切です。",
-    "総合運":"今の時間は遠回りではなく、未来を安定させるための整えです。小さな調整を侮らないでください。"
-  };
   return `
     <p>${escapeHtml(getNarrativeOpening(name, subTopic))}</p>
-    <p>命式の中心にある日主は「${escapeHtml(dayMaster)}」です。これは単なる性格傾向ではなく、人生の選び方、無意識に取ってしまう行動、そして迷った時に戻る本来の軸を示しています。今回のお悩みも、この日主の性質を通すことで、表面だけでは見えにくい本質が浮かび上がってきます。</p>
+    <p>命式の中心にある日主は「${escapeHtml(dayMaster)}」です。今回のお悩みも、この日主の性質を通すことで、表面だけでは見えにくい本質が浮かび上がってきます。</p>
     <p>${escapeHtml(core)}</p>
-    <p>${escapeHtml(themeNoteMap[subTopic] || themeNoteMap["総合運"])}</p>
     <p>${escapeHtml(fiveAdvice)}</p>
-    <p>この時期に特に大切なのは、外側の動きだけを見て判断しないことです。結果や反応だけで気持ちを決めてしまうと、本来受け取るべき流れを見失いやすくなります。${escapeHtml(cautionMap[subTopic] || cautionMap["総合運"])}</p>
     <p>行動面での開運ポイントとしては、${escapeHtml(action)}</p>
     <p>また、時期の読みとしては、${escapeHtml(timing)}</p>
     ${ichingText ? `<p>${escapeHtml(ichingText)}</p>` : ""}
     ${tarotText ? `<p>${escapeHtml(tarotText)}</p>` : ""}
-    <p>${escapeHtml(closingMap[subTopic] || closingMap["総合運"])}</p>
-    <p>全体として見ると、今の運気は「すぐに答えを出して前へ進む時」というより、「本音と現実を丁寧に揃えながら、次の流れを育てていく時」です。ここで焦らず、しかし曖昧にもせず、ご自身の感覚を大切にして選んでいくほど、未来の流れは静かに整っていきます。</p>
+    <p>全体として見ると、今は本音と現実を丁寧に揃えながら、次の流れを育てていく時です。焦らず、ご自身の感覚を大切にしてください。</p>
   `;
 }
 function getFreeNarrative(name, subTopic, core, action){
@@ -516,428 +469,37 @@ function getFreeNarrative(name, subTopic, core, action){
   `;
 }
 
-function currentCustomerData(){
-  const id = `${$("customerName").value.trim()}|${$("birthDate").value.trim()}`;
-  return {
-    id,
-    name:$("customerName").value.trim(),
-    birthDate:$("birthDate").value.trim(),
-    birthTime:$("birthTime").value.trim(),
-    birthPlace:$("birthPlace").value.trim(),
-    gender:$("gender").value.trim(),
-    topic:$("topic").value.trim(),
-    question:$("question").value.trim(),
-    readerMemo:$("readerMemo").value.trim(),
-    proposalMemo:$("proposalMemo").value.trim(),
-    reservationMemo:$("reservationMemo").value.trim(),
-    instaUrl:$("instaUrl").value.trim(),
-    lineUrl:$("lineUrl").value.trim(),
-    customerStatus:$("customerStatus").value.trim(),
-    feeMemo:$("feeMemo").value.trim(),
-    feeAmount:parseYen($("feeAmount").value.trim()),
-    lastVisit:$("lastVisit").value.trim(),
-    nextReservation:$("nextReservation").value.trim(),
-    nextReservationTime:$("nextReservationTime").value.trim(),
-    tarotMode:$("tarotMode").value.trim(),
-    customerTag:$("customerTag").value.trim(),
-    followMemo:$("followMemo").value.trim(),
-    sessionMinutes:parseYen($("sessionMinutes").value.trim()),
-    updatedAt:new Date().toLocaleString("ja-JP")
-  };
-}
-function fillCustomer(customer){
-  [
-    "customerName","birthDate","birthTime","birthPlace","gender","topic","question",
-    "readerMemo","proposalMemo","reservationMemo","instaUrl","lineUrl","customerStatus",
-    "feeMemo","feeAmount","lastVisit","nextReservation","nextReservationTime","tarotMode",
-    "customerTag","followMemo","sessionMinutes"
-  ].forEach(id => {
-    if ($(id)) $(id).value = customer[id] || "";
-  });
-  activeCustomerId = customer.id || "";
-  renderCustomerHistory(activeCustomerId);
-  updateReservationPreview();
-  updateInternalBlock();
-  autosaveDraft();
-}
-function saveCurrentCustomer(){
-  const customer = currentCustomerData();
-  if(!customer.name){
-    alert("お客様名を入力してください。");
-    return;
-  }
-  let arr = getStore("fortuneCustomers");
-  const idx = arr.findIndex(x => x.id === customer.id);
-  if(idx >= 0) arr[idx] = customer;
-  else arr.unshift(customer);
-  setStore("fortuneCustomers", arr.slice(0, 300));
-  activeCustomerId = customer.id;
-  renderCustomers();
-  renderCustomerHistory(customer.id);
-  renderFollowups();
-  renderRankSuggestions();
-  updateReservationPreview();
-  updateInternalBlock();
-  updateStats();
-  alert("顧客情報を保存しました。");
-}
-function saveHistory(){
-  const resultText = $("resultInner").innerText.trim();
-  const customerId = `${$("customerName").value.trim()}|${$("birthDate").value.trim()}`;
-  if(!resultText || resultText.includes("まだ鑑定結果はありません")){
-    alert("先に鑑定結果を作成してください。");
-    return;
-  }
-  const item = {
-    id:"hist_" + Date.now(),
-    customerId,
-    date:new Date().toLocaleString("ja-JP"),
-    isoDate:new Date().toISOString(),
-    mode:appMode,
-    readMode,
-    name:$("customerName").value.trim() || "お客様",
-    topic: readMode === "compat" ? ($("compatTopic").value.trim() || "相性") : ($("topic").value.trim() || "総合運"),
-    question:$("question").value.trim(),
-    feeMemo:$("feeMemo").value.trim(),
-    feeAmount:parseYen($("feeAmount").value.trim()),
-    nextReservation:$("nextReservation").value.trim(),
-    nextReservationTime:$("nextReservationTime").value.trim(),
-    reservationMemo:$("reservationMemo").value.trim(),
-    result:resultText.slice(0, 360) + "..."
-  };
-  let arr = getStore("fortuneHistory");
-  arr.unshift(item);
-  setStore("fortuneHistory", arr.slice(0, 700));
-  activeCustomerId = customerId;
-  renderHistory();
-  renderCustomerHistory(customerId);
-  renderFollowups();
-  renderRankSuggestions();
-  updateReservationPreview();
-  updateStats();
-  renderCustomers();
-  renderMonthlySales();
-  alert("鑑定履歴を保存しました。");
-}
-function saveReservation(){
-  const name = $("customerName").value.trim();
-  const date = $("nextReservation").value.trim();
-  const time = $("nextReservationTime").value.trim();
-  if(!name){
-    alert("お客様名を入力してください。");
-    return;
-  }
-  if(!date){
-    alert("予約日を入力してください。");
-    return;
-  }
-  const reservation = {
-    id:"res_" + Date.now(),
-    customerId:`${$("customerName").value.trim()}|${$("birthDate").value.trim()}`,
-    name,
-    date,
-    time: time || "00:00",
-    topic:$("topic").value.trim() || "総合運",
-    memo:$("reservationMemo").value.trim(),
-    minutes:parseYen($("sessionMinutes").value.trim()) || 60,
-    createdAt:new Date().toISOString()
-  };
-  let arr = getStore("fortuneReservations");
-  arr.unshift(reservation);
-  arr = arr.sort((a,b)=>`${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)).slice(0,1000);
-  setStore("fortuneReservations", arr);
-  renderScheduleForDate();
-  updateStats();
-  alert("予約台帳に保存しました。");
-}
-function getStatusLabel(status){
-  const map = { new:"新規", repeat:"リピーター", wait:"検討中", vip:"VIP" };
-  return map[status] || "新規";
-}
-function getStatusClass(status){ return "status-" + (status || "new"); }
-function getCustomerRankBySales(totalSales){
-  if(totalSales >= 100000) return "VIP";
-  if(totalSales >= 40000) return "上位";
-  if(totalSales >= 10000) return "一般";
-  return "新規";
-}
-function renderCustomers(){
-  const q = $("customerSearch").value.trim().toLowerCase();
-  let arr = getStore("fortuneCustomers");
-  if(q){
-    arr = arr.filter(x =>
-      (x.name || "").toLowerCase().includes(q) ||
-      (x.customerTag || "").toLowerCase().includes(q)
-    );
-  }
-  window._filteredCustomers = arr;
-  const box = $("customerList");
-  if(arr.length === 0){
-    box.innerHTML = `<div class="miniCard"><div class="small">顧客データはまだありません。</div></div>`;
-    return;
-  }
-  box.innerHTML = arr.map((c, i) => {
-    const sales = getCustomerSales(c.id);
-    const visits = getCustomerVisitCount(c.id);
-    const rank = getCustomerRankBySales(sales);
-    return `
-      <button type="button" class="listBtn" data-load-index="${i}">
-        <strong style="color:#765414">${escapeHtml(c.name || "名称未設定")}</strong>
-        <span class="statusBadge ${getStatusClass(c.customerStatus)}">${escapeHtml(getStatusLabel(c.customerStatus))}</span>
-        <span class="rankBadge">${escapeHtml(rank)}</span>
-        ${c.customerTag ? `<span class="tagBadge">${escapeHtml(c.customerTag)}</span>` : ""}<br>
-        <span class="small">${escapeHtml(c.birthDate || "生年月日未入力")} / ${escapeHtml(c.topic || "テーマ未設定")}</span><br>
-        <span class="small">来店回数：${visits}回 / 売上：${formatYen(sales)}</span><br>
-        <span class="small">次回予約：${escapeHtml(c.nextReservation || "未設定")} ${escapeHtml(c.nextReservationTime || "")}</span>
-      </button>
-    `;
-  }).join("");
-}
-function renderHistory(){
-  const arr = getStore("fortuneHistory");
-  const box = $("historyList");
-  if(arr.length === 0){
-    box.innerHTML = `<div class="miniCard"><div class="small">履歴はまだありません。</div></div>`;
-    return;
-  }
-  box.innerHTML = arr.map(h => `
-    <div class="miniCard">
-      <strong style="color:#765414">${escapeHtml(h.name)} / ${escapeHtml(h.topic)}</strong>
-      <div class="small">${escapeHtml(h.date)} / ${h.mode === "free" ? "無料版" : "有料版"} / ${h.readMode === "compat" ? "相性鑑定" : "通常鑑定"}</div>
-      <div class="small">売上：${formatYen(h.feeAmount || 0)}</div>
-      <div class="small">次回予約：${escapeHtml(h.nextReservation || "未設定")} ${escapeHtml(h.nextReservationTime || "")}</div>
-      <div class="small" style="margin-top:6px">相談：${escapeHtml(h.question || "")}</div>
-    </div>
-  `).join("");
-}
-function renderCustomerHistory(customerId){
-  const box = $("customerHistoryList");
-  if(!customerId){
-    box.innerHTML = `<div class="miniCard"><div class="small">顧客を選ぶと、この顧客の過去履歴がここに表示されます。</div></div>`;
-    return;
-  }
-  const arr = getStore("fortuneHistory").filter(h => h.customerId === customerId);
-  if(arr.length === 0){
-    box.innerHTML = `<div class="miniCard"><div class="small">この顧客の履歴はまだありません。</div></div>`;
-    return;
-  }
-  box.innerHTML = arr.map(h => `
-    <div class="miniCard">
-      <strong style="color:#765414">${escapeHtml(h.topic)}</strong>
-      <div class="small">${escapeHtml(h.date)} / ${h.mode === "free" ? "無料版" : "有料版"} / ${h.readMode === "compat" ? "相性" : "通常"}</div>
-      <div class="small">売上：${formatYen(h.feeAmount || 0)}</div>
-      <div class="small">相談：${escapeHtml(h.question || "")}</div>
-      <div class="small">次回予約：${escapeHtml(h.nextReservation || "未設定")} ${escapeHtml(h.nextReservationTime || "")}</div>
-    </div>
-  `).join("");
-}
-function getCustomerSales(customerId){
-  return getStore("fortuneHistory").filter(h => h.customerId === customerId).reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
-}
-function getCustomerVisitCount(customerId){
-  return getStore("fortuneHistory").filter(h => h.customerId === customerId).length;
-}
-function daysFrom(dateStr){
-  if(!dateStr) return 9999;
-  const today = new Date();
-  const d = new Date(dateStr + "T00:00:00");
-  return Math.floor((today.getTime() - d.getTime()) / 86400000);
-}
-function followPriority(c){
-  if(c.days >= 45 || c.sales >= 40000) return {label:"高"};
-  if(c.days >= 20 || c.visits >= 2) return {label:"中"};
-  return {label:"低"};
-}
-function renderFollowups(){
-  const customers = getStore("fortuneCustomers");
-  const box = $("followupList");
-  const list = customers
-    .map(c => ({...c, visits:getCustomerVisitCount(c.id), sales:getCustomerSales(c.id), days:daysFrom(c.lastVisit)}))
-    .filter(c => !c.nextReservation && (c.visits >= 1 || c.customerStatus === "repeat" || c.days >= 30))
-    .sort((a,b)=> b.days - a.days || b.visits - a.visits);
-
-  $("followupCount").textContent = list.length;
-
-  if(list.length === 0){
-    box.innerHTML = `<div class="miniCard"><div class="small">今すぐフォローしたい顧客はいません。</div></div>`;
-    return;
-  }
-  box.innerHTML = list.map(c => {
-    const p = followPriority(c);
-    return `
-      <div class="miniCard">
-        <strong style="color:#765414">${escapeHtml(c.name)}</strong>
-        <span class="rankBadge">${p.label}</span>
-        <div class="small">最終来店から：${c.days >= 9999 ? "未入力" : c.days + "日"}</div>
-        <div class="small">来店回数：${c.visits}回 / 売上：${formatYen(c.sales)}</div>
-        <div class="small">タグ：${escapeHtml(c.customerTag || "なし")}</div>
-        <div class="small">メモ：${escapeHtml(c.followMemo || "次回案内がおすすめ")}</div>
-      </div>
-    `;
-  }).join("");
-}
-function renderRankSuggestions(){
-  const customers = getStore("fortuneCustomers");
-  const box = $("rankSuggestionList");
-  const list = customers
-    .map(c => ({...c, visits:getCustomerVisitCount(c.id), sales:getCustomerSales(c.id), suggestion:getCustomerRankBySales(getCustomerSales(c.id))}))
-    .sort((a,b)=> b.sales - a.sales || b.visits - a.visits)
-    .slice(0,12);
-
-  if(list.length === 0){
-    box.innerHTML = `<div class="miniCard"><div class="small">顧客データがまだありません。</div></div>`;
-    return;
-  }
-  box.innerHTML = list.map(c => `
-    <div class="miniCard">
-      <strong style="color:#765414">${escapeHtml(c.name)}</strong>
-      <span class="rankBadge">${escapeHtml(c.suggestion)}</span>
-      <div class="small">来店回数：${c.visits}回 / 売上：${formatYen(c.sales)}</div>
-      <div class="small">現在ステータス：${escapeHtml(getStatusLabel(c.customerStatus))}</div>
-    </div>
-  `).join("");
-}
-function setTodaySchedule(){
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth()+1).padStart(2,"0");
-  const dd = String(today.getDate()).padStart(2,"0");
-  $("scheduleDate").value = `${yyyy}-${mm}-${dd}`;
-  renderScheduleForDate();
-}
-function renderScheduleForDate(){
-  const date = $("scheduleDate").value.trim();
-  const box = $("scheduleList");
-  const arr = getStore("fortuneReservations");
-  if(!date){
-    box.innerHTML = `<div class="scheduleEmpty">日付を選ぶと、その日の予約が表示されます。</div>`;
-    return;
-  }
-  const list = arr.filter(r => r.date === date).sort((a,b)=>(a.time || "").localeCompare(b.time || ""));
-  if(list.length === 0){
-    box.innerHTML = `<div class="scheduleEmpty">この日の予約はありません。</div>`;
-    return;
-  }
-  box.innerHTML = list.map(r => `
-    <div class="scheduleItem">
-      <div class="scheduleTime">${escapeHtml(r.time || "00:00")}〜</div>
-      <strong>${escapeHtml(r.name)}</strong>
-      <div class="small">テーマ：${escapeHtml(r.topic || "総合運")}</div>
-      <div class="small">鑑定分数：${escapeHtml(String(r.minutes || 60))}分</div>
-      <div class="small">メモ：${escapeHtml(r.memo || "なし")}</div>
-    </div>
-  `).join("");
-}
-function renderMonthlySales(){
-  const history = getStore("fortuneHistory");
-  const box = $("monthlySalesTable");
-  if(history.length === 0){
-    box.innerHTML = `<div class="small">履歴を保存すると、ここに月別売上が表示されます。</div>`;
-    return;
-  }
-  const monthly = {};
-  history.forEach(h => {
-    const dt = h.isoDate ? new Date(h.isoDate) : new Date();
-    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-    monthly[key] = (monthly[key] || 0) + parseYen(h.feeAmount);
-  });
-  const entries = Object.entries(monthly).sort((a,b)=> b[0].localeCompare(a[0]));
-  const max = Math.max(...entries.map(x => x[1]), 1);
-  box.innerHTML = `
-    <div class="barTable">
-      ${entries.map(([month, sales]) => `
-        <div class="barRow">
-          <div class="barHead">
-            <span>${escapeHtml(month)}</span>
-            <span>${formatYen(sales)}</span>
-          </div>
-          <div class="barTrack"><div class="barFill" style="width:${Math.round(sales / max * 100)}%"></div></div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-function updateMenuSuggestion(topic){
-  $("menuSuggestion").innerHTML = `
-    <strong style="color:#765414;">おすすめ導線</strong><br>
-    ${escapeHtml(getRecommendedMenuText(topic, appMode))}<br>
-    次回予約・相性鑑定・月運追加の案内がしやすい状態です。
-  `;
-}
-function updateReservationPreview(){
-  const name = $("customerName").value.trim();
-  if(!name){
-    $("reservationPreview").innerHTML = `<div class="small">顧客を選ぶと、予約メモや案内に使いやすい内容をここに表示します。</div>`;
-    return;
-  }
-  $("reservationPreview").innerHTML = `
-    <div class="small">
-      お客様名：${escapeHtml(name)}<br>
-      次回予約：${escapeHtml($("nextReservation").value.trim() || "未設定")} ${escapeHtml($("nextReservationTime").value.trim() || "")}<br>
-      料金メモ：${escapeHtml($("feeMemo").value.trim() || "未入力")}<br>
-      売上金額：${formatYen(parseYen($("feeAmount").value.trim()))}<br>
-      予約メモ：${escapeHtml($("reservationMemo").value.trim() || "未入力")}<br>
-      次回提案：${escapeHtml($("proposalMemo").value.trim() || "未入力")}
-    </div>
-  `;
-}
-function updateStats(){
-  const customers = getStore("fortuneCustomers");
-  const history = getStore("fortuneHistory");
-  const reservations = getStore("fortuneReservations");
-  const totalSales = history.reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
-
+function makeReportNumber(){
   const now = new Date();
   const yyyy = now.getFullYear();
-  const mm = String(now.getMonth()+1).padStart(2, "0");
-  const dd = String(now.getDate()).padStart(2, "0");
-  const todayStr = `${yyyy}-${mm}-${dd}`;
-  const currentMonthKey = `${yyyy}-${mm}`;
+  const mm = String(now.getMonth()+1).padStart(2,"0");
+  const dd = String(now.getDate()).padStart(2,"0");
+  const rand = String(Math.floor(Math.random()*9000)+1000);
+  return `R-${yyyy}${mm}${dd}-${rand}`;
+}
+function setReportMeta(){
+  if($("reportNumber")) $("reportNumber").textContent = makeReportNumber();
+  if($("reportDate")) $("reportDate").textContent = new Date().toLocaleDateString("ja-JP");
+}
+function updateInternalBlock(){
+  if($("internalReaderMemo")) $("internalReaderMemo").textContent = $("readerMemo")?.value.trim() || "未入力";
+  if($("internalProposalMemo")) $("internalProposalMemo").textContent = $("proposalMemo")?.value.trim() || "未入力";
+}
+function setPrintMode(mode){
+  printMode = mode;
+  document.body.classList.remove("print-customer", "print-internal");
+  document.body.classList.add(mode === "internal" ? "print-internal" : "print-customer");
+  if($("reportCopyType")) $("reportCopyType").textContent = mode === "internal" ? "内部控え" : "お客様控え";
+}
+function printCustomerCopy(){
+  setPrintMode("customer");
+  window.print();
+}
+function printInternalCopy(){
+  setPrintMode("internal");
+  window.print();
+}
 
-  const todayReservations = reservations.filter(r => r.date === todayStr).length;
-  const currentMonthSales = history
-    .filter(h => {
-      const dt = h.isoDate ? new Date(h.isoDate) : null;
-      if(!dt || isNaN(dt)) return false;
-      const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-      return key === currentMonthKey;
-    })
-    .reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
-
-  $("totalSales").textContent = formatYen(totalSales);
-  $("currentMonthSales").textContent = formatYen(currentMonthSales);
-  $("totalCustomers").textContent = customers.length;
-  $("totalReadings").textContent = history.length;
-  $("todayReservations").textContent = todayReservations;
-}
-function getRecommendedMenuText(topic, mode){
-  if(mode === "free"){
-    return "無料版の次は、本格総合鑑定・相性鑑定・時期読みへの案内がおすすめです。";
-  }
-  const map = {
-    "恋愛":"相性鑑定・復縁鑑定・結婚時期鑑定",
-    "仕事":"転職時期鑑定・適職鑑定・3か月仕事運",
-    "お金":"金運上昇期鑑定・仕事運連動鑑定・年間金運",
-    "人間関係":"相性鑑定・ご縁整理鑑定",
-    "結婚":"結婚時期鑑定・相性深掘り鑑定",
-    "家庭":"家庭運・家族相性・家庭内改善鑑定",
-    "健康":"生活リズム運気読み・回復期の流れ",
-    "総合運":"今後3か月運勢・年間総合鑑定"
-  };
-  return map[topic] || "詳細鑑定・月運・年間運";
-}
-function insertTemplate(type){
-  const map = {
-    "恋愛":"今後の恋愛運と、相手との距離感がどう変化していくか知りたいです。",
-    "復縁":"復縁の可能性と、今動くべき時期かどうか知りたいです。",
-    "片思い":"片思い中の相手との進展可能性と、どう接したらよいか知りたいです。",
-    "仕事":"仕事運と、転職・継続のどちらが良いか知りたいです。",
-    "転職":"転職すべき時期と、今の職場に残るべきか知りたいです。",
-    "独立":"独立や開業のタイミングと、成功のために必要な準備を知りたいです。"
-  };
-  $("question").value = map[type] || "";
-  autosaveDraft();
-}
 function buildTarotHtml(cards){
   if(!cards || cards.length === 0) return "";
   return `
@@ -1001,63 +563,6 @@ function scoreCard(title, score){
     </div>
   `;
 }
-function calcCompatibility(mainData, partnerData){
-  let score = 50;
-  const dayElement1 = getStemMeta(mainData.dayMaster).element;
-  const dayElement2 = getStemMeta(partnerData.dayMaster).element;
-  const generate = { 木:"火", 火:"土", 土:"金", 金:"水", 水:"木" };
-  const control = { 木:"土", 火:"金", 土:"水", 金:"木", 水:"火" };
-
-  let elementScore = 0;
-  if(dayElement1 === dayElement2) elementScore = 15;
-  else if(generate[dayElement1] === dayElement2 || generate[dayElement2] === dayElement1) elementScore = 20;
-  else if(control[dayElement1] === dayElement2 || control[dayElement2] === dayElement1) elementScore = -8;
-  else elementScore = 5;
-  score += elementScore;
-
-  const branch1 = mainData.pillars.dayP.branch;
-  const branch2 = partnerData.pillars.dayP.branch;
-  const branchScore = (branchCompat[branch1] && typeof branchCompat[branch1][branch2] === "number")
-    ? branchCompat[branch1][branch2] : 0;
-  score += branchScore * 5;
-
-  const weak1 = Object.entries(mainData.fiveCounts).sort((a,b)=>a[1]-b[1])[0][0];
-  const weak2 = Object.entries(partnerData.fiveCounts).sort((a,b)=>a[1]-b[1])[0][0];
-  const balanceScore = weak1 !== weak2 ? 8 : -3;
-  score += balanceScore;
-
-  score = Math.max(0, Math.min(100, score));
-  const love = Math.max(0, Math.min(100, score + (branchScore >= 2 ? 8 : branchScore <= -2 ? -8 : 0) + (elementScore >= 15 ? 5 : 0)));
-  const marriage = Math.max(0, Math.min(100, score + (weak1 !== weak2 ? 6 : -2)));
-  const work = Math.max(0, Math.min(100, score + (dayElement1 === dayElement2 ? 4 : 0)));
-  const relation = Math.max(0, Math.min(100, score + 2));
-
-  let level = "";
-  if(score >= 85) level = "とても良い相性";
-  else if(score >= 70) level = "良い相性";
-  else if(score >= 55) level = "育てていける相性";
-  else if(score >= 40) level = "課題の多い相性";
-  else level = "かなり調整が必要な相性";
-
-  const goodPoints = [];
-  const cautions = [];
-  const tips = [];
-  if(elementScore >= 15) goodPoints.push("価値観や感じ方に共通点が多く、気持ちが通いやすいです。");
-  if(elementScore === 20) goodPoints.push("五行が相生関係で、お互いを育て合いやすいです。");
-  if(branchScore >= 2) goodPoints.push("日支の流れが良く、自然に引き合いやすい組み合わせです。");
-  if(balanceScore > 0) goodPoints.push("五行の弱点が違うため、補い合いがしやすいです。");
-  if(elementScore < 0) cautions.push("五行に相剋関係があり、相手の言動をきつく感じやすい場面があります。");
-  if(branchScore <= -2) cautions.push("日支同士でぶつかりやすさがあり、近づきすぎると疲れやすいです。");
-  if(balanceScore < 0) cautions.push("似た弱点を持ちやすいため、同じ場面で同時に不安定になりやすいです。");
-  if(goodPoints.length === 0) goodPoints.push("似すぎていないため、関係の作り方しだいで伸びる余地があります。");
-  if(cautions.length === 0) cautions.push("大きな衝突要素は少ないですが、慣れから言葉足らずにならないよう注意が必要です。");
-  tips.push("相手を変えようとするより、それぞれの自然なリズムを尊重すること。");
-  tips.push("期待を曖昧にせず、安心できる距離感を言葉にすること。");
-  if(score >= 70) tips.push("良い流れがある時ほど、感謝や確認を小まめに伝えると関係が長続きしやすいです。");
-  else tips.push("違いを欠点ではなく役割の違いとして扱うと、関係が安定しやすいです。");
-
-  return { overall:score, love, marriage, work, relation, level, goodPoints, cautions, tips };
-}
 function buildCompatHtml(mainName, partnerName, mainData, partnerData, compat, compatTopic){
   return `
     <h3>相性鑑定結果</h3>
@@ -1074,24 +579,28 @@ function buildCompatHtml(mainName, partnerName, mainData, partnerData, compat, c
       ${scoreCard("仕事相性", compat.work)}
       ${scoreCard("人間関係相性", compat.relation)}
     </div>
-    <div class="compatGrid">
-      <div class="miniCard"><div style="font-weight:700;color:#765414">ご本人日主</div><div class="small">${escapeHtml(mainData.dayMaster)}</div></div>
-      <div class="miniCard"><div style="font-weight:700;color:#765414">お相手日主</div><div class="small">${escapeHtml(partnerData.dayMaster)}</div></div>
-      <div class="miniCard"><div style="font-weight:700;color:#765414">ご本人日支</div><div class="small">${escapeHtml(mainData.pillars.dayP.branch)}</div></div>
-      <div class="miniCard"><div style="font-weight:700;color:#765414">お相手日支</div><div class="small">${escapeHtml(partnerData.pillars.dayP.branch)}</div></div>
-    </div>
-    <p>${escapeHtml(mainName)}様と${escapeHtml(partnerName)}様の相性は、<span class="hl">${escapeHtml(compat.level)}</span>です。${escapeHtml(compatTopic)}として見ると、関係を自然に深めやすい部分と、意識して整えるべき部分の両方が出ています。</p>
-    <div class="hintGrid">
-      <div class="hintCard"><strong style="color:#765414">良い点</strong><div class="small">${compat.goodPoints.map(x => "・" + escapeHtml(x)).join("<br>")}</div></div>
-      <div class="hintCard"><strong style="color:#765414">注意点</strong><div class="small">${compat.cautions.map(x => "・" + escapeHtml(x)).join("<br>")}</div></div>
-      <div class="hintCard"><strong style="color:#765414">長続きのコツ</strong><div class="small">${compat.tips.map(x => "・" + escapeHtml(x)).join("<br>")}</div></div>
-    </div>
     ${buildPillarDetailHtml("ご本人", mainData)}
     ${buildPillarDetailHtml("お相手", partnerData)}
     ${buildFiveElementsHtml(mainData.fiveCounts, "ご本人")}
     ${buildFiveElementsHtml(partnerData.fiveCounts, "お相手")}
   `;
 }
+function calcCompatibility(mainData, partnerData){
+  let score = 60;
+  const dayElement1 = getStemMeta(mainData.dayMaster).element;
+  const dayElement2 = getStemMeta(partnerData.dayMaster).element;
+  if(dayElement1 === dayElement2) score += 10;
+  score = Math.max(0, Math.min(100, score));
+  return {
+    overall: score,
+    love: Math.min(100, score + 5),
+    marriage: Math.min(100, score + 2),
+    work: Math.min(100, score),
+    relation: Math.min(100, score + 3),
+    level: score >= 70 ? "良い相性" : "育てていける相性"
+  };
+}
+
 function buildSingleHtml(data, baseMeta){
   const subTopic = detectSubTopic(data.topic, data.question);
   const coreMessage = getSubTopicMessage(subTopic, data.dayMaster);
@@ -1099,7 +608,7 @@ function buildSingleHtml(data, baseMeta){
   const timingPlan = getSubTopicTiming(subTopic);
 
   const ichingNarrative = data.useIChing
-    ? `易では本卦「${data.iching.hexName}」が出ており、${data.iching.hexMeaning} という意味を持ちます。さらに ${data.iching.changingLine} 爻が動くことで、之卦「${data.iching.changedName}」へ移り、${data.iching.changedMeaning}`
+    ? `易では本卦「${data.iching.hexName}」が出ており、${data.iching.hexMeaning} という意味を持ちます。さらに ${data.iching.changingLine} 爻が動くことで、之卦「${data.iching.changedName}」へ移ります。`
     : "";
 
   const tarotNarrative = data.useTarot
@@ -1164,101 +673,23 @@ function buildSingleHtml(data, baseMeta){
           tarotNarrative
         )
     }
-
-    ${data.useIChing ? `
-      <div class="menuBox">
-        <strong style="color:#765414;">易の流れ</strong>
-        <div class="small">
-          本卦「${escapeHtml(data.iching.hexName)}」は、${escapeHtml(data.iching.hexMeaning)}<br>
-          ${escapeHtml(data.iching.changingLine)}爻が動き、之卦「${escapeHtml(data.iching.changedName)}」へ移ることで、
-          ${escapeHtml(data.iching.changedMeaning)}
-        </div>
-      </div>
-    ` : ""}
-
-    ${data.useRune ? `
-      <div class="menuBox">
-        <strong style="color:#765414;">ルーンメッセージ</strong>
-        <div class="small">
-          ルーン「${escapeHtml(data.rune)}」は、今の流れに対して“焦らず本質を見抜くこと”を示しやすいサインです。
-        </div>
-      </div>
-    ` : ""}
-
-    ${data.useTarot ? `
-      <div class="menuBox">
-        <strong style="color:#765414;">タロット補足</strong>
-        <div class="small">
-          ${escapeHtml(data.tarotSummary)}
-        </div>
-      </div>
-    ` : ""}
-
-    <div class="menuBox">
-      <strong style="color:#765414">おすすめ追加メニュー</strong>
-      <div class="small">${escapeHtml(getRecommendedMenuText(data.topic, appMode))}</div>
-    </div>
-
-    <div class="miniCard">
-      <strong style="color:#765414">次回予約・導線</strong>
-      <div class="small">
-        次回予約予定：${escapeHtml(data.nextReservation || "未設定")} ${escapeHtml(data.nextReservationTime || "")}<br>
-        予約メモ：${escapeHtml(data.reservationMemo || "未入力")}
-      </div>
-    </div>
   `;
-}
-
-function makeReportNumber(){
-  const now = new Date();
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth()+1).padStart(2,"0");
-  const dd = String(now.getDate()).padStart(2,"0");
-  const rand = String(Math.floor(Math.random()*9000)+1000);
-  return `R-${yyyy}${mm}${dd}-${rand}`;
-}
-function setReportMeta(){
-  $("reportNumber").textContent = makeReportNumber();
-  $("reportDate").textContent = new Date().toLocaleDateString("ja-JP");
-}
-function updateInternalBlock(){
-  $("internalReaderMemo").textContent = $("readerMemo").value.trim() || "未入力";
-  $("internalProposalMemo").textContent = $("proposalMemo").value.trim() || "未入力";
-}
-function setPrintMode(mode){
-  printMode = mode;
-  document.body.classList.remove("print-customer", "print-internal");
-  document.body.classList.add(mode === "internal" ? "print-internal" : "print-customer");
-  $("reportCopyType").textContent = mode === "internal" ? "内部控え" : "お客様控え";
-}
-function printCustomerCopy(){
-  setPrintMode("customer");
-  window.print();
-}
-function printInternalCopy(){
-  setPrintMode("internal");
-  window.print();
 }
 
 function generateReading(){
   const loading = $("loading");
-  const name = $("customerName").value.trim() || "お客様";
-  const birthDate = $("birthDate").value.trim();
-  const birthTime = $("birthTime").value.trim() || "12:00";
-  const birthPlace = $("birthPlace").value.trim() || "未入力";
-  const gender = $("gender").value.trim() || "未入力";
-  const topic = $("topic").value.trim() || "総合運";
-  const question = $("question").value.trim();
-  const memo = $("readerMemo").value.trim();
-  const proposalMemo = $("proposalMemo").value.trim();
-  const reservationMemo = $("reservationMemo").value.trim();
-  const instaUrl = $("instaUrl").value.trim();
-  const lineUrl = $("lineUrl").value.trim();
-  const status = $("customerStatus").value.trim();
-  const feeAmount = parseYen($("feeAmount").value.trim());
-  const nextReservation = $("nextReservation").value.trim();
-  const nextReservationTime = $("nextReservationTime").value.trim();
-  const tarotMode = $("tarotMode").value.trim() || "single";
+  const name = $("customerName")?.value.trim() || "お客様";
+  const birthDate = $("birthDate")?.value.trim();
+  const birthTime = $("birthTime")?.value.trim() || "12:00";
+  const birthPlace = $("birthPlace")?.value.trim() || "未入力";
+  const gender = $("gender")?.value.trim() || "未入力";
+  const topic = $("topic")?.value.trim() || "総合運";
+  const question = $("question")?.value.trim();
+  const status = $("customerStatus")?.value.trim() || "new";
+  const feeAmount = parseYen($("feeAmount")?.value.trim() || "");
+  const nextReservation = $("nextReservation")?.value.trim() || "";
+  const nextReservationTime = $("nextReservationTime")?.value.trim() || "";
+  const tarotMode = $("tarotMode")?.value.trim() || "single";
   const fortunes = selectedFortunes();
 
   if(!birthDate){
@@ -1269,98 +700,93 @@ function generateReading(){
     alert("相談内容を入力してください。");
     return;
   }
-  if(readMode === "compat" && !$("partnerBirthDate").value.trim()){
+
+  if(readMode === "compat" && !$("partnerBirthDate")?.value.trim()){
     alert("お相手の生年月日を入力してください。");
     return;
   }
 
-  loading.classList.add("show");
+  loading?.classList.add("show");
 
   setTimeout(() => {
-    const main = analyzePerson(birthDate, birthTime, question, `${name}|${birthPlace}|${topic}`);
-    const iching = calcIChing(main.seed + "|iching");
-    const rune = getRuneSeeded(main.seed + "|rune");
+    try {
+      const main = analyzePerson(birthDate, birthTime, question, `${name}|${birthPlace}|${topic}`);
+      if(!main) throw new Error("命式計算エラー");
 
-    let tarotCards = [];
-    let tarotSummary = "";
-    if(fortunes.includes("タロット")){
-      if(tarotMode === "three"){
-        const c1 = getTarotSeeded(main.seed, "_p");
-        const c2 = getTarotSeeded(main.seed, "_n");
-        const c3 = getTarotSeeded(main.seed, "_f");
-        tarotCards = [
-          {name:c1, meaning:getTarotMeaning(c1, "過去")},
-          {name:c2, meaning:getTarotMeaning(c2, "現在")},
-          {name:c3, meaning:getTarotMeaning(c3, "未来")}
-        ];
-        tarotSummary = `${c1}・${c2}・${c3}の並びから、過去の流れを整理しながら現在を整えることで、未来の道がはっきりしていく暗示です。`;
-      } else {
-        const c = getTarotSeeded(main.seed, "_s");
-        tarotCards = [{name:c, meaning:getTarotMeaning(c, "中心")}];
-        tarotSummary = `${c}が中心に出ており、今のテーマに対して最も大切な一点を示しています。`;
+      const iching = calcIChing(main.seed + "|iching");
+      const rune = getRuneSeeded(main.seed + "|rune");
+
+      let tarotCards = [];
+      let tarotSummary = "";
+      if(fortunes.includes("タロット")){
+        if(tarotMode === "three"){
+          const c1 = getTarotSeeded(main.seed, "_p");
+          const c2 = getTarotSeeded(main.seed, "_n");
+          const c3 = getTarotSeeded(main.seed, "_f");
+          tarotCards = [
+            {name:c1, meaning:getTarotMeaning(c1, "過去")},
+            {name:c2, meaning:getTarotMeaning(c2, "現在")},
+            {name:c3, meaning:getTarotMeaning(c3, "未来")}
+          ];
+          tarotSummary = `${c1}・${c2}・${c3}の並びから、過去の流れを整理しながら現在を整えることで、未来の道がはっきりしていく暗示です。`;
+        } else {
+          const c = getTarotSeeded(main.seed, "_s");
+          tarotCards = [{name:c, meaning:getTarotMeaning(c, "中心")}];
+          tarotSummary = `${c}が中心に出ており、今のテーマに対して最も大切な一点を示しています。`;
+        }
       }
+
+      const baseMeta = `
+        <div class="metaCard"><strong>お客様名：</strong>${escapeHtml(name)}</div>
+        <div class="metaCard"><strong>相談テーマ：</strong>${escapeHtml(topic)}</div>
+        <div class="metaCard"><strong>生年月日：</strong>${escapeHtml(birthDate)} ${escapeHtml(birthTime)}</div>
+        <div class="metaCard"><strong>出生地 / 性別：</strong>${escapeHtml(birthPlace)} / ${escapeHtml(gender)}</div>
+        <div class="metaCard"><strong>顧客ステータス：</strong>${escapeHtml(getStatusLabel(status))}</div>
+        <div class="metaCard"><strong>売上金額：</strong>${formatYen(feeAmount)}</div>
+        <div class="metaCard"><strong>次回予約：</strong>${escapeHtml(nextReservation || "未入力")} ${escapeHtml(nextReservationTime || "")}</div>
+        <div class="metaCard"><strong>鑑定モード：</strong>${readMode === "compat" ? "相性鑑定" : "通常鑑定"}</div>
+      `;
+
+      setReportMeta();
+      updateInternalBlock();
+
+      if(readMode === "compat"){
+        const partnerName = $("partnerName")?.value.trim() || "お相手";
+        const partnerBirthDate = $("partnerBirthDate")?.value.trim();
+        const partnerBirthTime = $("partnerBirthTime")?.value.trim() || "12:00";
+        const partnerBirthPlace = $("partnerBirthPlace")?.value.trim() || "未入力";
+        const compatTopic = $("compatTopic")?.value.trim() || "恋愛";
+        const partner = analyzePerson(partnerBirthDate, partnerBirthTime, question, `${partnerName}|${partnerBirthPlace}|${compatTopic}`);
+        if(!partner) throw new Error("相性計算エラー");
+        const compat = calcCompatibility(main, partner);
+        $("resultInner").innerHTML = buildCompatHtml(name, partnerName, main, partner, compat, compatTopic);
+        updateMenuSuggestion(compatTopic);
+      } else {
+        const singleData = {
+          name, topic, question,
+          nextReservation, nextReservationTime,
+          sign: main.sign, kyusei: main.kyusei,
+          pillars: main.pillars, fiveCounts: main.fiveCounts, dayMaster: main.dayMaster,
+          dayMasterProfile: main.dayMasterProfile, fiveElementAdvice: main.fiveElementAdvice,
+          iching, rune, tarotCards, tarotSummary, tarotMode,
+          useIChing: fortunes.includes("易"),
+          useRune: fortunes.includes("ルーン"),
+          useTarot: fortunes.includes("タロット")
+        };
+        $("resultInner").innerHTML = buildSingleHtml(singleData, baseMeta);
+        updateMenuSuggestion(topic);
+      }
+
+      updateReservationPreview();
+    } catch (e) {
+      console.error(e);
+      alert("鑑定結果の作成中にエラーが出ました。app.js の貼り漏れがないか確認してください。");
+    } finally {
+      loading?.classList.remove("show");
     }
-
-    const baseMeta = `
-      <div class="metaCard"><strong>お客様名：</strong>${escapeHtml(name)}</div>
-      <div class="metaCard"><strong>相談テーマ：</strong>${escapeHtml(topic)}</div>
-      <div class="metaCard"><strong>生年月日：</strong>${escapeHtml(birthDate)} ${escapeHtml(birthTime)}</div>
-      <div class="metaCard"><strong>出生地 / 性別：</strong>${escapeHtml(birthPlace)} / ${escapeHtml(gender)}</div>
-      <div class="metaCard"><strong>顧客ステータス：</strong>${escapeHtml(getStatusLabel(status))}</div>
-      <div class="metaCard"><strong>売上金額：</strong>${formatYen(feeAmount)}</div>
-      <div class="metaCard"><strong>次回予約：</strong>${escapeHtml(nextReservation || "未入力")} ${escapeHtml(nextReservationTime || "")}</div>
-      <div class="metaCard"><strong>鑑定モード：</strong>${readMode === "compat" ? "相性鑑定" : "通常鑑定"}</div>
-    `;
-
-    setReportMeta();
-    updateInternalBlock();
-
-    if(readMode === "compat"){
-      const partnerName = $("partnerName").value.trim() || "お相手";
-      const partnerBirthDate = $("partnerBirthDate").value.trim();
-      const partnerBirthTime = $("partnerBirthTime").value.trim() || "12:00";
-      const partnerBirthPlace = $("partnerBirthPlace").value.trim() || "未入力";
-      const compatTopic = $("compatTopic").value.trim() || "恋愛";
-      const partner = analyzePerson(partnerBirthDate, partnerBirthTime, question, `${partnerName}|${partnerBirthPlace}|${compatTopic}`);
-      const compat = calcCompatibility(main, partner);
-      $("resultInner").innerHTML = buildCompatHtml(name, partnerName, main, partner, compat, compatTopic);
-      updateMenuSuggestion(compatTopic);
-    } else {
-      const singleData = {
-        name, topic, question, memo, proposalMemo, reservationMemo, instaUrl, lineUrl,
-        nextReservation, nextReservationTime, sign: main.sign, kyusei: main.kyusei,
-        pillars: main.pillars, fiveCounts: main.fiveCounts, dayMaster: main.dayMaster,
-        dayMasterProfile: main.dayMasterProfile, fiveElementAdvice: main.fiveElementAdvice,
-        iching, rune, tarotCards, tarotSummary, tarotMode,
-        useIChing: fortunes.includes("易"),
-        useRune: fortunes.includes("ルーン"),
-        useTarot: fortunes.includes("タロット")
-      };
-      $("resultInner").innerHTML = buildSingleHtml(singleData, baseMeta);
-      updateMenuSuggestion(topic);
-    }
-
-    updateReservationPreview();
-    loading.classList.remove("show");
-  }, 650);
+  }, 400);
 }
 
-function downloadBackup(){
-  const data = {
-    customers:getStore("fortuneCustomers"),
-    history:getStore("fortuneHistory"),
-    reservations:getStore("fortuneReservations"),
-    draft:JSON.parse(localStorage.getItem("fortuneDraft3File") || "{}"),
-    exportedAt:new Date().toISOString()
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "fortune-app-backup.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
 function handleRestoreFile(event){
   const file = event.target.files[0];
   if(!file) return;
@@ -1390,6 +816,22 @@ function handleRestoreFile(event){
     }
   };
   reader.readAsText(file);
+}
+function downloadBackup(){
+  const data = {
+    customers:getStore("fortuneCustomers"),
+    history:getStore("fortuneHistory"),
+    reservations:getStore("fortuneReservations"),
+    draft:JSON.parse(localStorage.getItem("fortuneDraft3File") || "{}"),
+    exportedAt:new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "fortune-app-backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
 }
 function toCSV(rows){
   return rows.map(row =>
@@ -1437,29 +879,378 @@ function exportReservationsCSV(){
   });
   downloadTextFile("fortune-reservations.csv", toCSV(rows));
 }
-function clearAllData(){
-  const ok = confirm("顧客データ・履歴・予約台帳・下書きをすべて削除します。よろしいですか？");
-  if(!ok) return;
-  localStorage.removeItem("fortuneCustomers");
-  localStorage.removeItem("fortuneHistory");
-  localStorage.removeItem("fortuneReservations");
-  localStorage.removeItem("fortuneDraft3File");
-  activeCustomerId = "";
-  document.querySelectorAll(".draftField").forEach(el => { el.value = ""; });
+
+function saveCurrentCustomer(){
+  const customer = currentCustomerData();
+  if(!customer.name){
+    alert("お客様名を入力してください。");
+    return;
+  }
+  let arr = getStore("fortuneCustomers");
+  const idx = arr.findIndex(x => x.id === customer.id);
+  if(idx >= 0) arr[idx] = customer;
+  else arr.unshift(customer);
+  setStore("fortuneCustomers", arr.slice(0, 300));
+  activeCustomerId = customer.id;
   renderCustomers();
-  renderHistory();
-  renderCustomerHistory("");
+  renderCustomerHistory(customer.id);
   renderFollowups();
   renderRankSuggestions();
-  renderMonthlySales();
   updateReservationPreview();
   updateInternalBlock();
   updateStats();
-  setTodaySchedule();
-  $("resultInner").innerHTML = `<h3>まだ鑑定結果はありません</h3><p>左側に情報を入力し、「鑑定結果を作成する」を押してください。</p>`;
-  $("reportNumber").textContent = "未発行";
-  $("reportDate").textContent = "未発行";
-  alert("全データを削除しました。");
+  alert("顧客情報を保存しました。");
+}
+function saveHistory(){
+  const resultText = $("resultInner")?.innerText.trim();
+  const customerId = `${$("customerName")?.value.trim()}|${$("birthDate")?.value.trim()}`;
+  if(!resultText || resultText.includes("まだ鑑定結果はありません")){
+    alert("先に鑑定結果を作成してください。");
+    return;
+  }
+  const item = {
+    id:"hist_" + Date.now(),
+    customerId,
+    date:new Date().toLocaleString("ja-JP"),
+    isoDate:new Date().toISOString(),
+    mode:appMode,
+    readMode,
+    name:$("customerName")?.value.trim() || "お客様",
+    topic: readMode === "compat" ? ($("compatTopic")?.value.trim() || "相性") : ($("topic")?.value.trim() || "総合運"),
+    question:$("question")?.value.trim() || "",
+    feeMemo:$("feeMemo")?.value.trim() || "",
+    feeAmount:parseYen($("feeAmount")?.value.trim() || ""),
+    nextReservation:$("nextReservation")?.value.trim() || "",
+    nextReservationTime:$("nextReservationTime")?.value.trim() || "",
+    reservationMemo:$("reservationMemo")?.value.trim() || "",
+    result:resultText.slice(0, 360) + "..."
+  };
+  let arr = getStore("fortuneHistory");
+  arr.unshift(item);
+  setStore("fortuneHistory", arr.slice(0, 700));
+  activeCustomerId = customerId;
+  renderHistory();
+  renderCustomerHistory(customerId);
+  renderFollowups();
+  renderRankSuggestions();
+  updateReservationPreview();
+  updateStats();
+  renderCustomers();
+  renderMonthlySales();
+  alert("鑑定履歴を保存しました。");
+}
+function saveReservation(){
+  const name = $("customerName")?.value.trim();
+  const date = $("nextReservation")?.value.trim();
+  const time = $("nextReservationTime")?.value.trim();
+  if(!name){
+    alert("お客様名を入力してください。");
+    return;
+  }
+  if(!date){
+    alert("予約日を入力してください。");
+    return;
+  }
+  const reservation = {
+    id:"res_" + Date.now(),
+    customerId:`${$("customerName")?.value.trim()}|${$("birthDate")?.value.trim()}`,
+    name,
+    date,
+    time: time || "00:00",
+    topic:$("topic")?.value.trim() || "総合運",
+    memo:$("reservationMemo")?.value.trim() || "",
+    minutes:parseYen($("sessionMinutes")?.value.trim() || "") || 60,
+    createdAt:new Date().toISOString()
+  };
+  let arr = getStore("fortuneReservations");
+  arr.unshift(reservation);
+  arr = arr.sort((a,b)=>`${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`)).slice(0,1000);
+  setStore("fortuneReservations", arr);
+  renderScheduleForDate();
+  updateStats();
+  alert("予約台帳に保存しました。");
+}
+function currentCustomerData(){
+  const id = `${$("customerName")?.value.trim()}|${$("birthDate")?.value.trim()}`;
+  return {
+    id,
+    name:$("customerName")?.value.trim() || "",
+    birthDate:$("birthDate")?.value.trim() || "",
+    birthTime:$("birthTime")?.value.trim() || "",
+    birthPlace:$("birthPlace")?.value.trim() || "",
+    gender:$("gender")?.value.trim() || "",
+    topic:$("topic")?.value.trim() || "",
+    question:$("question")?.value.trim() || "",
+    readerMemo:$("readerMemo")?.value.trim() || "",
+    proposalMemo:$("proposalMemo")?.value.trim() || "",
+    reservationMemo:$("reservationMemo")?.value.trim() || "",
+    instaUrl:$("instaUrl")?.value.trim() || "",
+    lineUrl:$("lineUrl")?.value.trim() || "",
+    customerStatus:$("customerStatus")?.value.trim() || "",
+    feeMemo:$("feeMemo")?.value.trim() || "",
+    feeAmount:parseYen($("feeAmount")?.value.trim() || ""),
+    lastVisit:$("lastVisit")?.value.trim() || "",
+    nextReservation:$("nextReservation")?.value.trim() || "",
+    nextReservationTime:$("nextReservationTime")?.value.trim() || "",
+    tarotMode:$("tarotMode")?.value.trim() || "",
+    customerTag:$("customerTag")?.value.trim() || "",
+    followMemo:$("followMemo")?.value.trim() || "",
+    sessionMinutes:parseYen($("sessionMinutes")?.value.trim() || ""),
+    updatedAt:new Date().toLocaleString("ja-JP")
+  };
+}
+
+function renderCustomers(){
+  const box = $("customerList");
+  if(!box) return;
+  const q = $("customerSearch")?.value.trim().toLowerCase() || "";
+  let arr = getStore("fortuneCustomers");
+  if(q){
+    arr = arr.filter(x =>
+      (x.name || "").toLowerCase().includes(q) ||
+      (x.customerTag || "").toLowerCase().includes(q)
+    );
+  }
+  window._filteredCustomers = arr;
+  if(arr.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">顧客データはまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = arr.map((c, i) => {
+    const sales = getCustomerSales(c.id);
+    const visits = getCustomerVisitCount(c.id);
+    const rank = getCustomerRankBySales(sales);
+    return `
+      <button type="button" class="listBtn" data-load-index="${i}">
+        <strong style="color:#765414">${escapeHtml(c.name || "名称未設定")}</strong>
+        <span class="statusBadge ${getStatusClass(c.customerStatus)}">${escapeHtml(getStatusLabel(c.customerStatus))}</span>
+        <span class="rankBadge">${escapeHtml(rank)}</span>
+        ${c.customerTag ? `<span class="tagBadge">${escapeHtml(c.customerTag)}</span>` : ""}<br>
+        <span class="small">${escapeHtml(c.birthDate || "生年月日未入力")} / ${escapeHtml(c.topic || "テーマ未設定")}</span><br>
+        <span class="small">来店回数：${visits}回 / 売上：${formatYen(sales)}</span><br>
+        <span class="small">次回予約：${escapeHtml(c.nextReservation || "未設定")} ${escapeHtml(c.nextReservationTime || "")}</span>
+      </button>
+    `;
+  }).join("");
+}
+function renderHistory(){
+  const box = $("historyList");
+  if(!box) return;
+  const arr = getStore("fortuneHistory");
+  if(arr.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">履歴はまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = arr.map(h => `
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(h.name)} / ${escapeHtml(h.topic)}</strong>
+      <div class="small">${escapeHtml(h.date)} / ${h.mode === "free" ? "無料版" : "有料版"} / ${h.readMode === "compat" ? "相性鑑定" : "通常鑑定"}</div>
+      <div class="small">売上：${formatYen(h.feeAmount || 0)}</div>
+      <div class="small">${escapeHtml(h.question || "")}</div>
+    </div>
+  `).join("");
+}
+function renderCustomerHistory(customerId){
+  const box = $("customerHistoryList");
+  if(!box) return;
+  if(!customerId){
+    box.innerHTML = `<div class="miniCard"><div class="small">顧客を選ぶと、この顧客の過去履歴がここに表示されます。</div></div>`;
+    return;
+  }
+  const arr = getStore("fortuneHistory").filter(h => h.customerId === customerId);
+  if(arr.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">この顧客の履歴はまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = arr.map(h => `
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(h.topic)}</strong>
+      <div class="small">${escapeHtml(h.date)}</div>
+      <div class="small">売上：${formatYen(h.feeAmount || 0)}</div>
+    </div>
+  `).join("");
+}
+function getCustomerSales(customerId){
+  return getStore("fortuneHistory").filter(h => h.customerId === customerId).reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
+}
+function getCustomerVisitCount(customerId){
+  return getStore("fortuneHistory").filter(h => h.customerId === customerId).length;
+}
+function daysFrom(dateStr){
+  if(!dateStr) return 9999;
+  const today = new Date();
+  const d = new Date(dateStr + "T00:00:00");
+  return Math.floor((today.getTime() - d.getTime()) / 86400000);
+}
+function followPriority(c){
+  if(c.days >= 45 || c.sales >= 40000) return {label:"高"};
+  if(c.days >= 20 || c.visits >= 2) return {label:"中"};
+  return {label:"低"};
+}
+function renderFollowups(){
+  const box = $("followupList");
+  if(!box) return;
+  const customers = getStore("fortuneCustomers");
+  const list = customers
+    .map(c => ({...c, visits:getCustomerVisitCount(c.id), sales:getCustomerSales(c.id), days:daysFrom(c.lastVisit)}))
+    .filter(c => !c.nextReservation && (c.visits >= 1 || c.customerStatus === "repeat" || c.days >= 30))
+    .sort((a,b)=> b.days - a.days || b.visits - a.visits);
+  if($("followupCount")) $("followupCount").textContent = list.length;
+  if(list.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">今すぐフォローしたい顧客はいません。</div></div>`;
+    return;
+  }
+  box.innerHTML = list.map(c => {
+    const p = followPriority(c);
+    return `
+      <div class="miniCard">
+        <strong style="color:#765414">${escapeHtml(c.name)}</strong>
+        <span class="rankBadge">${p.label}</span>
+        <div class="small">最終来店から：${c.days >= 9999 ? "未入力" : c.days + "日"}</div>
+      </div>
+    `;
+  }).join("");
+}
+function renderRankSuggestions(){
+  const box = $("rankSuggestionList");
+  if(!box) return;
+  const customers = getStore("fortuneCustomers");
+  const list = customers
+    .map(c => ({...c, visits:getCustomerVisitCount(c.id), sales:getCustomerSales(c.id), suggestion:getCustomerRankBySales(getCustomerSales(c.id))}))
+    .sort((a,b)=> b.sales - a.sales || b.visits - a.visits)
+    .slice(0,12);
+  if(list.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">顧客データがまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = list.map(c => `
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(c.name)}</strong>
+      <span class="rankBadge">${escapeHtml(c.suggestion)}</span>
+    </div>
+  `).join("");
+}
+function setTodaySchedule(){
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth()+1).padStart(2,"0");
+  const dd = String(today.getDate()).padStart(2,"0");
+  if($("scheduleDate")) $("scheduleDate").value = `${yyyy}-${mm}-${dd}`;
+  renderScheduleForDate();
+}
+function renderScheduleForDate(){
+  const box = $("scheduleList");
+  if(!box) return;
+  const date = $("scheduleDate")?.value.trim();
+  const arr = getStore("fortuneReservations");
+  if(!date){
+    box.innerHTML = `<div class="scheduleEmpty">日付を選ぶと、その日の予約が表示されます。</div>`;
+    return;
+  }
+  const list = arr.filter(r => r.date === date).sort((a,b)=>(a.time || "").localeCompare(b.time || ""));
+  if(list.length === 0){
+    box.innerHTML = `<div class="scheduleEmpty">この日の予約はありません。</div>`;
+    return;
+  }
+  box.innerHTML = list.map(r => `
+    <div class="scheduleItem">
+      <div class="scheduleTime">${escapeHtml(r.time || "00:00")}〜</div>
+      <strong>${escapeHtml(r.name)}</strong>
+      <div class="small">テーマ：${escapeHtml(r.topic || "総合運")}</div>
+    </div>
+  `).join("");
+}
+function renderMonthlySales(){
+  const box = $("monthlySalesTable");
+  if(!box) return;
+  const history = getStore("fortuneHistory");
+  if(history.length === 0){
+    box.innerHTML = `<div class="small">履歴を保存すると、ここに月別売上が表示されます。</div>`;
+    return;
+  }
+  const monthly = {};
+  history.forEach(h => {
+    const dt = h.isoDate ? new Date(h.isoDate) : new Date();
+    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+    monthly[key] = (monthly[key] || 0) + parseYen(h.feeAmount);
+  });
+  const entries = Object.entries(monthly).sort((a,b)=> b[0].localeCompare(a[0]));
+  const max = Math.max(...entries.map(x => x[1]), 1);
+  box.innerHTML = `
+    <div class="barTable">
+      ${entries.map(([month, sales]) => `
+        <div class="barRow">
+          <div class="barHead">
+            <span>${escapeHtml(month)}</span>
+            <span>${formatYen(sales)}</span>
+          </div>
+          <div class="barTrack"><div class="barFill" style="width:${Math.round(sales / max * 100)}%"></div></div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+function updateMenuSuggestion(topic){
+  if(!$("menuSuggestion")) return;
+  $("menuSuggestion").innerHTML = `
+    <strong style="color:#765414;">おすすめ導線</strong><br>
+    ${escapeHtml(getRecommendedMenuText(topic, appMode))}
+  `;
+}
+function updateReservationPreview(){
+  if(!$("reservationPreview")) return;
+  const name = $("customerName")?.value.trim();
+  if(!name){
+    $("reservationPreview").innerHTML = `<div class="small">顧客を選ぶと、予約メモや案内に使いやすい内容をここに表示します。</div>`;
+    return;
+  }
+  $("reservationPreview").innerHTML = `
+    <div class="small">
+      お客様名：${escapeHtml(name)}<br>
+      次回予約：${escapeHtml($("nextReservation")?.value.trim() || "未設定")} ${escapeHtml($("nextReservationTime")?.value.trim() || "")}
+    </div>
+  `;
+}
+function updateStats(){
+  const customers = getStore("fortuneCustomers");
+  const history = getStore("fortuneHistory");
+  const reservations = getStore("fortuneReservations");
+  const totalSales = history.reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
+
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth()+1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+  const currentMonthKey = `${yyyy}-${mm}`;
+
+  const todayReservations = reservations.filter(r => r.date === todayStr).length;
+  const currentMonthSales = history
+    .filter(h => {
+      const dt = h.isoDate ? new Date(h.isoDate) : null;
+      if(!dt || isNaN(dt)) return false;
+      const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+      return key === currentMonthKey;
+    })
+    .reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
+
+  if($("totalSales")) $("totalSales").textContent = formatYen(totalSales);
+  if($("currentMonthSales")) $("currentMonthSales").textContent = formatYen(currentMonthSales);
+  if($("totalCustomers")) $("totalCustomers").textContent = customers.length;
+  if($("totalReadings")) $("totalReadings").textContent = history.length;
+  if($("todayReservations")) $("todayReservations").textContent = todayReservations;
+}
+function getRecommendedMenuText(topic, mode){
+  if(mode === "free"){
+    return "無料版の次は、本格総合鑑定・相性鑑定・時期読みへの案内がおすすめです。";
+  }
+  const map = {
+    "恋愛":"相性鑑定・復縁鑑定・結婚時期鑑定",
+    "仕事":"転職時期鑑定・適職鑑定・3か月仕事運",
+    "お金":"金運上昇期鑑定・年間金運",
+    "総合運":"今後3か月運勢・年間総合鑑定"
+  };
+  return map[topic] || "詳細鑑定・月運・年間運";
 }
 function autosaveDraft(){
   const data = {};
@@ -1479,46 +1270,72 @@ function loadDraft(){
     if(typeof data[el.id] !== "undefined") el.value = data[el.id];
   });
 }
+function clearAllData(){
+  const ok = confirm("顧客データ・履歴・予約台帳・下書きをすべて削除します。よろしいですか？");
+  if(!ok) return;
+  localStorage.removeItem("fortuneCustomers");
+  localStorage.removeItem("fortuneHistory");
+  localStorage.removeItem("fortuneReservations");
+  localStorage.removeItem("fortuneDraft3File");
+  activeCustomerId = "";
+  document.querySelectorAll(".draftField").forEach(el => { el.value = ""; });
+  renderCustomers();
+  renderHistory();
+  renderCustomerHistory("");
+  renderFollowups();
+  renderRankSuggestions();
+  renderMonthlySales();
+  updateReservationPreview();
+  updateInternalBlock();
+  updateStats();
+  setTodaySchedule();
+  if($("resultInner")) $("resultInner").innerHTML = `<h3>まだ鑑定結果はありません</h3><p>左側に情報を入力し、「鑑定結果を作成する」を押してください。</p>`;
+  if($("reportNumber")) $("reportNumber").textContent = "未発行";
+  if($("reportDate")) $("reportDate").textContent = "未発行";
+  alert("全データを削除しました。");
+}
 function setMode(mode){
   appMode = mode;
-  $("freeBtn").classList.toggle("active", mode === "free");
-  $("premiumBtn").classList.toggle("active", mode === "premium");
-  $("modeGuide").textContent = mode === "free"
-    ? "無料版は短めの体験鑑定向けです。有料版への導線作りに向いています。"
-    : "有料版は複合占術と長文の物語調リーディングを行う本格鑑定です。";
+  $("freeBtn")?.classList.toggle("active", mode === "free");
+  $("premiumBtn")?.classList.toggle("active", mode === "premium");
+  if($("modeGuide")){
+    $("modeGuide").textContent = mode === "free"
+      ? "無料版は短めの体験鑑定向けです。有料版への導線作りに向いています。"
+      : "有料版は複合占術と長文の物語調リーディングを行う本格鑑定です。";
+  }
 }
 function setReadMode(mode){
   readMode = mode;
-  $("singleReadBtn").classList.toggle("active", mode === "single");
-  $("compatReadBtn").classList.toggle("active", mode === "compat");
-  $("partnerSection").classList.toggle("hidden", mode !== "compat");
+  $("singleReadBtn")?.classList.toggle("active", mode === "single");
+  $("compatReadBtn")?.classList.toggle("active", mode === "compat");
+  $("partnerSection")?.classList.toggle("hidden", mode !== "compat");
   autosaveDraft();
 }
 function bindEvents(){
-  $("freeBtn").addEventListener("click", ()=>setMode("free"));
-  $("premiumBtn").addEventListener("click", ()=>setMode("premium"));
-  $("singleReadBtn").addEventListener("click", ()=>setReadMode("single"));
-  $("compatReadBtn").addEventListener("click", ()=>setReadMode("compat"));
+  $("freeBtn")?.addEventListener("click", ()=>setMode("free"));
+  $("premiumBtn")?.addEventListener("click", ()=>setMode("premium"));
+  $("singleReadBtn")?.addEventListener("click", ()=>setReadMode("single"));
+  $("compatReadBtn")?.addEventListener("click", ()=>setReadMode("compat"));
 
-  $("generateBtn").addEventListener("click", generateReading);
-  $("saveCustomerBtn").addEventListener("click", saveCurrentCustomer);
-  $("saveHistoryBtn").addEventListener("click", saveHistory);
-  $("saveReservationBtn").addEventListener("click", saveReservation);
-  $("printCustomerBtn").addEventListener("click", printCustomerCopy);
-  $("printInternalBtn").addEventListener("click", printInternalCopy);
+  $("generateBtn")?.addEventListener("click", generateReading);
+  $("saveCustomerBtn")?.addEventListener("click", saveCurrentCustomer);
+  $("saveHistoryBtn")?.addEventListener("click", saveHistory);
+  $("saveReservationBtn")?.addEventListener("click", saveReservation);
+  $("printCustomerBtn")?.addEventListener("click", printCustomerCopy);
+  $("printInternalBtn")?.addEventListener("click", printInternalCopy);
 
-  $("backupBtn").addEventListener("click", downloadBackup);
-  $("restoreBtn").addEventListener("click", ()=>$("restoreFile").click());
-  $("restoreFile").addEventListener("change", handleRestoreFile);
+  $("backupBtn")?.addEventListener("click", downloadBackup);
+  $("restoreBtn")?.addEventListener("click", ()=>$("restoreFile")?.click());
+  $("restoreFile")?.addEventListener("change", handleRestoreFile);
 
-  $("exportCustomersBtn").addEventListener("click", exportCustomersCSV);
-  $("exportHistoryBtn").addEventListener("click", exportHistoryCSV);
-  $("exportReservationsBtn").addEventListener("click", exportReservationsCSV);
-  $("clearAllBtn").addEventListener("click", clearAllData);
+  $("exportCustomersBtn")?.addEventListener("click", exportCustomersCSV);
+  $("exportHistoryBtn")?.addEventListener("click", exportHistoryCSV);
+  $("exportReservationsBtn")?.addEventListener("click", exportReservationsCSV);
+  $("clearAllBtn")?.addEventListener("click", clearAllData);
 
-  $("customerSearch").addEventListener("input", renderCustomers);
-  $("scheduleDate").addEventListener("change", renderScheduleForDate);
-  $("todayScheduleBtn").addEventListener("click", setTodaySchedule);
+  $("customerSearch")?.addEventListener("input", renderCustomers);
+  $("scheduleDate")?.addEventListener("change", renderScheduleForDate);
+  $("todayScheduleBtn")?.addEventListener("click", setTodaySchedule);
 
   document.querySelectorAll(".chipBtn[data-template]").forEach(btn => {
     btn.addEventListener("click", ()=>insertTemplate(btn.dataset.template));
@@ -1554,7 +1371,8 @@ function init(){
   updateInternalBlock();
   updateStats();
   setTodaySchedule();
-  $("reportNumber").textContent = "未発行";
-  $("reportDate").textContent = "未発行";
+  if($("reportNumber")) $("reportNumber").textContent = "未発行";
+  if($("reportDate")) $("reportDate").textContent = "未発行";
 }
+
 document.addEventListener("DOMContentLoaded", init);
