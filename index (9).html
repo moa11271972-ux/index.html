@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>古代ケルト本格鑑定アプリ PDF版</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="crest">ᚠ</div>
+      <div>
+        <div class="sub">ANCIENT CELTIC READING SYSTEM</div>
+        <h1>古代ケルト本格鑑定アプリ PDF版</h1>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="card no-print">
+        <h2>鑑定入力</h2>
+
+        <div class="label">鑑定形式</div>
+        <div class="row2">
+          <button id="singleBtn" class="btn toggle active" type="button">通常鑑定</button>
+          <button id="compatBtn" class="btn toggle" type="button">相性鑑定</button>
+        </div>
+
+        <div class="label">文章量</div>
+        <div class="row2">
+          <button id="normalBtn" class="btn toggle active" type="button">標準</button>
+          <button id="longBtn" class="btn toggle" type="button">長文</button>
+        </div>
+
+        <div class="noteBox">ケルト樹木暦・ドルイド気質・ルーン・三相時間読みを中心にした古代ケルト風鑑定版です。</div>
+
+        <div class="label">ご本人情報</div>
+        <div class="row2">
+          <input id="name" class="input" placeholder="お名前">
+          <input id="birthDate" class="input" type="date">
+        </div>
+        <div class="row2">
+          <input id="birthTime" class="input" type="time">
+          <input id="birthPlace" class="input" placeholder="出生地（例：大阪府大阪市）">
+        </div>
+        <div class="row2">
+          <select id="topic" class="input">
+            <option value="">相談テーマ</option>
+            <option>恋愛</option>
+            <option>仕事</option>
+            <option>お金</option>
+            <option>人間関係</option>
+            <option>結婚</option>
+            <option>家庭</option>
+            <option>健康</option>
+            <option>総合運</option>
+          </select>
+          <select id="gender" class="input">
+            <option value="">性別</option>
+            <option>女性</option>
+            <option>男性</option>
+            <option>その他</option>
+          </select>
+        </div>
+
+        <div id="partnerSection" class="hidden">
+          <div class="label">お相手情報</div>
+          <div class="row2">
+            <input id="partnerName" class="input" placeholder="お相手名">
+            <input id="partnerBirthDate" class="input" type="date">
+          </div>
+          <div class="row2">
+            <input id="partnerBirthTime" class="input" type="time">
+            <input id="partnerBirthPlace" class="input" placeholder="出生地（例：東京都）">
+          </div>
+        </div>
+
+        <div class="label">相談内容</div>
+        <textarea id="question" class="textarea" placeholder="例：今後の恋愛運と、動くべき時期を知りたいです。"></textarea>
+
+        <div class="label">補助占術</div>
+        <div class="checks">
+          <label><input type="checkbox" class="subCheck" value="樹木暦" checked> 樹木暦</label>
+          <label><input type="checkbox" class="subCheck" value="ルーン" checked> ルーン</label>
+          <label><input type="checkbox" class="subCheck" value="季節" checked> 季節の気</label>
+        </div>
+
+        <div class="label">ドルイドメモ</div>
+        <textarea id="memo" class="textarea" placeholder="内部メモ"></textarea>
+
+        <button id="generateBtn" class="btn primary mt12" type="button">鑑定結果を作成する</button>
+
+        <div class="row2 mt12">
+          <button id="pdfCustomerBtn" class="btn" type="button">お客様控えPDF</button>
+          <button id="pdfInternalBtn" class="btn" type="button">内部控えPDF</button>
+        </div>
+        <div class="tip">PDFボタンを押すと印刷画面が開きます。保存先で「PDFに保存」を選んでください。</div>
+      </section>
+
+      <section class="card">
+        <h2>鑑定書</h2>
+        <div class="meta">
+          <span>鑑定番号：<b id="reportNumber">未発行</b></span>
+          <span>発行日：<b id="reportDate">未発行</b></span>
+          <span>控え種別：<b id="copyType">お客様控え</b></span>
+        </div>
+
+        <div id="result" class="paper">
+          <h3>まだ鑑定結果はありません</h3>
+          <p>左の情報を入力して、鑑定結果を作成してください。</p>
+        </div>
+
+        <div id="internalBlock" class="internal">
+          <h3>内部記録</h3>
+          <p><b>ドルイドメモ：</b><span id="memoView">未入力</span></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
