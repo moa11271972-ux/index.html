@@ -1,198 +1,1778 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MOA MOA 占術アプリ Pro 東西ルーンタロット版</title>
-  <style>
-    *{box-sizing:border-box}
-    :root{
-      --bg:#0b1020; --line:rgba(255,255,255,.08); --text:#eef2ff; --sub:#a9b3d1;
-      --accent:#caa35f; --accent2:#8f6a2b; --paper:#fffcf6; --paper2:#f6efe2; --ink:#2a2016; --danger:#d96b6b;
-      --shadow:0 18px 40px rgba(0,0,0,.28);
-    }
-    body{
-      margin:0; font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif; color:var(--text);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(202,163,95,.12), transparent 26%),
-        radial-gradient(circle at 100% 100%, rgba(202,163,95,.08), transparent 22%),
-        linear-gradient(180deg,#0b1020,#0f1730);
-    }
-    .appShell{min-height:100vh;display:grid;grid-template-columns:280px 1fr;gap:16px;padding:16px}
-    @media(max-width:1080px){.appShell{grid-template-columns:1fr}}
-    .sidebar,.panel,.topbar{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:var(--shadow)}
-    .sidebar{border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:14px}
-    .brand{display:flex;align-items:center;gap:14px;padding:12px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
-    .brandIcon{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#23170d;font-size:28px;font-weight:700}
-    .brandTop{font-size:11px;letter-spacing:.22em;color:#d7c29e}
-    .brandTitle{font-size:20px;font-weight:700}
-    .navCard,.miniCard{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:20px;padding:14px}
-    .navTitle{font-size:12px;color:var(--sub);margin-bottom:10px;letter-spacing:.14em}
-    .navItem{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);margin-bottom:8px;color:var(--text);font-weight:700}
-    .miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .miniStat{padding:12px;border-radius:16px;background:#10172b;border:1px solid var(--line)}
-    .miniStatLabel{font-size:11px;color:var(--sub);margin-bottom:6px}
-    .miniStatValue{font-size:18px;font-weight:800}
-    .main{display:flex;flex-direction:column;gap:16px}
-    .topbar{border-radius:24px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .topbarTitle{font-size:22px;font-weight:800}
-    .topbarSub{font-size:13px;color:var(--sub);margin-top:4px}
-    .statusPill{padding:10px 14px;border-radius:999px;background:rgba(202,163,95,.14);border:1px solid rgba(202,163,95,.34);color:#f2deba;font-weight:700;white-space:nowrap}
-    .workspace{display:grid;grid-template-columns:420px 1fr;gap:16px}
-    @media(max-width:1180px){.workspace{grid-template-columns:1fr}}
-    .panel{border-radius:28px;padding:18px}
-    .panelTitle{font-size:20px;font-weight:800;margin-bottom:10px}
-    .panelSub{font-size:13px;color:var(--sub);margin-bottom:14px;line-height:1.7}
-    .sectionLabel{font-size:12px;letter-spacing:.08em;color:#d8def0;margin:14px 0 8px;font-weight:700}
-    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:760px){.row2{grid-template-columns:1fr}}
-    .input,.textarea,select{width:100%;padding:13px 14px;border-radius:16px;border:1px solid var(--line);background:#0f1730;color:var(--text);font-size:15px;outline:none}
-    .textarea{min-height:100px;resize:vertical;line-height:1.8}
-    .segmented{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .chipRow{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{padding:10px 12px;border:none;border-radius:999px;background:#1b2544;color:var(--text);border:1px solid var(--line);cursor:pointer;font-weight:700}
-    .btn{width:100%;padding:14px;border:none;border-radius:16px;cursor:pointer;font-weight:800;font-size:15px}
-    .btnPrimary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#23170d}
-    .btnSoft{background:#17213d;color:var(--text);border:1px solid var(--line)}
-    .btnDanger{background:#29191b;color:#ffd7d7;border:1px solid rgba(217,107,107,.35)}
-    .toggle.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#23170d}
-    .reportWrap{background:linear-gradient(180deg,var(--paper),var(--paper2));color:var(--ink);border-radius:28px;padding:22px;min-height:900px;position:relative}
-    .reportSeal{position:absolute;top:18px;right:18px;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle, rgba(202,163,95,.28), rgba(143,106,43,.12));border:1px solid rgba(143,106,43,.22);color:#7b5b27;font-size:12px;text-align:center;line-height:1.2}
-    .reportHeader{padding-bottom:14px;border-bottom:2px solid rgba(143,106,43,.16);margin-bottom:16px}
-    .reportTitle{font-size:32px;font-weight:900;color:#6d4f1a;letter-spacing:.06em}
-    .reportSub{font-size:11px;color:#9a7b48;letter-spacing:.18em}
-    .metaRow{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:#6c5b45;margin-bottom:16px}
-    .reportBlock{border:1px solid #eadbc0;border-radius:18px;background:#fffefb;padding:14px;margin-top:14px}
-    .reportMiniGrid,.reportMiniGrid5{display:grid;gap:10px}
-    .reportMiniGrid{grid-template-columns:repeat(4,1fr)}
-    .reportMiniGrid5{grid-template-columns:repeat(5,1fr)}
-    @media(max-width:900px){.reportMiniGrid,.reportMiniGrid5{grid-template-columns:1fr 1fr}}
-    @media(max-width:560px){.reportMiniGrid,.reportMiniGrid5{grid-template-columns:1fr}}
-    .miniBox{border:1px solid #eadbc0;border-radius:14px;background:#fff;padding:10px 12px}
-    .miniBoxLabel{font-size:12px;color:#8a7550;margin-bottom:5px}
-    .miniBoxValue{font-weight:800}
-    .callout{margin-top:14px;padding:13px 14px;border-left:4px solid #b88934;background:#fff7e8;border-radius:12px;color:#5f471d;line-height:1.9}
-    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:#f4ecdd;color:#765414;font-size:12px;font-weight:700;margin:0 6px 6px 0}
-    .table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
-    .table th,.table td{border:1px solid #eadbc0;padding:8px 10px;text-align:left}
-    .table th{background:#fbf3e1;color:#6f4d14}
-    .hidden{display:none !important}
-    .print-customer #internalBlock{display:none}
-    .print-internal #internalBlock{display:block}
-    @media print{
-      body{background:#fff}.sidebar,.topbar,.workspace>.panel:first-child{display:none !important}.workspace{display:block}
-      .panel{border:none;box-shadow:none;padding:0;background:#fff}.reportWrap{box-shadow:none;background:#fff;padding:0}.reportSeal{display:none}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>占い師専用アプリ 第9版 相性鑑定モード付き</title>
+<style>
+  :root{
+    --bg:#f7f3eb;
+    --bg2:#fffdf8;
+    --panel:rgba(255,255,255,.96);
+    --gold:#9f772b;
+    --gold2:#d7b36a;
+    --text:#2f2417;
+    --sub:#675947;
+    --line:rgba(159,119,43,.20);
+    --shadow:0 18px 44px rgba(70,46,12,.12);
+    --radius:24px;
+    --danger:#b64d4d;
+    --ok:#2f7b57;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    color:var(--text);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+    background:
+      radial-gradient(circle at 10% 10%, rgba(255,221,144,.28), transparent 26%),
+      radial-gradient(circle at 90% 14%, rgba(255,214,132,.15), transparent 18%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+    min-height:100vh;
+  }
+
+  .wrap{max-width:1600px;margin:0 auto;padding:18px;}
+  .hero{
+    border-radius:32px;
+    border:1px solid var(--line);
+    background:linear-gradient(135deg, rgba(255,255,255,.97), rgba(255,248,236,.96));
+    box-shadow:var(--shadow);
+    padding:28px 24px;
+  }
+  h1{
+    margin:0 0 10px;
+    font-size:clamp(28px,4vw,44px);
+    color:#765414;
+    letter-spacing:.04em;
+  }
+  .hero p{margin:0;color:var(--sub);line-height:1.9;}
+  .badgeRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+  .badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid var(--line);
+    color:#765414;
+    font-size:12px;
+    font-weight:700;
+  }
+
+  .dashboard{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:18px;
+  }
+  @media (max-width:1280px){ .dashboard{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:700px){ .dashboard{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .dashboard{grid-template-columns:1fr;} }
+
+  .statCard{
+    background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:16px;
+  }
+  .statCard strong{display:block;color:#765414;font-size:13px;margin-bottom:8px;}
+  .statValue{font-size:22px;font-weight:800;}
+  .money{color:var(--ok);font-weight:800;}
+
+  .layout{
+    display:grid;
+    grid-template-columns:460px 1fr 390px;
+    gap:18px;
+    margin-top:18px;
+  }
+  @media (max-width:1420px){ .layout{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--panel);
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+
+  .card h2{margin:0 0 14px;color:#765414;font-size:22px;}
+  .sectionTitle{margin:14px 0 8px;color:#765414;font-size:14px;font-weight:700;}
+  .input,.textarea,.select{
+    width:100%;
+    border:1px solid #dcc89f;
+    background:#fffefb;
+    color:var(--text);
+    border-radius:16px;
+    padding:13px 14px;
+    font-size:15px;
+    outline:none;
+  }
+  .textarea{min-height:92px;resize:vertical;line-height:1.8;}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:680px){ .row{grid-template-columns:1fr;} }
+
+  .switchRow{display:flex;gap:10px;flex-wrap:wrap;}
+  .switchBtn,.subBtn,.mainBtn,.dangerBtn,.ctaBtn{
+    border:none;cursor:pointer;border-radius:16px;padding:14px 16px;font-size:15px;font-weight:700;
+  }
+  .switchBtn,.subBtn,.ctaBtn{
+    background:#fff;color:#765414;border:1px solid var(--line);
+  }
+  .switchBtn.active{
+    color:#fff;background:linear-gradient(135deg,var(--gold),var(--gold2));
+    box-shadow:0 10px 22px rgba(159,119,43,.22);
+  }
+  .mainBtn{
+    width:100%;color:#fff;background:linear-gradient(135deg,var(--gold),var(--gold2));
+    box-shadow:0 10px 22px rgba(159,119,43,.22);margin-top:12px;
+  }
+  .dangerBtn{background:#fff5f5;color:var(--danger);border:1px solid rgba(182,77,77,.2);}
+  .toolGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+  @media (max-width:680px){ .toolGrid{grid-template-columns:1fr;} }
+
+  .checkGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:680px){ .checkGrid{grid-template-columns:1fr;} }
+  .checkItem{
+    display:flex;align-items:center;gap:10px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:16px;
+  }
+
+  .lockBox,.menuBox,.miniCard,.metaCard{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;
+  }
+  .lockBox{background:#fff8e8;border:1px solid #e1c584;color:#765414;line-height:1.8;}
+  .menuBox{line-height:1.8;color:var(--sub);}
+  .small{font-size:13px;line-height:1.8;color:var(--sub);}
+
+  .resultBox{
+    min-height:980px;padding:22px;border-radius:22px;border:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.99), rgba(255,249,239,.98));
+    line-height:2;
+  }
+  .resultBox h3{margin:0 0 12px;color:#765414;font-size:24px;}
+  .metaGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+  @media (max-width:900px){ .metaGrid{grid-template-columns:1fr;} }
+
+  .pill{
+    display:inline-block;margin:0 6px 6px 0;padding:8px 12px;border-radius:999px;
+    background:#fff;border:1px solid var(--line);color:#765414;font-size:12px;font-weight:700;
+  }
+
+  .hl{background:linear-gradient(transparent 60%, rgba(215,179,106,.36) 60%);font-weight:700;}
+  .loading{display:none;margin-top:10px;color:#765414;font-weight:700;}
+  .loading.show{display:block;}
+
+  .listWrap{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow:auto;}
+  .listBtn{
+    width:100%;text-align:left;border:none;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;color:var(--text);
+  }
+
+  .statusBadge,.rankBadge{
+    display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-left:6px;vertical-align:middle;
+  }
+  .status-new{background:#eef6ff;color:#245c9f}
+  .status-repeat{background:#eefaf3;color:#206740}
+  .status-wait{background:#fff7ea;color:#946419}
+  .status-vip{background:#fff0f5;color:#a23a63}
+  .rankBadge{background:#f6efe2;color:#765414;}
+
+  .divider{height:1px;background:var(--line);margin:14px 0;}
+
+  .tarotSpread{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;}
+  @media (max-width:680px){ .tarotSpread{grid-template-columns:1fr;} }
+
+  .fiveGrid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin-top:10px;
+  }
+  @media (max-width:680px){ .fiveGrid{grid-template-columns:1fr 1fr;} }
+
+  .fiveCell,.pillCard{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center;
+  }
+
+  .compatGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:10px;
+  }
+  @media (max-width:680px){ .compatGrid{grid-template-columns:1fr 1fr;} }
+
+  .compatCell{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center;
+  }
+
+  table{
+    width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:16px;overflow:hidden;
+  }
+  th,td{border-bottom:1px solid #eee2c8;padding:10px;text-align:left;}
+  th{background:#fbf5e8;color:#765414;}
+
+  .hidden{display:none !important;}
+
+  a{color:#8b5f11}
+
+  @media print{
+    body{background:#fff}
+    .hero,.dashboard,.leftCol,.rightCol,.loading,.toolGrid,.switchRow,.mainBtn,.subBtn,.dangerBtn,.ctaBtn{display:none !important}
+    .layout{display:block}
+    .card{box-shadow:none;border:none;background:#fff;padding:0}
+    .resultBox{border:none;padding:0}
+  }
+</style>
 </head>
 <body>
-<div class="appShell">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brandIcon">☯</div>
-      <div><div class="brandTop">MOA FORTUNE PRO SYSTEM</div><div class="brandTitle">MOA 占術アプリ Pro</div></div>
+<div class="wrap">
+  <section class="hero">
+    <h1>占い師専用アプリ 第9版 相性鑑定モード付き</h1>
+    <p>
+      四柱推命・五行・易・タロットに加え、2人分の命式を並べて見る相性鑑定モードを追加した版です。<br>
+      通常鑑定と相性鑑定を切り替えて使えます。
+    </p>
+    <div class="badgeRow">
+      <span class="badge">通常鑑定</span>
+      <span class="badge">相性鑑定</span>
+      <span class="badge">四柱推命</span>
+      <span class="badge">蔵干・通変星</span>
+      <span class="badge">五行相性</span>
+      <span class="badge">易・タロット</span>
     </div>
-    <div class="navCard">
-      <div class="navTitle">WORKSPACE</div>
-      <div class="navItem">命式入力</div><div class="navItem">本格鑑定</div><div class="navItem">相性判定</div><div class="navItem">PDF出力</div>
-    </div>
+  </section>
+
+  <section class="dashboard">
+    <div class="statCard"><strong>全体売上合計</strong><div class="statValue money" id="totalSales">¥0</div></div>
+    <div class="statCard"><strong>今月売上</strong><div class="statValue money" id="currentMonthSales">¥0</div></div>
+    <div class="statCard"><strong>顧客数</strong><div class="statValue" id="totalCustomers">0</div></div>
+    <div class="statCard"><strong>鑑定履歴数</strong><div class="statValue" id="totalReadings">0</div></div>
+    <div class="statCard"><strong>今日の予約件数</strong><div class="statValue" id="todayReservations">0</div></div>
+    <div class="statCard"><strong>未予約客数</strong><div class="statValue" id="noReservationCount">0</div></div>
+  </section>
+
+  <div class="layout">
+    <aside class="card leftCol">
+      <h2>鑑定入力</h2>
+
+      <div class="sectionTitle">鑑定モード</div>
+      <div class="switchRow">
+        <button type="button" class="switchBtn active" id="singleReadBtn">通常鑑定</button>
+        <button type="button" class="switchBtn" id="compatReadBtn">相性鑑定</button>
+      </div>
+
+      <div class="sectionTitle">利用モード</div>
+      <div class="switchRow">
+        <button type="button" class="switchBtn active" id="freeBtn">無料版</button>
+        <button type="button" class="switchBtn" id="premiumBtn">有料版</button>
+      </div>
+      <div class="lockBox" id="modeGuide">
+        無料版は短めの体験鑑定向けです。有料版は複合占術による長文鑑定です。
+      </div>
+
+      <div class="sectionTitle">ご本人情報</div>
+      <div class="row">
+        <input id="customerName" class="input" placeholder="お客様名">
+        <input id="birthDate" class="input" type="date">
+      </div>
+
+      <div class="row">
+        <input id="birthTime" class="input" type="time">
+        <input id="birthPlace" class="input" placeholder="出生地（例：大阪府）">
+      </div>
+
+      <div class="row">
+        <select id="gender" class="select">
+          <option value="">性別</option>
+          <option>女性</option>
+          <option>男性</option>
+          <option>その他</option>
+        </select>
+        <select id="topic" class="select">
+          <option value="">相談テーマ</option>
+          <option>恋愛</option>
+          <option>仕事</option>
+          <option>お金</option>
+          <option>人間関係</option>
+          <option>結婚</option>
+          <option>家庭</option>
+          <option>健康</option>
+          <option>総合運</option>
+        </select>
+      </div>
+
+      <div id="partnerSection" class="hidden">
+        <div class="sectionTitle">お相手情報</div>
+        <div class="row">
+          <input id="partnerName" class="input" placeholder="お相手名">
+          <input id="partnerBirthDate" class="input" type="date">
+        </div>
+        <div class="row">
+          <input id="partnerBirthTime" class="input" type="time">
+          <input id="partnerBirthPlace" class="input" placeholder="出生地（例：東京都）">
+        </div>
+        <div class="row">
+          <select id="compatTopic" class="select">
+            <option value="恋愛">恋愛相性</option>
+            <option value="結婚">結婚相性</option>
+            <option value="人間関係">人間関係相性</option>
+            <option value="仕事">仕事相性</option>
+          </select>
+          <select id="partnerGender" class="select">
+            <option value="">お相手性別</option>
+            <option>女性</option>
+            <option>男性</option>
+            <option>その他</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sectionTitle">顧客管理情報</div>
+      <div class="row">
+        <select id="customerStatus" class="select">
+          <option value="new">新規</option>
+          <option value="repeat">リピーター</option>
+          <option value="wait">検討中</option>
+          <option value="vip">VIP</option>
+        </select>
+        <input id="feeMemo" class="input" placeholder="料金メモ（例：60分 8,000円）">
+      </div>
+
+      <div class="row">
+        <input id="feeAmount" class="input" type="number" min="0" placeholder="売上金額（例：8000）">
+        <input id="lastVisit" class="input" type="date">
+      </div>
+
+      <div class="row">
+        <input id="nextReservation" class="input" type="date">
+        <select id="tarotMode" class="select">
+          <option value="single">タロット1枚引き</option>
+          <option value="three">タロット3枚引き</option>
+        </select>
+      </div>
+
+      <div class="sectionTitle">相談内容</div>
+      <textarea id="question" class="textarea" placeholder="例：今後の恋愛運と、動くべき時期を知りたい。相手との距離感に迷っている。"></textarea>
+
+      <div class="sectionTitle">占術選択</div>
+      <div class="checkGrid">
+        <label class="checkItem"><input type="checkbox" class="fortuneCheck" value="四柱推命" checked>四柱推命</label>
+        <label class="checkItem"><input type="checkbox" class="fortuneCheck" value="九星気学" checked>九星気学</label>
+        <label class="checkItem"><input type="checkbox" class="fortuneCheck" value="西洋占星術" checked>西洋占星術</label>
+        <label class="checkItem"><input type="checkbox" class="fortuneCheck" value="易" checked>易</label>
+        <label class="checkItem"><input type="checkbox" class="fortuneCheck" value="ルーン" checked>ルーン</label>
+        <label class="checkItem"><input type="checkbox" class="fortuneCheck" value="タロット" checked>タロット</label>
+      </div>
+
+      <div class="sectionTitle">占い師メモ</div>
+      <textarea id="readerMemo" class="textarea" placeholder="対面で感じた印象、注意点、次回提案など"></textarea>
+
+      <div class="sectionTitle">次回提案メモ</div>
+      <textarea id="proposalMemo" class="textarea" placeholder="例：次回は相性鑑定、月運、年間運を提案"></textarea>
+
+      <div class="sectionTitle">予約メモ</div>
+      <textarea id="reservationMemo" class="textarea" placeholder="例：次回は来月上旬の土曜日希望 / 夜の時間帯が希望"></textarea>
+
+      <div class="sectionTitle">SNS導線</div>
+      <input id="instaUrl" class="input" placeholder="Instagram URL">
+      <input id="lineUrl" class="input" placeholder="LINE URL" style="margin-top:10px">
+
+      <button class="mainBtn" onclick="generateReading()">鑑定結果を作成する</button>
+      <div class="loading" id="loading">命式・相性・五行・易を計算しています…</div>
+
+      <div class="toolGrid">
+        <button type="button" class="subBtn" onclick="saveCurrentCustomer()">顧客を保存</button>
+        <button type="button" class="subBtn" onclick="saveHistory()">履歴に保存</button>
+        <button type="button" class="subBtn" onclick="window.print()">印刷 / PDF保存</button>
+        <button type="button" class="subBtn" onclick="downloadBackup()">JSON保存</button>
+      </div>
+
+      <div class="toolGrid">
+        <button type="button" class="subBtn" onclick="triggerRestore()">JSON復元</button>
+        <button type="button" class="subBtn" onclick="exportCustomersCSV()">顧客CSV出力</button>
+        <button type="button" class="subBtn" onclick="exportHistoryCSV()">履歴CSV出力</button>
+        <button type="button" class="dangerBtn" onclick="clearAllData()">全データ削除</button>
+      </div>
+
+      <input type="file" id="restoreFile" accept="application/json" style="display:none">
+
+      <div class="sectionTitle">おすすめ提案</div>
+      <div class="menuBox" id="menuSuggestion">
+        まだ鑑定前です。鑑定後におすすめの有料メニュー案内を表示します。
+      </div>
+    </aside>
+
+    <main class="card">
+      <h2>鑑定結果</h2>
+      <div class="resultBox" id="result">
+        <h3>まだ鑑定結果はありません</h3>
+        <p>
+          左側に情報を入力し、<span class="hl">「鑑定結果を作成する」</span>を押してください。<br>
+          第9版では通常鑑定と相性鑑定を切り替えられます。
+        </p>
+      </div>
+
+      <div class="sectionTitle">月別売上表</div>
+      <div class="miniCard" id="monthlySalesTable">
+        <div class="small">履歴を保存すると、ここに月別売上が表示されます。</div>
+      </div>
+    </main>
+
+    <aside class="card rightCol">
+      <h2>顧客と導線</h2>
+
+      <div class="sectionTitle">顧客検索</div>
+      <input id="customerSearch" class="input" placeholder="名前で検索" oninput="renderCustomers()">
+
+      <div class="sectionTitle">顧客一覧</div>
+      <div class="listWrap" id="customerList"></div>
+
+      <div class="divider"></div>
+
+      <div class="sectionTitle">この顧客の過去履歴</div>
+      <div class="listWrap" id="customerHistoryList"></div>
+
+      <div class="divider"></div>
+
+      <div class="sectionTitle">リピーター一覧</div>
+      <div class="listWrap" id="repeatersList"></div>
+
+      <div class="divider"></div>
+
+      <div class="sectionTitle">未予約客一覧</div>
+      <div class="listWrap" id="noReservationList"></div>
+
+      <div class="divider"></div>
+
+      <div class="sectionTitle">予約・導線</div>
+      <div class="miniCard" id="reservationPreview">
+        <div class="small">顧客を選ぶと、予約メモや案内に使いやすい内容をここに表示します。</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sectionTitle">全体履歴</div>
+      <div class="listWrap" id="historyList"></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+let appMode = "free";
+let readMode = "single";
+let activeCustomerId = "";
+
+const freeBtn = document.getElementById("freeBtn");
+const premiumBtn = document.getElementById("premiumBtn");
+const singleReadBtn = document.getElementById("singleReadBtn");
+const compatReadBtn = document.getElementById("compatReadBtn");
+const partnerSection = document.getElementById("partnerSection");
+const modeGuide = document.getElementById("modeGuide");
+const restoreFile = document.getElementById("restoreFile");
+
+freeBtn.addEventListener("click", ()=>setMode("free"));
+premiumBtn.addEventListener("click", ()=>setMode("premium"));
+singleReadBtn.addEventListener("click", ()=>setReadMode("single"));
+compatReadBtn.addEventListener("click", ()=>setReadMode("compat"));
+restoreFile.addEventListener("change", handleRestoreFile);
+
+function setMode(mode){
+  appMode = mode;
+  freeBtn.classList.toggle("active", mode === "free");
+  premiumBtn.classList.toggle("active", mode === "premium");
+  modeGuide.textContent = mode === "free"
+    ? "無料版は短めの体験鑑定向けです。有料版への導線作りに向いています。"
+    : "有料版は複合占術と長文の物語調リーディングを行う本格鑑定です。";
+}
+
+function setReadMode(mode){
+  readMode = mode;
+  singleReadBtn.classList.toggle("active", mode === "single");
+  compatReadBtn.classList.toggle("active", mode === "compat");
+  partnerSection.classList.toggle("hidden", mode !== "compat");
+}
+
+function safeValue(id){ return document.getElementById(id).value.trim(); }
+function escapeHtml(str){
+  return String(str || "").replace(/[&<>"']/g, function(m){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];
+  });
+}
+function selectedFortunes(){
+  return [...document.querySelectorAll(".fortuneCheck:checked")].map(el=>el.value);
+}
+function parseBirthData(dateStr){
+  if(!dateStr) return null;
+  const d = new Date(dateStr);
+  if(isNaN(d)) return null;
+  return { year:d.getFullYear(), month:d.getMonth()+1, day:d.getDate() };
+}
+function parseYen(input){
+  const n = Number(String(input).replace(/[^\d.-]/g,""));
+  return isNaN(n) ? 0 : n;
+}
+function formatYen(n){
+  return "¥" + Number(n || 0).toLocaleString("ja-JP");
+}
+
+const stems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+const branches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+const stemElements = ["木","木","火","火","土","土","金","金","水","水"];
+const stemPolarity = ["陽","陰","陽","陰","陽","陰","陽","陰","陽","陰"];
+const branchElements = {
+  "子":"水","丑":"土","寅":"木","卯":"木","辰":"土","巳":"火",
+  "午":"火","未":"土","申":"金","酉":"金","戌":"土","亥":"水"
+};
+
+const zodiacBorders = [
+  ["山羊座",1,20],["水瓶座",2,19],["魚座",3,21],["牡羊座",4,20],["牡牛座",5,21],["双子座",6,22],
+  ["蟹座",7,23],["獅子座",8,23],["乙女座",9,23],["天秤座",10,24],["蠍座",11,23],["射手座",12,22],["山羊座",12,32]
+];
+
+const ichingNames = [
+"乾為天","坤為地","水雷屯","山水蒙","水天需","天水訟","地水師","水地比",
+"風天小畜","天沢履","地天泰","天地否","天火同人","火天大有","地山謙","雷地豫",
+"沢雷随","山風蠱","地沢臨","風地観","火雷噬嗑","山火賁","山地剥","地雷復",
+"天雷无妄","山天大畜","山雷頤","沢風大過","坎為水","離為火","沢山咸","雷風恒",
+"天山遯","雷天大壮","火地晋","地火明夷","風火家人","火沢睽","水山蹇","雷水解",
+"山沢損","風雷益","沢天夬","天風姤","沢地萃","地風升","沢水困","水風井",
+"沢火革","火風鼎","震為雷","艮為山","風山漸","雷沢帰妹","雷火豊","火山旅",
+"巽為風","兌為沢","風水渙","水沢節","風沢中孚","雷山小過","水火既済","火水未済"
+];
+
+const ichingMeanings = {
+  "乾為天":"強い意志で道を切り開く時。","坤為地":"受け入れ育てる姿勢が運を開く時。","水雷屯":"始まりの苦労はあるが育つ兆し。",
+  "山水蒙":"学び直しと見極めが必要な時。","水天需":"焦らず待つことが実りにつながる。","天水訟":"争わず筋を整えることが大切。",
+  "地水師":"組織立てて動くと力を発揮しやすい。","水地比":"協力と信頼が鍵。","風天小畜":"小さく整えながら進める時。",
+  "天沢履":"礼節と慎重さが成功の鍵。","地天泰":"物事が通りやすい好機。","天地否":"今は無理押しせず流れを見極める時。",
+  "天火同人":"志を同じくする人との縁が重要。","火天大有":"豊かさと成果を受け取りやすい。","地山謙":"控えめさが運を守る。",
+  "雷地豫":"楽しみの中に勢いが生まれる。","沢雷随":"流れに乗ることが大切。","山風蠱":"乱れを整え直す時。",
+  "地沢臨":"良い流れが近づく兆し。","風地観":"状況観察が最優先。","火雷噬嗑":"問題をはっきり整理する時。",
+  "山火賁":"外見より本質を磨く時。","山地剥":"手放しと整理の局面。","地雷復":"もう一度やり直せる兆し。",
+  "天雷无妄":"自然体で進むことが吉。","山天大畜":"力を蓄えてから動く時。","山雷頤":"言葉と養いがテーマ。",
+  "沢風大過":"やりすぎや偏りの調整が必要。","坎為水":"不安の中でも道はある。","離為火":"見通しと明るさを得やすい。",
+  "沢山咸":"心の共鳴と引き合い。","雷風恒":"継続が結果を生む。","天山遯":"退く勇気も大切。",
+  "雷天大壮":"勢いはあるが強引さに注意。","火地晋":"前進と評価が得られやすい。","地火明夷":"今は光を内に守る時。",
+  "風火家人":"身近な関係性の整え直し。","火沢睽":"すれ違いは視点の違いから生まれる。","水山蹇":"進みにくい時は準備が先。",
+  "雷水解":"重さがほどけていく兆し。","山沢損":"減らすことで整う。","風雷益":"与えたものが増えて返る。",
+  "沢天夬":"決断の時。","天風姤":"急な出会いや変化に注意。","沢地萃":"人や情報が集まりやすい。",
+  "地風升":"少しずつ上昇する流れ。","沢水困":"苦しさの中で本質が見える。","水風井":"基盤を整えると運が安定する。",
+  "沢火革":"変革と切り替えの時。","火風鼎":"新しい形へ作り替える時。","震為雷":"動き出しの合図。",
+  "艮為山":"止まって見直す意義が大きい。","風山漸":"ゆっくり育つご縁や成果。","雷沢帰妹":"焦った結論に注意。",
+  "雷火豊":"勢いと華やかさがある時。","火山旅":"一時的な流れ、腰を据えすぎない。","巽為風":"柔らかな浸透力が鍵。",
+  "兌為沢":"喜びと対話が運を開く。","風水渙":"散らばりをまとめ直す時。","水沢節":"節度が運を整える。",
+  "風沢中孚":"誠実さが信頼を呼ぶ。","雷山小過":"小さなことを丁寧に。","水火既済":"整った後こそ油断禁物。",
+  "火水未済":"まだ完成前、整えながら進む。"
+};
+
+const runeList = [
+"フェオ","ウル","ソーン","アンスール","ライド","ケン","ギューフ","ウンジョ",
+"ハガル","ニイド","イス","ヤラ","エイワズ","ペオース","アルジズ","ソウェイル",
+"ティール","ベルカナ","エワズ","マンナズ","ラグズ","イング","ダエグ","オシラ"
+];
+
+const tarotList = [
+"愚者","魔術師","女教皇","女帝","皇帝","法王","恋人たち","戦車","力","隠者",
+"運命の輪","正義","吊るされた男","死神","節制","悪魔","塔","星","月","太陽","審判","世界"
+];
+
+const zokanMap = {
+  "子":["癸"],"丑":["己","癸","辛"],"寅":["甲","丙","戊"],"卯":["乙"],"辰":["戊","乙","癸"],"巳":["丙","庚","戊"],
+  "午":["丁","己"],"未":["己","丁","乙"],"申":["庚","壬","戊"],"酉":["辛"],"戌":["戊","辛","丁"],"亥":["壬","甲"]
+};
+
+const juniunMap = {
+  "甲":{"亥":"長生","子":"沐浴","丑":"冠帯","寅":"建禄","卯":"帝旺","辰":"衰","巳":"病","午":"死","未":"墓","申":"絶","酉":"胎","戌":"養"},
+  "乙":{"午":"長生","巳":"沐浴","辰":"冠帯","卯":"建禄","寅":"帝旺","丑":"衰","子":"病","亥":"死","戌":"墓","酉":"絶","申":"胎","未":"養"},
+  "丙":{"寅":"長生","卯":"沐浴","辰":"冠帯","巳":"建禄","午":"帝旺","未":"衰","申":"病","酉":"死","戌":"墓","亥":"絶","子":"胎","丑":"養"},
+  "丁":{"酉":"長生","申":"沐浴","未":"冠帯","午":"建禄","巳":"帝旺","辰":"衰","卯":"病","寅":"死","丑":"墓","子":"絶","亥":"胎","戌":"養"},
+  "戊":{"寅":"長生","卯":"沐浴","辰":"冠帯","巳":"建禄","午":"帝旺","未":"衰","申":"病","酉":"死","戌":"墓","亥":"絶","子":"胎","丑":"養"},
+  "己":{"酉":"長生","申":"沐浴","未":"冠帯","午":"建禄","巳":"帝旺","辰":"衰","卯":"病","寅":"死","丑":"墓","子":"絶","亥":"胎","戌":"養"},
+  "庚":{"巳":"長生","午":"沐浴","未":"冠帯","申":"建禄","酉":"帝旺","戌":"衰","亥":"病","子":"死","丑":"墓","寅":"絶","卯":"胎","辰":"養"},
+  "辛":{"子":"長生","亥":"沐浴","戌":"冠帯","酉":"建禄","申":"帝旺","未":"衰","午":"病","巳":"死","辰":"墓","卯":"絶","寅":"胎","丑":"養"},
+  "壬":{"申":"長生","酉":"沐浴","戌":"冠帯","亥":"建禄","子":"帝旺","丑":"衰","寅":"病","卯":"死","辰":"墓","巳":"絶","午":"胎","未":"養"},
+  "癸":{"卯":"長生","寅":"沐浴","丑":"冠帯","子":"建禄","亥":"帝旺","戌":"衰","酉":"病","申":"死","未":"墓","午":"絶","巳":"胎","辰":"養"}
+};
+
+const branchCompat = {
+  "子":{"子":3,"丑":2,"寅":1,"卯":0,"辰":2,"巳":1,"午":-2,"未":1,"申":2,"酉":1,"戌":0,"亥":3},
+  "丑":{"子":2,"丑":2,"寅":1,"卯":0,"辰":2,"巳":1,"午":0,"未":-2,"申":1,"酉":2,"戌":1,"亥":0},
+  "寅":{"子":1,"丑":1,"寅":2,"卯":2,"辰":1,"巳":-2,"午":2,"未":1,"申":-2,"酉":0,"戌":2,"亥":3},
+  "卯":{"子":0,"丑":0,"寅":2,"卯":2,"辰":-2,"巳":1,"午":1,"未":2,"申":0,"酉":-2,"戌":2,"亥":2},
+  "辰":{"子":2,"丑":2,"寅":1,"卯":-2,"辰":2,"巳":2,"午":1,"未":0,"申":2,"酉":2,"戌":-2,"亥":1},
+  "巳":{"子":1,"丑":1,"寅":-2,"卯":1,"辰":2,"巳":2,"午":2,"未":1,"申":2,"酉":1,"戌":0,"亥":-2},
+  "午":{"子":-2,"丑":0,"寅":2,"卯":1,"辰":1,"巳":2,"午":2,"未":2,"申":0,"酉":-1,"戌":2,"亥":1},
+  "未":{"子":1,"丑":-2,"寅":1,"卯":2,"辰":0,"巳":1,"午":2,"未":2,"申":1,"酉":0,"戌":2,"亥":1},
+  "申":{"子":2,"丑":1,"寅":-2,"卯":0,"辰":2,"巳":2,"午":0,"未":1,"申":2,"酉":2,"戌":1,"亥":-2},
+  "酉":{"子":1,"丑":2,"寅":0,"卯":-2,"辰":2,"巳":1,"午":-1,"未":0,"申":2,"酉":2,"戌":1,"亥":1},
+  "戌":{"子":0,"丑":1,"寅":2,"卯":2,"辰":-2,"巳":0,"午":2,"未":2,"申":1,"酉":1,"戌":2,"亥":1},
+  "亥":{"子":3,"丑":0,"寅":3,"卯":2,"辰":1,"巳":-2,"午":1,"未":1,"申":-2,"酉":1,"戌":1,"亥":2}
+};
+
+function getWesternSign(month, day){
+  for(const [name,m,d] of zodiacBorders){
+    if(month < m || (month === m && day < d)) return name;
+  }
+  return "山羊座";
+}
+function seededIndex(str, len, salt=""){
+  const s = (str || "seed") + salt;
+  let h = 0;
+  for(let i=0;i<s.length;i++){
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h) % len;
+}
+function getRuneSeeded(seed){ return runeList[seededIndex(seed, runeList.length, "rune")]; }
+function getTarotSeeded(seed, salt=""){ return tarotList[seededIndex(seed, tarotList.length, "tarot"+salt)]; }
+
+function getTarotMeaning(card, pos){
+  const map = {
+    "愚者":"新しい流れへの一歩","魔術師":"行動と創造の開始","女教皇":"直感と静かな見極め",
+    "女帝":"豊かさと育み","皇帝":"安定と責任","法王":"助言と学び","恋人たち":"選択とご縁",
+    "戦車":"前進と意志","力":"心の強さ","隠者":"内省と答え探し","運命の輪":"転機と流れ",
+    "正義":"公平な判断","吊るされた男":"視点の転換","死神":"終わりと再生","節制":"調和と調整",
+    "悪魔":"執着の見直し","塔":"急な変化","星":"希望と癒し","月":"不安と潜在意識",
+    "太陽":"明るい結果","審判":"再起と答え","世界":"完成と到達"
+  };
+  return (pos ? `${pos}：` : "") + (map[card] || "流れの変化");
+}
+
+function julianDay(y, m, d){
+  if(m <= 2){ y -= 1; m += 12; }
+  const A = Math.floor(y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+}
+function sexagenaryName(index){
+  const s = stems[index % 10];
+  const b = branches[index % 12];
+  return s + b;
+}
+function getYearPillar(dateObj){
+  const y = dateObj.getFullYear();
+  const m = dateObj.getMonth() + 1;
+  const d = dateObj.getDate();
+  const effectiveYear = (m < 2 || (m === 2 && d < 4)) ? y - 1 : y;
+  const index = (effectiveYear - 1984 + 60) % 60;
+  return { index, name: sexagenaryName(index), stem: stems[index % 10], branch: branches[index % 12] };
+}
+function getMonthPillar(dateObj, yearStemIndex){
+  const m = dateObj.getMonth() + 1;
+  const d = dateObj.getDate();
+  let astroMonth = m;
+  if(d < 4) astroMonth -= 1;
+  if(astroMonth <= 0) astroMonth += 12;
+
+  const monthBranchOrder = ["寅","卯","辰","巳","午","未","申","酉","戌","亥","子","丑"];
+  const monthBranch = monthBranchOrder[(astroMonth + 10) % 12];
+
+  const firstStemMap = {
+    "甲":2,"己":2,
+    "乙":4,"庚":4,
+    "丙":6,"辛":6,
+    "丁":8,"壬":8,
+    "戊":0,"癸":0
+  };
+  const firstStem = firstStemMap[stems[yearStemIndex]];
+  const monthIndexWithin = monthBranchOrder.indexOf(monthBranch);
+  const stemIndex = (firstStem + monthIndexWithin) % 10;
+  return { name: stems[stemIndex] + monthBranch, stem: stems[stemIndex], branch: monthBranch };
+}
+function getDayPillar(dateObj){
+  const y = dateObj.getFullYear();
+  const m = dateObj.getMonth() + 1;
+  const d = dateObj.getDate();
+  const jd = julianDay(y, m, d);
+  const base = julianDay(1984, 2, 2);
+  const diff = Math.floor(jd - base);
+  const index = ((diff % 60) + 60) % 60;
+  return { index, name: sexagenaryName(index), stem: stems[index % 10], branch: branches[index % 12] };
+}
+function getHourBranch(hour){
+  const order = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+  const idx = Math.floor(((hour + 1) % 24) / 2);
+  return order[idx];
+}
+function getHourPillar(dayStem, hour){
+  const hourBranch = getHourBranch(hour);
+  const hourBranchIndex = branches.indexOf(hourBranch);
+  const startMap = {
+    "甲":0,"己":0,
+    "乙":2,"庚":2,
+    "丙":4,"辛":4,
+    "丁":6,"壬":6,
+    "戊":8,"癸":8
+  };
+  const stemIndex = (startMap[dayStem] + hourBranchIndex) % 10;
+  return { name: stems[stemIndex] + hourBranch, stem: stems[stemIndex], branch: hourBranch };
+}
+function calcFourPillars(dateStr, timeStr){
+  const dateObj = new Date(dateStr + "T12:00:00");
+  const yearP = getYearPillar(dateObj);
+  const monthP = getMonthPillar(dateObj, stems.indexOf(yearP.stem));
+  const dayP = getDayPillar(dateObj);
+  const hour = timeStr ? Number(timeStr.split(":")[0]) : 12;
+  const hourP = getHourPillar(dayP.stem, hour);
+  return { yearP, monthP, dayP, hourP };
+}
+function countFiveElements(pillars){
+  const counts = { 木:0, 火:0, 土:0, 金:0, 水:0 };
+  [pillars.yearP, pillars.monthP, pillars.dayP, pillars.hourP].forEach(p => {
+    counts[stemElements[stems.indexOf(p.stem)]] += 1;
+    counts[branchElements[p.branch]] += 1;
+  });
+  return counts;
+}
+function getKyusei(year, month, day){
+  const effectiveYear = (month < 2 || (month === 2 && day < 4)) ? year - 1 : year;
+  let num = 11 - (effectiveYear % 9);
+  if(num > 9) num -= 9;
+  if(num === 0) num = 9;
+  const names = {
+    1:"一白水星",2:"二黒土星",3:"三碧木星",4:"四緑木星",5:"五黄土星",
+    6:"六白金星",7:"七赤金星",8:"八白土星",9:"九紫火星"
+  };
+  return names[num];
+}
+function calcIChing(seed){
+  const base = seededIndex(seed, 64, "hex");
+  const changing = (seededIndex(seed, 6, "line") + 1);
+  const changed = base ^ (1 << (changing - 1));
+  return {
+    hexIndex: base,
+    changingLine: changing,
+    hexName: ichingNames[base],
+    changedName: ichingNames[changed],
+    hexMeaning: ichingMeanings[ichingNames[base]] || "流れを観察することが大切。",
+    changedMeaning: ichingMeanings[ichingNames[changed]] || "変化後の流れを整えることが大切。"
+  };
+}
+
+function getShichuProfileByDayMaster(dayStem){
+  const map = {
+    "甲":"まっすぐ伸びる木のように理想と成長を重視するタイプ",
+    "乙":"しなやかな草花のように柔軟で空気を読む力が高いタイプ",
+    "丙":"太陽のように明るく外へ力を出すタイプ",
+    "丁":"灯火のように繊細で深い感性を持つタイプ",
+    "戊":"山のように安定感と責任感の強いタイプ",
+    "己":"畑の土のように受容力と調整力が高いタイプ",
+    "庚":"鉄のように決断力と切り替えの速いタイプ",
+    "辛":"宝石のように繊細で審美眼のあるタイプ",
+    "壬":"海のように大きく柔らかい流れを持つタイプ",
+    "癸":"雨露のように静かで観察力の高いタイプ"
+  };
+  return map[dayStem] || "内面を丁寧に見極めるタイプ";
+}
+function getZokan(branch){ return zokanMap[branch] || []; }
+function getStemMeta(stem){
+  const idx = stems.indexOf(stem);
+  return { element: stemElements[idx], polarity: stemPolarity[idx] };
+}
+function getTsuhen(dayStem, otherStem){
+  const day = getStemMeta(dayStem);
+  const other = getStemMeta(otherStem);
+  const generate = { 木:"火", 火:"土", 土:"金", 金:"水", 水:"木" };
+  const control = { 木:"土", 火:"金", 土:"水", 金:"木", 水:"火" };
+  const producedBy = { 木:"水", 火:"木", 土:"火", 金:"土", 水:"金" };
+  const controlledBy = { 木:"金", 火:"水", 土:"木", 金:"火", 水:"土" };
+
+  if(day.element === other.element) return day.polarity === other.polarity ? "比肩" : "劫財";
+  if(generate[day.element] === other.element) return day.polarity === other.polarity ? "食神" : "傷官";
+  if(control[day.element] === other.element) return day.polarity === other.polarity ? "偏財" : "正財";
+  if(controlledBy[day.element] === other.element) return day.polarity === other.polarity ? "偏官" : "正官";
+  if(producedBy[day.element] === other.element) return day.polarity === other.polarity ? "偏印" : "印綬";
+  return "―";
+}
+function getJuniun(dayStem, branch){
+  return (juniunMap[dayStem] && juniunMap[dayStem][branch]) ? juniunMap[dayStem][branch] : "―";
+}
+function getFiveElementAdvice(counts){
+  const entries = Object.entries(counts).sort((a,b)=> a[1]-b[1]);
+  const weak = entries[0][0];
+  const strong = entries[entries.length-1][0];
+  const weakMap = {
+    "木":"成長・計画・継続を意識すると運が整いやすいです。",
+    "火":"情熱・発信・自己表現を増やすと流れが動きやすいです。",
+    "土":"生活基盤・休息・現実整理を意識すると安定しやすいです。",
+    "金":"決断・整理・線引きを意識すると迷いが減りやすいです。",
+    "水":"内省・学び・柔軟さを意識すると運が巡りやすいです。"
+  };
+  const strongMap = {
+    "木":"理想が先に立ちすぎると疲れやすいので現実調整も大切です。",
+    "火":"勢いが強くなりすぎると消耗しやすいので休息も必要です。",
+    "土":"抱え込みすぎると重くなるため手放しも大切です。",
+    "金":"厳しさが出すぎると人間関係が固くなるので柔らかさも意識すると良いです。",
+    "水":"考えすぎて動けなくなる前に小さく行動すると運が巡ります。"
+  };
+  return `五行では「${weak}」がやや弱く「${strong}」が強めです。${weakMap[weak]} また、${strongMap[strong]}`;
+}
+
+function enrichPillars(pillars){
+  pillars.yearP.zokan = getZokan(pillars.yearP.branch);
+  pillars.monthP.zokan = getZokan(pillars.monthP.branch);
+  pillars.dayP.zokan = getZokan(pillars.dayP.branch);
+  pillars.hourP.zokan = getZokan(pillars.hourP.branch);
+  const dayMaster = pillars.dayP.stem;
+  pillars.yearP.tsuhen = getTsuhen(dayMaster, pillars.yearP.stem);
+  pillars.monthP.tsuhen = getTsuhen(dayMaster, pillars.monthP.stem);
+  pillars.dayP.tsuhen = "日元";
+  pillars.hourP.tsuhen = getTsuhen(dayMaster, pillars.hourP.stem);
+  pillars.yearP.juniun = getJuniun(dayMaster, pillars.yearP.branch);
+  pillars.monthP.juniun = getJuniun(dayMaster, pillars.monthP.branch);
+  pillars.dayP.juniun = getJuniun(dayMaster, pillars.dayP.branch);
+  pillars.hourP.juniun = getJuniun(dayMaster, pillars.hourP.branch);
+  return pillars;
+}
+
+function analyzePerson(dateStr, timeStr, question, seedBase){
+  const birth = parseBirthData(dateStr);
+  const sign = getWesternSign(birth.month, birth.day);
+  const pillars = enrichPillars(calcFourPillars(dateStr, timeStr || "12:00"));
+  const fiveCounts = countFiveElements(pillars);
+  const kyusei = getKyusei(birth.year, birth.month, birth.day);
+  const dayMaster = pillars.dayP.stem;
+  const dayMasterProfile = getShichuProfileByDayMaster(dayMaster);
+  const fiveElementAdvice = getFiveElementAdvice(fiveCounts);
+  const seed = `${seedBase}|${dateStr}|${timeStr}|${question}`;
+  return {
+    birth, sign, pillars, fiveCounts, kyusei, dayMaster, dayMasterProfile, fiveElementAdvice, seed
+  };
+}
+
+function getTopicBase(topic){
+  const map = {
+    "恋愛":"相手との距離感だけでなく、ご自身がどの関係なら安心できるかが大きな鍵です。",
+    "仕事":"役割の広がりと疲れやすさが同時に出やすく、選び方が今後を左右しやすい時期です。",
+    "お金":"お金そのものより、ご自身の価値の扱い方が豊かさを左右しやすい流れです。",
+    "人間関係":"縁を広げるより、安心できる関係を選び直す意味が強い時期です。",
+    "結婚":"形を急ぐより、これから先も落ち着ける相手かどうかの見極めが大切です。",
+    "家庭":"言葉にしていない我慢や気配りが積み重なりやすく、整え直しが必要な流れです。",
+    "健康":"回復力を上げることが、そのまま全体運の底上げにつながります。",
+    "総合運":"人生全体の流れを静かに組み替える時期で、内面の整理が外側の幸運へつながります。"
+  };
+  return map[topic] || "今は心と現実を丁寧に揃えることが大切です。";
+}
+function getActionAdvice(topic){
+  const map = {
+    "恋愛":"相手の反応を追いすぎず、ご自身が安心できる関係の条件を書き出すことです。",
+    "仕事":"今の仕事で評価されている点と消耗している点を分けて整理することです。",
+    "お金":"収支だけでなく、ご自身の価値に見合った受け取り方を意識することです。",
+    "人間関係":"疲れる相手と無理に合わせず、自然体で話せる相手を大切にすることです。",
+    "結婚":"条件面だけでなく、一緒にいる時の安堵感を判断基準にすることです。",
+    "家庭":"感情が高ぶった時ではなく、落ち着いた時に短く正直に伝えることです。",
+    "健康":"予定を詰め込みすぎず、休むことを先に予定へ入れることです。",
+    "総合運":"毎日少しでも気持ちが整う習慣を作ることです。"
+  };
+  return map[topic] || "無理なく続く一歩を選ぶことです。";
+}
+function getTimingAdvice(topic){
+  const map = {
+    "恋愛":"急いで答えを出すより、相手の態度と自分の気持ちが一致する時に動く方が流れは良いです。",
+    "仕事":"すぐに大きく変えるより、水面下で準備を進めてから動く方が安定します。",
+    "お金":"短期の増減より、数か月単位で整える方が成果につながりやすいです。",
+    "人間関係":"違和感が続く縁は早めに距離を整え、必要な縁は時間をかけて育てる方が良いです。",
+    "結婚":"見極めの期間を持つことで後悔が減り、納得できる形につながりやすいです。",
+    "家庭":"静かな時間帯に話すほど誤解が減りやすいです。",
+    "健康":"不調が強く出る前に止まるほど回復が早いです。",
+    "総合運":"待つだけでも急ぐだけでもなく、整った時に小さく動くのが最適です。"
+  };
+  return map[topic] || "流れを見極めながら一歩ずつ進む時期です。";
+}
+function getDeepTheme(topic, question){
+  if(question.includes("復縁")) return "過去の縁を追うより、その関係が今の自分を本当に幸せにするかを見直す必要があります。";
+  if(question.includes("転職")) return "今は環境そのものより、自分の力が自然に活きる場所を見つけることが優先です。";
+  if(question.includes("結婚")) return "形への焦りより、安心して未来を描ける相手かどうかが中心課題です。";
+  if(question.includes("お金")) return "不安から守りに入りすぎるより、受け取れる価値へ意識を向けることが大切です。";
+  return getTopicBase(topic);
+}
+function getModeIntro(){
+  return appMode === "free"
+    ? "今回の簡易鑑定では、今のお悩みに対して流れの中心だけをやわらかく読み解いていきます。"
+    : "今回の本格鑑定では、複数の占術を重ねながら、今の状況・本質・流れ・時期を立体的に見ていきます。";
+}
+function getStatusLabel(status){
+  const map = { new:"新規", repeat:"リピーター", wait:"検討中", vip:"VIP" };
+  return map[status] || "新規";
+}
+function getStatusClass(status){ return "status-" + (status || "new"); }
+function getCustomerRankBySales(totalSales){
+  if(totalSales >= 100000) return "VIP";
+  if(totalSales >= 40000) return "上位";
+  if(totalSales >= 10000) return "一般";
+  return "新規";
+}
+
+function calcCompatibility(mainData, partnerData, compatTopic){
+  let score = 50;
+
+  const dayElement1 = getStemMeta(mainData.dayMaster).element;
+  const dayElement2 = getStemMeta(partnerData.dayMaster).element;
+
+  const generate = { 木:"火", 火:"土", 土:"金", 金:"水", 水:"木" };
+  const control = { 木:"土", 火:"金", 土:"水", 金:"木", 水:"火" };
+
+  let elementComment = "";
+  if(dayElement1 === dayElement2){
+    score += 15;
+    elementComment = "日主の五行が同じで、価値観や感じ方に共通点が多い相性です。";
+  } else if(generate[dayElement1] === dayElement2 || generate[dayElement2] === dayElement1){
+    score += 20;
+    elementComment = "五行が相生関係で、お互いを育て合いやすい相性です。";
+  } else if(control[dayElement1] === dayElement2 || control[dayElement2] === dayElement1){
+    score -= 8;
+    elementComment = "五行に相剋関係があり、刺激は強いですが衝突も起こりやすい相性です。";
+  } else {
+    score += 5;
+    elementComment = "五行の違いが補い合いとして働きやすい相性です。";
+  }
+
+  const branch1 = mainData.pillars.dayP.branch;
+  const branch2 = partnerData.pillars.dayP.branch;
+  const branchScore = (branchCompat[branch1] && typeof branchCompat[branch1][branch2] === "number")
+    ? branchCompat[branch1][branch2]
+    : 0;
+  score += branchScore * 5;
+
+  let branchComment = "";
+  if(branchScore >= 2){
+    branchComment = "日支同士の流れは良く、自然に気持ちが通いやすい組み合わせです。";
+  } else if(branchScore <= -2){
+    branchComment = "日支同士ではぶつかりやすさがあり、距離感の調整が大切です。";
+  } else {
+    branchComment = "日支同士は中庸で、付き合い方次第で安定しやすい関係です。";
+  }
+
+  const weak1 = Object.entries(mainData.fiveCounts).sort((a,b)=>a[1]-b[1])[0][0];
+  const weak2 = Object.entries(partnerData.fiveCounts).sort((a,b)=>a[1]-b[1])[0][0];
+
+  let balanceComment = "";
+  if(weak1 !== weak2){
+    score += 8;
+    balanceComment = "五行の不足部分が違うため、補い合いの形が作りやすい相性です。";
+  } else {
+    score -= 3;
+    balanceComment = "似た弱点を持ちやすいため、同じ場面で疲れが出ることがあります。";
+  }
+
+  if(compatTopic === "恋愛"){
+    score += 5;
+  } else if(compatTopic === "結婚"){
+    score += 3;
+  } else if(compatTopic === "仕事"){
+    score += 1;
+  }
+
+  score = Math.max(0, Math.min(100, score));
+
+  let level = "";
+  if(score >= 85) level = "とても良い相性";
+  else if(score >= 70) level = "良い相性";
+  else if(score >= 55) level = "育てていける相性";
+  else if(score >= 40) level = "課題の多い相性";
+  else level = "かなり調整が必要な相性";
+
+  let themeComment = "";
+  if(compatTopic === "恋愛"){
+    themeComment = score >= 70
+      ? "恋愛では気持ちが通いやすく、関係を育てやすい流れです。"
+      : "恋愛では期待値のズレが出やすいので、言葉で確認し合うことが重要です。";
+  } else if(compatTopic === "結婚"){
+    themeComment = score >= 70
+      ? "結婚相性としては、生活感覚をすり合わせながら安定を作りやすい組み合わせです。"
+      : "結婚相性では、価値観や生活習慣の違いを早めに確認する必要があります。";
+  } else if(compatTopic === "仕事"){
+    themeComment = score >= 70
+      ? "仕事相性としては役割分担がはまりやすく、成果を出しやすい組み合わせです。"
+      : "仕事相性では、進め方の違いをルール化すると安定しやすいです。";
+  } else {
+    themeComment = score >= 70
+      ? "人間関係として自然体で続けやすく、無理の少ない相性です。"
+      : "人間関係としては近づきすぎず、適切な距離感を持つと良いです。";
+  }
+
+  return {
+    score, level, elementComment, branchComment, balanceComment, themeComment
+  };
+}
+
+function buildTarotHtml(cards){
+  if(!cards || cards.length === 0) return "";
+  return `
     <div class="miniCard">
-      <div class="navTitle">DASHBOARD</div>
-      <div class="miniGrid">
-        <div class="miniStat"><div class="miniStatLabel">四柱</div><div class="miniStatValue">ON</div></div>
-        <div class="miniStat"><div class="miniStatLabel">空亡</div><div class="miniStatValue">ON</div></div>
-        <div class="miniStat"><div class="miniStatLabel">納音</div><div class="miniStatValue">ON</div></div>
-        <div class="miniStat"><div class="miniStatLabel">PDF</div><div class="miniStatValue">OK</div></div>
+      <strong style="color:#765414">タロット展開</strong>
+      <div class="tarotSpread">
+        ${cards.map(c => `
+          <div class="pillCard">
+            <div style="font-weight:700;color:#765414">${escapeHtml(c.name)}</div>
+            <div class="small">${escapeHtml(c.meaning)}</div>
+          </div>
+        `).join("")}
       </div>
     </div>
+  `;
+}
+
+function buildFiveElementsHtml(counts){
+  return `
     <div class="miniCard">
-      <div class="navTitle">FIX</div>
-      <div style="font-size:13px;color:var(--sub);line-height:1.8">四柱・西洋占星術・ルーン・タロットをまとめて読める総合版です。</div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="topbar">
-      <div><div class="topbarTitle">MOA MOA 占術アプリ Pro</div><div class="topbarSub">東西ルーンタロット版 / ルーン・タロット解説追加</div></div>
-      <div class="statusPill">TOTAL FORTUNE</div>
-    </div>
-
-    <div class="workspace">
-      <section class="panel">
-        <div class="panelTitle">鑑定入力</div>
-        <div class="panelSub">東洋占い・西洋占星術に加えて、ルーン占いとタロットの詳しい読みを追加した版です。</div>
-
-        <div class="sectionLabel">鑑定形式</div>
-        <div class="segmented">
-          <button id="singleBtn" class="btn btnSoft toggle active" type="button">通常鑑定</button>
-          <button id="compatBtn" class="btn btnSoft toggle" type="button">相性鑑定</button>
-        </div>
-
-        <div class="sectionLabel">文章量</div>
-        <div class="segmented">
-          <button id="normalBtn" class="btn btnSoft toggle active" type="button">標準</button>
-          <button id="longBtn" class="btn btnSoft toggle" type="button">長文</button>
-        </div>
-
-        <div class="sectionLabel">ご本人情報</div>
-        <div class="row2"><input id="name" class="input" placeholder="お名前"><input id="birthDate" class="input" type="date"></div>
-        <div class="row2" style="margin-top:10px"><input id="birthTime" class="input" type="time"><input id="birthPlace" class="input" placeholder="出生地（例：大阪府大阪市）"></div>
-        <div class="row2" style="margin-top:10px">
-          <select id="topic" class="input">
-            <option value="">相談テーマ</option><option>恋愛</option><option>復縁</option><option>片思い</option><option>仕事</option><option>転職</option><option>独立</option><option>お金</option><option>人間関係</option><option>結婚</option><option>家庭</option><option>健康</option><option>総合運</option>
-          </select>
-          <select id="gender" class="input"><option value="">性別</option><option>女性</option><option>男性</option><option>その他</option></select>
-        </div>
-
-        <div id="partnerSection" class="hidden">
-          <div class="sectionLabel">お相手情報</div>
-          <div class="row2"><input id="partnerName" class="input" placeholder="お相手名"><input id="partnerBirthDate" class="input" type="date"></div>
-          <div class="row2" style="margin-top:10px"><input id="partnerBirthTime" class="input" type="time"><input id="partnerBirthPlace" class="input" placeholder="出生地（例：東京都）"></div>
-        </div>
-
-        <div class="sectionLabel">相談テンプレ</div>
-        <div class="chipRow">
-          <button type="button" class="chip" data-template="恋愛">恋愛</button><button type="button" class="chip" data-template="復縁">復縁</button><button type="button" class="chip" data-template="片思い">片思い</button><button type="button" class="chip" data-template="仕事">仕事</button><button type="button" class="chip" data-template="転職">転職</button><button type="button" class="chip" data-template="独立">独立</button>
-        </div>
-
-        <div class="sectionLabel">相談内容</div>
-        <textarea id="question" class="textarea" placeholder="例：今後の恋愛運と、動くべき時期を知りたいです。"></textarea>
-
-        <div class="sectionLabel">内部メモ</div>
-        <textarea id="memo" class="textarea" placeholder="占い師メモ"></textarea>
-        <textarea id="proposalMemo" class="textarea" placeholder="次回提案メモ" style="margin-top:10px"></textarea>
-
-        <div class="row2" style="margin-top:14px">
-          <button id="generateBtn" class="btn btnPrimary" type="button">鑑定結果を作成する</button>
-          <button id="resetBtn" class="btn btnDanger" type="button">入力をリセット</button>
-        </div>
-        <div class="row2" style="margin-top:10px">
-          <button id="pdfCustomerBtn" class="btn btnSoft" type="button">お客様控えPDF</button>
-          <button id="pdfInternalBtn" class="btn btnSoft" type="button">内部控えPDF</button>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="metaRow"><span>鑑定番号：<b id="reportNumber">未発行</b></span><span>発行日：<b id="reportDate">未発行</b></span><span>控え種別：<b id="copyType">お客様控え</b></span></div>
-
-        <div class="reportWrap">
-          <div class="reportSeal">TOTAL FORTUNE<br>DEEP</div>
-          <div id="result" class="report">
-            <div class="reportHeader"><div class="reportTitle">鑑定書</div><div class="reportSub">MOA PROFESSIONAL FORTUNE READING DOCUMENT</div></div>
-            <h3>まだ鑑定結果はありません</h3>
-            <p>左の情報を入力して、「鑑定結果を作成する」を押してください。</p>
+      <strong style="color:#765414">五行バランス</strong>
+      <div class="fiveGrid">
+        ${Object.entries(counts).map(([k,v]) => `
+          <div class="fiveCell">
+            <div style="font-weight:700;color:#765414">${k}</div>
+            <div class="small">${v}</div>
           </div>
-        </div>
-
-        <div id="internalBlock" class="reportBlock" style="margin-top:16px;background:#fff9ee">
-          <h3>内部記録</h3>
-          <p><b>占い師メモ：</b><span id="memoView">未入力</span></p>
-          <p><b>次回提案メモ：</b><span id="proposalMemoView">未入力</span></p>
-        </div>
-      </section>
+        `).join("")}
+      </div>
     </div>
-  </main>
-</div>
-<script src="app.js"></script>
+  `;
+}
+
+function buildPillarDetailHtml(label, person){
+  const ps = [
+    ["年柱", person.pillars.yearP],
+    ["月柱", person.pillars.monthP],
+    ["日柱", person.pillars.dayP],
+    ["時柱", person.pillars.hourP]
+  ];
+  return `
+    <div class="miniCard">
+      <strong style="color:#765414">${label} 四柱詳細</strong>
+      <table>
+        <thead>
+          <tr>
+            <th>柱</th>
+            <th>干支</th>
+            <th>蔵干</th>
+            <th>通変星</th>
+            <th>十二運</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ps.map(([rowLabel,p]) => `
+            <tr>
+              <td>${rowLabel}</td>
+              <td>${escapeHtml(p.name)}</td>
+              <td>${escapeHtml((p.zokan || []).join("・"))}</td>
+              <td>${escapeHtml(p.tsuhen || "―")}</td>
+              <td>${escapeHtml(p.juniun || "―")}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function buildCompatHtml(mainName, partnerName, mainData, partnerData, compat, compatTopic){
+  return `
+    <h3>相性鑑定結果</h3>
+
+    <div class="metaGrid">
+      <div class="metaCard"><strong>ご本人：</strong>${escapeHtml(mainName)}</div>
+      <div class="metaCard"><strong>お相手：</strong>${escapeHtml(partnerName)}</div>
+      <div class="metaCard"><strong>相性テーマ：</strong>${escapeHtml(compatTopic)}</div>
+      <div class="metaCard"><strong>相性スコア：</strong>${compat.score} / 100</div>
+    </div>
+
+    <div class="miniCard">
+      <strong style="color:#765414">総合判定</strong>
+      <div class="small"><span class="hl">${escapeHtml(compat.level)}</span></div>
+    </div>
+
+    <div class="compatGrid">
+      <div class="compatCell">
+        <div style="font-weight:700;color:#765414">ご本人日主</div>
+        <div class="small">${escapeHtml(mainData.dayMaster)}</div>
+      </div>
+      <div class="compatCell">
+        <div style="font-weight:700;color:#765414">お相手日主</div>
+        <div class="small">${escapeHtml(partnerData.dayMaster)}</div>
+      </div>
+      <div class="compatCell">
+        <div style="font-weight:700;color:#765414">ご本人日支</div>
+        <div class="small">${escapeHtml(mainData.pillars.dayP.branch)}</div>
+      </div>
+      <div class="compatCell">
+        <div style="font-weight:700;color:#765414">お相手日支</div>
+        <div class="small">${escapeHtml(partnerData.pillars.dayP.branch)}</div>
+      </div>
+    </div>
+
+    <p>
+      ${escapeHtml(mainName)}様と${escapeHtml(partnerName)}様の相性を見ると、
+      <span class="hl">${escapeHtml(compat.level)}</span>という流れが出ています。
+    </p>
+
+    <p>${escapeHtml(compat.elementComment)}</p>
+    <p>${escapeHtml(compat.branchComment)}</p>
+    <p>${escapeHtml(compat.balanceComment)}</p>
+    <p>${escapeHtml(compat.themeComment)}</p>
+
+    <p>
+      ご本人は「${escapeHtml(mainData.dayMaster)}」の日主で、${escapeHtml(mainData.dayMasterProfile)}傾向があります。
+      一方、お相手は「${escapeHtml(partnerData.dayMaster)}」の日主で、${escapeHtml(partnerData.dayMasterProfile)}傾向があります。
+      そのため、この関係では「似ている部分」と「補い合う部分」の両方がテーマになります。
+    </p>
+
+    <p>
+      相性を良く育てる鍵は、相手を変えようとするよりも、
+      それぞれの自然なリズムを尊重しながら付き合うことです。
+      とくに${escapeHtml(compatTopic)}では、期待を曖昧にせず、安心できる距離感を言葉にするほど流れが整います。
+    </p>
+
+    ${buildPillarDetailHtml("ご本人", mainData)}
+    ${buildPillarDetailHtml("お相手", partnerData)}
+    ${buildFiveElementsHtml(mainData.fiveCounts)}
+    ${buildFiveElementsHtml(partnerData.fiveCounts)}
+  `;
+}
+
+function buildSingleHtml(data, baseMeta){
+  return `
+    <h3>${appMode === "free" ? "無料版 簡易鑑定" : "有料版 本格複合鑑定"}</h3>
+
+    <div class="metaGrid">
+      ${baseMeta}
+      <div class="metaCard"><strong>太陽星座：</strong>${escapeHtml(data.sign)}</div>
+    </div>
+
+    <div class="miniCard">
+      <strong style="color:#765414">四柱推命 計算結果</strong>
+      <div class="small">
+        年柱：${escapeHtml(data.pillars.yearP.name)} / 月柱：${escapeHtml(data.pillars.monthP.name)} / 日柱：${escapeHtml(data.pillars.dayP.name)} / 時柱：${escapeHtml(data.pillars.hourP.name)}<br>
+        日主：${escapeHtml(data.dayMaster)}<br>
+        ${escapeHtml(data.dayMasterProfile)}
+      </div>
+    </div>
+
+    ${buildPillarDetailHtml("ご本人", data)}
+    ${buildFiveElementsHtml(data.fiveCounts)}
+
+    <div class="miniCard">
+      <strong style="color:#765414">占術サマリー</strong>
+      <div class="small">
+        九星気学：${escapeHtml(data.kyusei)}<br>
+        西洋占星術：${escapeHtml(data.sign)}<br>
+        ${data.useIChing ? `易：本卦 ${escapeHtml(data.iching.hexName)} / 変爻 ${data.iching.changingLine} / 之卦 ${escapeHtml(data.iching.changedName)}<br>` : ""}
+        ${data.useRune ? `ルーン：${escapeHtml(data.rune)}<br>` : ""}
+        ${data.useTarot ? `タロット：${escapeHtml(data.tarotMode === "three" ? "3枚引き" : "1枚引き")}` : ""}
+      </div>
+    </div>
+
+    <div class="miniCard">
+      <strong style="color:#765414">相談内容</strong>
+      <div class="small">${escapeHtml(data.question).replace(/\n/g,"<br>")}</div>
+    </div>
+
+    ${buildTarotHtml(data.tarotCards)}
+
+    ${appMode === "free" ? `
+      <p>${getModeIntro()}</p>
+      <p>${escapeHtml(data.name)}様の今回のご相談には、<span class="hl">${escapeHtml(getDeepTheme(data.topic, data.question))}</span>という象意がまず強く出ています。</p>
+      <p>日主は「${escapeHtml(data.dayMaster)}」で、${escapeHtml(data.dayMasterProfile)}という本質が見えます。また、日柱の十二運は「${escapeHtml(data.pillars.dayP.juniun)}」で、内面のエネルギーの向きも特徴的です。</p>
+      <p>${escapeHtml(data.fiveElementAdvice)}</p>
+      <p>開運の鍵は、${escapeHtml(getActionAdvice(data.topic))} また、${escapeHtml(getTimingAdvice(data.topic))}</p>
+    ` : `
+      <p>${getModeIntro()}</p>
+      <p>${escapeHtml(data.name)}様の命式を見ると、今は単なる迷いではなく、<span class="hl">人生の流れを一段深く組み替える転換点</span>に入っています。</p>
+      <p>四柱推命では日主が「${escapeHtml(data.dayMaster)}」となり、${escapeHtml(data.dayMasterProfile)}という本質が命式の中心にあります。月柱には「${escapeHtml(data.pillars.monthP.tsuhen)}」、日柱には「${escapeHtml(data.pillars.dayP.tsuhen)}」の傾向があり、社会面と本心の両方にテーマが表れています。</p>
+      <p>十二運では、年柱「${escapeHtml(data.pillars.yearP.juniun)}」、月柱「${escapeHtml(data.pillars.monthP.juniun)}」、日柱「${escapeHtml(data.pillars.dayP.juniun)}」、時柱「${escapeHtml(data.pillars.hourP.juniun)}」と出ています。</p>
+      <p>${escapeHtml(data.fiveElementAdvice)}</p>
+      <p>九星気学では「${escapeHtml(data.kyusei)}」、太陽星座では「${escapeHtml(data.sign)}」の資質が重なります。</p>
+      ${data.useIChing ? `<p>易では本卦「${escapeHtml(data.iching.hexName)}」が出ており、これは「${escapeHtml(data.iching.hexMeaning)}」という意味を持ちます。さらに${data.iching.changingLine}爻が動き、之卦は「${escapeHtml(data.iching.changedName)}」で、「${escapeHtml(data.iching.changedMeaning)}」という流れに移ります。</p>` : ""}
+      ${data.useRune ? `<p>ルーンでは「${escapeHtml(data.rune)}」が出ており、ご縁・直感・流れの切り替わりのメッセージが重なります。</p>` : ""}
+      ${data.useTarot ? `<p>タロットからは、${escapeHtml(data.tarotSummary)}という流れが出ています。</p>` : ""}
+      <p>相談内容である「${escapeHtml(data.question)}」について総合的に見ると、${escapeHtml(getDeepTheme(data.topic, data.question))}</p>
+      <p>具体的な開運行動としては、${escapeHtml(getActionAdvice(data.topic))}</p>
+      <p>時期の読みとしては、${escapeHtml(getTimingAdvice(data.topic))}</p>
+    `}
+
+    ${data.memo ? `<div class="menuBox"><strong style="color:#765414;">占い師メモ</strong><div class="small">${escapeHtml(data.memo).replace(/\n/g,"<br>")}</div></div>` : ""}
+    ${data.proposalMemo ? `<div class="menuBox"><strong style="color:#765414;">次回提案メモ</strong><div class="small">${escapeHtml(data.proposalMemo).replace(/\n/g,"<br>")}</div></div>` : ""}
+    ${data.reservationMemo ? `<div class="menuBox"><strong style="color:#765414;">予約メモ</strong><div class="small">${escapeHtml(data.reservationMemo).replace(/\n/g,"<br>")}</div></div>` : ""}
+
+    <div class="menuBox">
+      <strong style="color:#765414">おすすめ追加メニュー</strong>
+      <div class="small">${escapeHtml(getRecommendedMenuText(data.topic, appMode))}</div>
+    </div>
+
+    <div class="miniCard">
+      <strong style="color:#765414">次回予約・導線</strong>
+      <div class="small">
+        次回予約予定：${escapeHtml(data.nextReservation || "未設定")}<br>
+        予約メモ：${escapeHtml(data.reservationMemo || "未入力")}
+      </div>
+      <div class="toolGrid" style="margin-top:10px;">
+        ${data.lineUrl ? `<a class="ctaBtn" href="${escapeHtml(data.lineUrl)}" target="_blank" style="text-decoration:none;text-align:center;">LINEへ案内</a>` : `<button class="ctaBtn" type="button" onclick="copyGuideText()">案内文をコピー</button>`}
+        ${data.instaUrl ? `<a class="ctaBtn" href="${escapeHtml(data.instaUrl)}" target="_blank" style="text-decoration:none;text-align:center;">Instagramへ案内</a>` : `<button class="ctaBtn" type="button" onclick="copyGuideText()">予約案内をコピー</button>`}
+      </div>
+    </div>
+  `;
+}
+
+function generateReading(){
+  const loading = document.getElementById("loading");
+  const name = safeValue("customerName") || "お客様";
+  const birthDate = safeValue("birthDate");
+  const birthTime = safeValue("birthTime") || "12:00";
+  const birthPlace = safeValue("birthPlace") || "未入力";
+  const gender = safeValue("gender") || "未入力";
+  const topic = safeValue("topic") || "総合運";
+  const question = safeValue("question");
+  const memo = safeValue("readerMemo");
+  const proposalMemo = safeValue("proposalMemo");
+  const reservationMemo = safeValue("reservationMemo");
+  const instaUrl = safeValue("instaUrl");
+  const lineUrl = safeValue("lineUrl");
+  const status = safeValue("customerStatus");
+  const feeAmount = parseYen(safeValue("feeAmount"));
+  const nextReservation = safeValue("nextReservation");
+  const tarotMode = safeValue("tarotMode") || "single";
+  const fortunes = selectedFortunes();
+
+  if(!birthDate){
+    alert("ご本人の生年月日を入力してください。");
+    return;
+  }
+  if(!question){
+    alert("相談内容を入力してください。");
+    return;
+  }
+
+  if(readMode === "compat" && !safeValue("partnerBirthDate")){
+    alert("お相手の生年月日を入力してください。");
+    return;
+  }
+
+  loading.classList.add("show");
+
+  setTimeout(()=>{
+    const result = document.getElementById("result");
+
+    const main = analyzePerson(birthDate, birthTime, question, `${name}|${birthPlace}|${topic}`);
+    const iching = calcIChing(main.seed + "|iching");
+    const rune = getRuneSeeded(main.seed + "|rune");
+
+    let tarotCards = [];
+    let tarotSummary = "";
+    if(fortunes.includes("タロット")){
+      if(tarotMode === "three"){
+        const c1 = getTarotSeeded(main.seed, "_p");
+        const c2 = getTarotSeeded(main.seed, "_n");
+        const c3 = getTarotSeeded(main.seed, "_f");
+        tarotCards = [
+          {name:c1, meaning:getTarotMeaning(c1, "過去")},
+          {name:c2, meaning:getTarotMeaning(c2, "現在")},
+          {name:c3, meaning:getTarotMeaning(c3, "未来")}
+        ];
+        tarotSummary = `${c1}・${c2}・${c3}の並びから、過去を整理し現在を整えることで未来が開ける暗示`;
+      } else {
+        const c = getTarotSeeded(main.seed, "_s");
+        tarotCards = [{name:c, meaning:getTarotMeaning(c, "中心")}];
+        tarotSummary = `${c}が中心に出ており、今のテーマに対して大切な象徴を一つに絞って示している暗示`;
+      }
+    }
+
+    const baseMeta = `
+      <div class="metaCard"><strong>お客様名：</strong>${escapeHtml(name)}</div>
+      <div class="metaCard"><strong>相談テーマ：</strong>${escapeHtml(topic)}</div>
+      <div class="metaCard"><strong>生年月日：</strong>${escapeHtml(birthDate)} ${escapeHtml(birthTime)}</div>
+      <div class="metaCard"><strong>出生地 / 性別：</strong>${escapeHtml(birthPlace)} / ${escapeHtml(gender)}</div>
+      <div class="metaCard"><strong>顧客ステータス：</strong>${escapeHtml(getStatusLabel(status))}</div>
+      <div class="metaCard"><strong>売上金額：</strong>${formatYen(feeAmount)}</div>
+      <div class="metaCard"><strong>次回予約：</strong>${escapeHtml(nextReservation || "未入力")}</div>
+      <div class="metaCard"><strong>鑑定モード：</strong>${readMode === "compat" ? "相性鑑定" : "通常鑑定"}</div>
+    `;
+
+    if(readMode === "compat"){
+      const partnerName = safeValue("partnerName") || "お相手";
+      const partnerBirthDate = safeValue("partnerBirthDate");
+      const partnerBirthTime = safeValue("partnerBirthTime") || "12:00";
+      const partnerBirthPlace = safeValue("partnerBirthPlace") || "未入力";
+      const compatTopic = safeValue("compatTopic") || "恋愛";
+
+      const partner = analyzePerson(partnerBirthDate, partnerBirthTime, question, `${partnerName}|${partnerBirthPlace}|${compatTopic}`);
+      const compat = calcCompatibility(main, partner, compatTopic);
+
+      result.innerHTML = buildCompatHtml(name, partnerName, main, partner, compat, compatTopic);
+      updateMenuSuggestion(compatTopic);
+    } else {
+      const singleData = {
+        name, topic, question, memo, proposalMemo, reservationMemo, instaUrl, lineUrl, nextReservation,
+        sign: main.sign,
+        kyusei: main.kyusei,
+        pillars: main.pillars,
+        fiveCounts: main.fiveCounts,
+        dayMaster: main.dayMaster,
+        dayMasterProfile: main.dayMasterProfile,
+        fiveElementAdvice: main.fiveElementAdvice,
+        iching, rune, tarotCards, tarotSummary, tarotMode,
+        useIChing: fortunes.includes("易"),
+        useRune: fortunes.includes("ルーン"),
+        useTarot: fortunes.includes("タロット")
+      };
+      result.innerHTML = buildSingleHtml(singleData, baseMeta);
+      updateMenuSuggestion(topic);
+    }
+
+    updateReservationPreview();
+    loading.classList.remove("show");
+  }, 700);
+}
+
+function getRecommendedMenuText(topic, mode){
+  if(mode === "free"){
+    return "無料版の次は、本格総合鑑定・相性鑑定・時期読みへの案内がおすすめです。";
+  }
+  const map = {
+    "恋愛":"相性鑑定・復縁鑑定・結婚時期鑑定",
+    "仕事":"転職時期鑑定・適職鑑定・3か月仕事運",
+    "お金":"金運上昇期鑑定・仕事運連動鑑定・年間金運",
+    "人間関係":"相性鑑定・ご縁整理鑑定",
+    "結婚":"結婚時期鑑定・相性深掘り鑑定",
+    "家庭":"家庭運・家族相性・家庭内改善鑑定",
+    "健康":"生活リズム運気読み・回復期の流れ",
+    "総合運":"今後3か月運勢・年間総合鑑定"
+  };
+  return map[topic] || "詳細鑑定・月運・年間運";
+}
+
+function copyGuideText(){
+  const name = safeValue("customerName") || "お客様";
+  const nextReservation = safeValue("nextReservation") || "未定";
+  const text = `${name}様、ありがとうございました。続きの本格鑑定や次回のご予約も承っております。次回候補日は ${nextReservation} です。ご希望の方はLINEまたはInstagramからご連絡ください。`;
+  navigator.clipboard.writeText(text).then(()=>{
+    alert("案内文をコピーしました。");
+  }).catch(()=>{
+    alert("コピーに失敗しました。");
+  });
+}
+
+function currentCustomerData(){
+  const id = (safeValue("customerName") || "") + "|" + (safeValue("birthDate") || "");
+  return {
+    id,
+    name:safeValue("customerName"),
+    birthDate:safeValue("birthDate"),
+    birthTime:safeValue("birthTime"),
+    birthPlace:safeValue("birthPlace"),
+    gender:safeValue("gender"),
+    topic:safeValue("topic"),
+    question:safeValue("question"),
+    readerMemo:safeValue("readerMemo"),
+    proposalMemo:safeValue("proposalMemo"),
+    reservationMemo:safeValue("reservationMemo"),
+    instaUrl:safeValue("instaUrl"),
+    lineUrl:safeValue("lineUrl"),
+    customerStatus:safeValue("customerStatus"),
+    feeMemo:safeValue("feeMemo"),
+    feeAmount:parseYen(safeValue("feeAmount")),
+    lastVisit:safeValue("lastVisit"),
+    nextReservation:safeValue("nextReservation"),
+    tarotMode:safeValue("tarotMode"),
+    updatedAt:new Date().toLocaleString("ja-JP")
+  };
+}
+
+function saveCurrentCustomer(){
+  const customer = currentCustomerData();
+  if(!customer.name){
+    alert("お客様名を入力してください。");
+    return;
+  }
+  let arr = JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  const idx = arr.findIndex(x => x.id === customer.id);
+  if(idx >= 0) arr[idx] = customer;
+  else arr.unshift(customer);
+  localStorage.setItem("fortuneCustomers", JSON.stringify(arr.slice(0,200)));
+  activeCustomerId = customer.id;
+  renderCustomers();
+  renderCustomerHistory(customer.id);
+  updateReservationPreview();
+  updateStats();
+  renderRepeaters();
+  renderNoReservation();
+  alert("顧客情報を保存しました。");
+}
+
+function fillCustomer(customer){
+  document.getElementById("customerName").value = customer.name || "";
+  document.getElementById("birthDate").value = customer.birthDate || "";
+  document.getElementById("birthTime").value = customer.birthTime || "";
+  document.getElementById("birthPlace").value = customer.birthPlace || "";
+  document.getElementById("gender").value = customer.gender || "";
+  document.getElementById("topic").value = customer.topic || "";
+  document.getElementById("question").value = customer.question || "";
+  document.getElementById("readerMemo").value = customer.readerMemo || "";
+  document.getElementById("proposalMemo").value = customer.proposalMemo || "";
+  document.getElementById("reservationMemo").value = customer.reservationMemo || "";
+  document.getElementById("instaUrl").value = customer.instaUrl || "";
+  document.getElementById("lineUrl").value = customer.lineUrl || "";
+  document.getElementById("customerStatus").value = customer.customerStatus || "new";
+  document.getElementById("feeMemo").value = customer.feeMemo || "";
+  document.getElementById("feeAmount").value = customer.feeAmount || "";
+  document.getElementById("lastVisit").value = customer.lastVisit || "";
+  document.getElementById("nextReservation").value = customer.nextReservation || "";
+  document.getElementById("tarotMode").value = customer.tarotMode || "single";
+  activeCustomerId = customer.id || "";
+  renderCustomerHistory(activeCustomerId);
+  updateReservationPreview();
+}
+
+function renderCustomers(){
+  const q = safeValue("customerSearch").toLowerCase();
+  let arr = JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  if(q){
+    arr = arr.filter(x => (x.name || "").toLowerCase().includes(q));
+  }
+  window._filteredCustomers = arr;
+  const box = document.getElementById("customerList");
+  if(arr.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">顧客データはまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = arr.map((c,i)=>{
+    const customerSales = getCustomerSales(c.id);
+    const count = getCustomerVisitCount(c.id);
+    const rank = getCustomerRankBySales(customerSales);
+    return `
+      <button type="button" class="listBtn" onclick="loadCustomer(${i})">
+        <strong style="color:#765414">${escapeHtml(c.name || "名称未設定")}</strong>
+        <span class="statusBadge ${getStatusClass(c.customerStatus)}">${escapeHtml(getStatusLabel(c.customerStatus))}</span>
+        <span class="rankBadge">${escapeHtml(rank)}</span><br>
+        <span class="small">${escapeHtml(c.birthDate || "生年月日未入力")} / ${escapeHtml(c.topic || "テーマ未設定")}</span><br>
+        <span class="small">来店回数：${count}回 / 売上：${formatYen(customerSales)}</span><br>
+        <span class="small">次回予約：${escapeHtml(c.nextReservation || "未設定")}</span>
+      </button>
+    `;
+  }).join("");
+}
+function loadCustomer(index){
+  const arr = window._filteredCustomers || JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  const customer = arr[index];
+  if(customer) fillCustomer(customer);
+}
+
+function saveHistory(){
+  const resultText = document.getElementById("result").innerText.trim();
+  const customerId = (safeValue("customerName") || "") + "|" + (safeValue("birthDate") || "");
+  if(!resultText || resultText.includes("まだ鑑定結果はありません")){
+    alert("先に鑑定結果を作成してください。");
+    return;
+  }
+  const item = {
+    id:"hist_" + Date.now(),
+    customerId,
+    date:new Date().toLocaleString("ja-JP"),
+    isoDate:new Date().toISOString(),
+    mode:appMode,
+    readMode,
+    name:safeValue("customerName") || "お客様",
+    topic: readMode === "compat" ? (safeValue("compatTopic") || "相性") : (safeValue("topic") || "総合運"),
+    question:safeValue("question"),
+    feeMemo:safeValue("feeMemo"),
+    feeAmount:parseYen(safeValue("feeAmount")),
+    nextReservation:safeValue("nextReservation"),
+    reservationMemo:safeValue("reservationMemo"),
+    result:resultText.slice(0,320) + "..."
+  };
+  let arr = JSON.parse(localStorage.getItem("fortuneHistory") || "[]");
+  arr.unshift(item);
+  localStorage.setItem("fortuneHistory", JSON.stringify(arr.slice(0,500)));
+  activeCustomerId = customerId;
+  renderHistory();
+  renderCustomerHistory(customerId);
+  updateReservationPreview();
+  updateStats();
+  renderCustomers();
+  renderRepeaters();
+  renderNoReservation();
+  renderMonthlySales();
+  alert("鑑定履歴を保存しました。");
+}
+
+function renderHistory(){
+  const arr = JSON.parse(localStorage.getItem("fortuneHistory") || "[]");
+  const box = document.getElementById("historyList");
+  if(arr.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">履歴はまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = arr.map(h=>`
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(h.name)} / ${escapeHtml(h.topic)}</strong>
+      <div class="small">${escapeHtml(h.date)} / ${h.mode === "free" ? "無料版" : "有料版"} / ${h.readMode === "compat" ? "相性鑑定" : "通常鑑定"}</div>
+      <div class="small">売上：${formatYen(h.feeAmount || 0)}</div>
+      <div class="small">次回予約：${escapeHtml(h.nextReservation || "未設定")}</div>
+      <div class="small" style="margin-top:6px">相談：${escapeHtml(h.question || "")}</div>
+    </div>
+  `).join("");
+}
+function renderCustomerHistory(customerId){
+  const box = document.getElementById("customerHistoryList");
+  if(!customerId){
+    box.innerHTML = `<div class="miniCard"><div class="small">顧客を選ぶと、この顧客の過去履歴がここに表示されます。</div></div>`;
+    return;
+  }
+  const arr = JSON.parse(localStorage.getItem("fortuneHistory") || "[]").filter(h => h.customerId === customerId);
+  if(arr.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">この顧客の履歴はまだありません。</div></div>`;
+    return;
+  }
+  box.innerHTML = arr.map(h=>`
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(h.topic)}</strong>
+      <div class="small">${escapeHtml(h.date)} / ${h.mode === "free" ? "無料版" : "有料版"} / ${h.readMode === "compat" ? "相性" : "通常"}</div>
+      <div class="small">売上：${formatYen(h.feeAmount || 0)}</div>
+      <div class="small">相談：${escapeHtml(h.question || "")}</div>
+      <div class="small">次回予約：${escapeHtml(h.nextReservation || "未設定")}</div>
+    </div>
+  `).join("");
+}
+
+function getCustomerSales(customerId){
+  const arr = JSON.parse(localStorage.getItem("fortuneHistory") || "[]").filter(h => h.customerId === customerId);
+  return arr.reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
+}
+function getCustomerVisitCount(customerId){
+  return JSON.parse(localStorage.getItem("fortuneHistory") || "[]").filter(h => h.customerId === customerId).length;
+}
+
+function renderRepeaters(){
+  const customers = JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  const box = document.getElementById("repeatersList");
+  const repeaters = customers
+    .map(c => ({...c, visits:getCustomerVisitCount(c.id), sales:getCustomerSales(c.id)}))
+    .filter(c => c.visits >= 2)
+    .sort((a,b)=> b.visits - a.visits || b.sales - a.sales);
+
+  if(repeaters.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">リピーターはまだいません。</div></div>`;
+    return;
+  }
+  box.innerHTML = repeaters.map(c=>`
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(c.name)}</strong>
+      <div class="small">来店回数：${c.visits}回</div>
+      <div class="small">売上合計：${formatYen(c.sales)}</div>
+      <div class="small">次回予約：${escapeHtml(c.nextReservation || "未設定")}</div>
+    </div>
+  `).join("");
+}
+function renderNoReservation(){
+  const customers = JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  const box = document.getElementById("noReservationList");
+  const list = customers.filter(c => !(c.nextReservation || "").trim());
+
+  if(list.length === 0){
+    box.innerHTML = `<div class="miniCard"><div class="small">未予約客はいません。</div></div>`;
+    return;
+  }
+  box.innerHTML = list.map(c=>`
+    <div class="miniCard">
+      <strong style="color:#765414">${escapeHtml(c.name)}</strong>
+      <div class="small">テーマ：${escapeHtml(c.topic || "未設定")}</div>
+      <div class="small">売上合計：${formatYen(getCustomerSales(c.id))}</div>
+      <div class="small">提案：次回予約のご案内がおすすめです。</div>
+    </div>
+  `).join("");
+}
+function renderMonthlySales(){
+  const history = JSON.parse(localStorage.getItem("fortuneHistory") || "[]");
+  const box = document.getElementById("monthlySalesTable");
+  if(history.length === 0){
+    box.innerHTML = `<div class="small">履歴を保存すると、ここに月別売上が表示されます。</div>`;
+    return;
+  }
+  const monthly = {};
+  history.forEach(h => {
+    const dt = h.isoDate ? new Date(h.isoDate) : new Date();
+    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+    monthly[key] = (monthly[key] || 0) + parseYen(h.feeAmount);
+  });
+  const entries = Object.entries(monthly).sort((a,b)=> b[0].localeCompare(a[0]));
+  box.innerHTML = `
+    <table>
+      <thead><tr><th>月</th><th>売上</th></tr></thead>
+      <tbody>
+        ${entries.map(([month, sales]) => `<tr><td>${escapeHtml(month)}</td><td class="money">${formatYen(sales)}</td></tr>`).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function updateMenuSuggestion(topic){
+  document.getElementById("menuSuggestion").innerHTML = `
+    <strong style="color:#765414;">おすすめ導線</strong><br>
+    ${escapeHtml(getRecommendedMenuText(topic, appMode))}<br>
+    次回予約・相性鑑定・月運追加の案内がしやすい状態です。
+  `;
+}
+function updateReservationPreview(){
+  const box = document.getElementById("reservationPreview");
+  const name = safeValue("customerName");
+  const nextReservation = safeValue("nextReservation");
+  const reservationMemo = safeValue("reservationMemo");
+  const proposalMemo = safeValue("proposalMemo");
+  const feeMemo = safeValue("feeMemo");
+  const feeAmount = parseYen(safeValue("feeAmount"));
+
+  if(!name){
+    box.innerHTML = `<div class="small">顧客を選ぶと、予約メモや案内に使いやすい内容をここに表示します。</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="small">
+      お客様名：${escapeHtml(name)}<br>
+      次回予約：${escapeHtml(nextReservation || "未設定")}<br>
+      料金メモ：${escapeHtml(feeMemo || "未入力")}<br>
+      売上金額：${formatYen(feeAmount)}<br>
+      予約メモ：${escapeHtml(reservationMemo || "未入力")}<br>
+      次回提案：${escapeHtml(proposalMemo || "未入力")}
+    </div>
+  `;
+}
+function updateStats(){
+  const customers = JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  const history = JSON.parse(localStorage.getItem("fortuneHistory") || "[]");
+  const totalSales = history.reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
+
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth()+1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+  const currentMonthKey = `${yyyy}-${mm}`;
+
+  const todayReservations = customers.filter(c => (c.nextReservation || "") === todayStr).length;
+  const noReservationCount = customers.filter(c => !(c.nextReservation || "").trim()).length;
+  const currentMonthSales = history
+    .filter(h => {
+      const dt = h.isoDate ? new Date(h.isoDate) : null;
+      if(!dt || isNaN(dt)) return false;
+      const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+      return key === currentMonthKey;
+    })
+    .reduce((sum, h) => sum + parseYen(h.feeAmount), 0);
+
+  document.getElementById("totalSales").textContent = formatYen(totalSales);
+  document.getElementById("currentMonthSales").textContent = formatYen(currentMonthSales);
+  document.getElementById("totalCustomers").textContent = customers.length;
+  document.getElementById("totalReadings").textContent = history.length;
+  document.getElementById("todayReservations").textContent = todayReservations;
+  document.getElementById("noReservationCount").textContent = noReservationCount;
+}
+
+function downloadBackup(){
+  const data = {
+    customers: JSON.parse(localStorage.getItem("fortuneCustomers") || "[]"),
+    history: JSON.parse(localStorage.getItem("fortuneHistory") || "[]"),
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "fortune-app-backup-v9.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function toCSV(rows){
+  return rows.map(row =>
+    row.map(v => {
+      const s = String(v ?? "");
+      if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      return s;
+    }).join(",")
+  ).join("\n");
+}
+function downloadTextFile(filename, content, type="text/csv;charset=utf-8;"){
+  const blob = new Blob(["\uFEFF" + content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function exportCustomersCSV(){
+  const customers = JSON.parse(localStorage.getItem("fortuneCustomers") || "[]");
+  const rows = [["ID","名前","生年月日","テーマ","ステータス","売上合計","来店回数","次回予約","料金メモ","更新日時"]];
+  customers.forEach(c => {
+    rows.push([
+      c.id, c.name, c.birthDate, c.topic, getStatusLabel(c.customerStatus),
+      getCustomerSales(c.id), getCustomerVisitCount(c.id), c.nextReservation || "",
+      c.feeMemo || "", c.updatedAt || ""
+    ]);
+  });
+  downloadTextFile("fortune-customers-v9.csv", toCSV(rows));
+}
+function exportHistoryCSV(){
+  const history = JSON.parse(localStorage.getItem("fortuneHistory") || "[]");
+  const rows = [["ID","顧客ID","日付","モード","鑑定種別","名前","テーマ","相談内容","売上","次回予約","予約メモ"]];
+  history.forEach(h => {
+    rows.push([
+      h.id, h.customerId, h.date, h.mode, h.readMode, h.name, h.topic, h.question,
+      h.feeAmount || 0, h.nextReservation || "", h.reservationMemo || ""
+    ]);
+  });
+  downloadTextFile("fortune-history-v9.csv", toCSV(rows));
+}
+function triggerRestore(){
+  restoreFile.value = "";
+  restoreFile.click();
+}
+function handleRestoreFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const json = JSON.parse(e.target.result);
+      const customers = Array.isArray(json.customers) ? json.customers : [];
+      const history = Array.isArray(json.history) ? json.history : [];
+      localStorage.setItem("fortuneCustomers", JSON.stringify(customers));
+      localStorage.setItem("fortuneHistory", JSON.stringify(history));
+      activeCustomerId = "";
+      renderCustomers();
+      renderHistory();
+      renderCustomerHistory("");
+      renderRepeaters();
+      renderNoReservation();
+      renderMonthlySales();
+      updateReservationPreview();
+      updateStats();
+      alert("バックアップを復元しました。");
+    }catch(err){
+      alert("JSONファイルの読み込みに失敗しました。");
+    }
+  };
+  reader.readAsText(file);
+}
+function clearAllData(){
+  const ok = confirm("顧客データと履歴をすべて削除します。よろしいですか？");
+  if(!ok) return;
+  localStorage.removeItem("fortuneCustomers");
+  localStorage.removeItem("fortuneHistory");
+  activeCustomerId = "";
+  renderCustomers();
+  renderHistory();
+  renderCustomerHistory("");
+  renderRepeaters();
+  renderNoReservation();
+  renderMonthlySales();
+  updateReservationPreview();
+  updateStats();
+  alert("全データを削除しました。");
+}
+
+renderCustomers();
+renderHistory();
+renderCustomerHistory("");
+renderRepeaters();
+renderNoReservation();
+renderMonthlySales();
+updateReservationPreview();
+updateStats();
+setReadMode("single");
+</script>
 </body>
 </html>
