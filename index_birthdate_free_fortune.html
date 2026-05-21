@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOA専用 生年月日なし占い配信アプリ</title>
+  <style>
+    :root {
+      --bg-a: #fff7fb;
+      --bg-b: #f2ecff;
+      --card: rgba(255, 255, 255, 0.94);
+      --pink: #d86fa3;
+      --pink-dark: #ad477e;
+      --purple: #7760a8;
+      --gold: #c99b3b;
+      --text: #33283a;
+      --muted: #746879;
+      --line: #ead7e8;
+      --shadow: 0 18px 45px rgba(104, 58, 101, 0.15);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 0%, #ffe3f1 0, transparent 31%),
+        radial-gradient(circle at 95% 18%, #eadfff 0, transparent 32%),
+        linear-gradient(135deg, var(--bg-a), var(--bg-b));
+    }
+    header { text-align: center; padding: 34px 16px 18px; }
+    .logo {
+      width: 92px; height: 92px; margin: 0 auto 13px; border-radius: 50%;
+      display: grid; place-items: center; background: linear-gradient(145deg, #fff, #ffe4f2);
+      box-shadow: var(--shadow); font-size: 42px; border: 1px solid #fff;
+    }
+    h1 { margin: 0; color: var(--pink-dark); font-size: clamp(1.6rem, 4vw, 2.65rem); letter-spacing: 0.04em; }
+    .lead { max-width: 900px; margin: 12px auto 0; color: var(--muted); line-height: 1.8; font-size: 0.98rem; }
+    .badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .badge {
+      background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px;
+      color: var(--pink-dark); font-weight: 800; box-shadow: 0 8px 18px rgba(104, 58, 101, 0.08); font-size: 0.9rem;
+    }
+    .app {
+      width: min(1200px, calc(100% - 28px)); margin: 18px auto 72px;
+      display: grid; grid-template-columns: 420px 1fr; gap: 18px; align-items: start;
+    }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; backdrop-filter: blur(8px); }
+    .input-card { position: sticky; top: 14px; }
+    h2.section-title { margin: 0 0 14px; color: var(--pink-dark); font-size: 1.15rem; }
+    .note, .notice { margin: 14px 0; padding: 13px 14px; border-radius: 16px; line-height: 1.75; font-size: 0.9rem; }
+    .note { background: #f7f0ff; border: 1px solid #e0cff4; color: #665078; }
+    .notice { background: #fff9ed; border: 1px solid #edd7a5; color: #705b35; }
+    .form-group { margin: 15px 0; }
+    label { display: block; margin-bottom: 7px; color: var(--muted); font-weight: 800; font-size: 0.9rem; }
+    input, select, textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 12px 13px;
+      font-size: 1rem; color: var(--text); background: #fff; outline: none; font-family: inherit;
+    }
+    textarea { min-height: 120px; resize: vertical; line-height: 1.75; }
+    input:focus, select:focus, textarea:focus { border-color: var(--pink); box-shadow: 0 0 0 4px rgba(216, 111, 163, 0.13); }
+    .mode-tabs, .choice-grid, .actions, .quick-themes { display: flex; flex-wrap: wrap; gap: 10px; }
+    button {
+      border: none; cursor: pointer; border-radius: 999px; padding: 11px 15px; font-weight: 800;
+      font-family: inherit; font-size: 0.92rem; transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(126, 61, 113, 0.15); }
+    .choice-btn, .theme-btn, .mode-btn, .secondary { background: #fff; color: var(--pink-dark); border: 1px solid var(--line); }
+    .choice-btn.active, .theme-btn.active, .mode-btn.active, .primary { background: linear-gradient(135deg, var(--pink), var(--purple)); color: #fff; border: 1px solid transparent; }
+    .danger { background: #fff2f2; color: #a74646; border: 1px solid #efcaca; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .box { border: 1px solid var(--line); background: #fffafd; border-radius: 18px; padding: 14px; margin-top: 14px; }
+    .box h3 { margin: 0 0 10px; color: var(--pink-dark); font-size: 1rem; }
+    .result-card { min-height: 680px; }
+    .result-top { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .score {
+      display: inline-flex; align-items: center; white-space: nowrap; background: linear-gradient(135deg, #fff6d8, #fff);
+      border: 1px solid #efd99e; color: #936813; border-radius: 999px; padding: 9px 13px; font-weight: 900;
+    }
+    #modeLabel { color: var(--muted); font-weight: 800; }
+    #result { line-height: 1.9; }
+    #result h2 { color: var(--pink-dark); margin: 14px 0 8px; font-size: 1.45rem; }
+    #result h3 { color: var(--purple); margin: 20px 0 7px; border-left: 5px solid var(--pink); padding-left: 10px; font-size: 1.08rem; }
+    #result p { margin: 8px 0; }
+    #result ul { padding-left: 1.25em; margin-top: 8px; }
+    .script-box { margin: 14px 0; padding: 14px; border-radius: 16px; background: #fff7fb; border: 1px dashed #df9cc1; color: #653b58; }
+    .script-box strong { color: var(--pink-dark); }
+    .mini-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+    .mini-card { border: 1px solid var(--line); border-radius: 16px; padding: 12px; background: #fffafd; }
+    .mini-card strong { display: block; margin-bottom: 4px; color: var(--pink-dark); }
+    .hidden { display: none !important; }
+    dialog { border: none; border-radius: 22px; padding: 0; max-width: 720px; width: calc(100% - 28px); box-shadow: var(--shadow); }
+    dialog::backdrop { background: rgba(58, 35, 56, 0.45); }
+    .modal-body { padding: 22px; line-height: 1.85; }
+    .modal-body h2 { margin-top: 0; color: var(--pink-dark); }
+    footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin: -48px 0 38px; }
+    @media (max-width: 940px) { .app { grid-template-columns: 1fr; } .input-card { position: static; } }
+    @media (max-width: 560px) { .two, .mini-cards { grid-template-columns: 1fr; } button { width: 100%; } .result-top { align-items: stretch; flex-direction: column; } .score { justify-content: center; } }
+    @media print { body { background: #fff; } header, .input-card, .actions, footer { display: none !important; } .app { display: block; width: 100%; margin: 0; } .card { box-shadow: none; border: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">☾</div>
+    <h1>MOA専用 生年月日なし占い配信アプリ</h1>
+    <p class="lead">生年月日を聞かずに、ニックネーム・相談内容・直感で選ぶ数字や色から鑑定できます。配信でテンポよく使える、読み上げやすい占いアプリです。</p>
+    <div class="badges"><span class="badge">生年月日なし</span><span class="badge">配信用</span><span class="badge">直感リーディング</span><span class="badge">法人相談も対応</span></div>
+  </header>
+  <main class="app">
+    <section class="card input-card">
+      <h2 class="section-title">✦ 鑑定入力</h2>
+      <div class="form-group"><label>鑑定モード</label><div class="mode-tabs">
+        <button type="button" class="mode-btn active" data-mode="simple">かんたん鑑定</button>
+        <button type="button" class="mode-btn" data-mode="love">恋愛・相手の気持ち</button>
+        <button type="button" class="mode-btn" data-mode="choice">二択・選択</button>
+        <button type="button" class="mode-btn" data-mode="business">仕事・法人</button>
+        <button type="button" class="mode-btn" data-mode="yesno">YES / NO</button>
+      </div></div>
+      <div class="note">配信では「ニックネーム、相談内容、1〜9の数字、気になる色だけ送ってください」で使えます。</div>
+      <div class="notice">占いの参考表示です。医療・法律・税務・投資などの専門判断を代替せず、結果を保証・断定しません。</div>
+      <div class="box"><h3>基本情報</h3>
+        <div class="form-group"><label for="nickname">ニックネーム</label><input id="nickname" type="text" placeholder="例：もあ / 相談者さんの名前" /></div>
+        <div class="form-group"><label for="theme">相談テーマ</label><select id="theme">
+          <option>総合運</option><option>恋愛</option><option>相手の気持ち</option><option>復縁</option><option>片思い</option><option>不倫問題</option><option>仕事</option><option>転職</option><option>お金</option><option>人間関係</option><option>家族</option><option>結婚</option><option>事業運</option><option>集客運</option><option>売上運</option><option>法人総合運</option><option>YES / NO</option><option>二択</option>
+        </select></div>
+        <div class="form-group"><label>相談テンプレ</label><div class="quick-themes">
+          <button type="button" class="theme-btn" data-theme="恋愛" data-text="恋愛について、相手の気持ちと今後の流れを知りたいです。">恋愛</button>
+          <button type="button" class="theme-btn" data-theme="復縁" data-text="復縁できる可能性と、今やるべき行動を知りたいです。">復縁</button>
+          <button type="button" class="theme-btn" data-theme="仕事" data-text="仕事の流れと、これからどう動けばよいかを知りたいです。">仕事</button>
+          <button type="button" class="theme-btn" data-theme="事業運" data-text="事業の流れ、集客、売上、今後の伸ばし方を知りたいです。">法人</button>
+          <button type="button" class="theme-btn" data-theme="二択" data-text="AとBで迷っています。どちらを選ぶとよい流れになるか知りたいです。">二択</button>
+        </div></div>
+        <div class="form-group"><label for="question">相談内容</label><textarea id="question" placeholder="例：彼から連絡が少なくて不安です。今後どうしたらいいですか？"></textarea></div>
+      </div>
+      <div class="box"><h3>直感で選ぶもの</h3>
+        <div class="form-group"><label>数字 1〜9</label><div class="choice-grid" id="numberChoices">
+          <button type="button" class="choice-btn" data-number="1">1</button><button type="button" class="choice-btn" data-number="2">2</button><button type="button" class="choice-btn" data-number="3">3</button><button type="button" class="choice-btn" data-number="4">4</button><button type="button" class="choice-btn" data-number="5">5</button><button type="button" class="choice-btn" data-number="6">6</button><button type="button" class="choice-btn" data-number="7">7</button><button type="button" class="choice-btn" data-number="8">8</button><button type="button" class="choice-btn" data-number="9">9</button>
+        </div></div>
+        <div class="two"><div class="form-group"><label for="color">気になる色</label><select id="color"><option>ピンク</option><option>白</option><option>紫</option><option>青</option><option>緑</option><option>黄色</option><option>金</option><option>赤</option><option>黒</option></select></div>
+        <div class="form-group"><label for="mood">今の気分</label><select id="mood"><option>不安</option><option>迷い</option><option>期待</option><option>疲れ</option><option>前向き</option><option>寂しい</option><option>焦り</option><option>落ち着いている</option></select></div></div>
+        <div class="two hidden" id="choiceBox"><div class="form-group"><label for="optionA">選択肢A</label><input id="optionA" type="text" placeholder="例：連絡する / 今の仕事を続ける" /></div><div class="form-group"><label for="optionB">選択肢B</label><input id="optionB" type="text" placeholder="例：待つ / 転職する" /></div></div>
+      </div>
+      <div class="form-group"><label>操作</label><div class="actions"><button type="button" class="primary" id="fortuneBtn">鑑定する</button><button type="button" class="secondary" id="copyBtn">結果をコピー</button><button type="button" class="secondary" id="pdfBtn">PDF保存</button><button type="button" class="danger" id="resetBtn">リセット</button><button type="button" class="secondary" id="termsBtn">免責</button></div></div>
+    </section>
+    <section class="card result-card" id="printArea"><div class="result-top"><div><h2 class="section-title">✧ 配信用 鑑定結果</h2><div id="modeLabel">かんたん鑑定</div></div><div class="score" id="score">今日の流れ：開運準備期</div></div>
+      <div id="result"><h2>MOAさん専用 生年月日なし鑑定</h2><p>左側にニックネーム・相談内容・数字・色・気分を入れて「鑑定する」を押してください。生年月日を聞かずに、配信で読み上げやすい鑑定文を作ります。</p><div class="script-box"><strong>配信での案内例：</strong><br>「生年月日は言わなくて大丈夫です。ニックネーム、相談内容、1〜9で気になる数字、気になる色を送ってください。」</div><div class="mini-cards"><div class="mini-card"><strong>直感</strong>数字・色・気分から今の流れを読む。</div><div class="mini-card"><strong>相談文</strong>悩みの言葉から本音と注意点を読む。</div><div class="mini-card"><strong>配信向け</strong>読み上げやすい文章で表示。</div></div></div>
+    </section>
+  </main>
+  <dialog id="termsDialog"><div class="modal-body"><h2>免責事項</h2><p>本アプリはMOAさんの占い配信・鑑定補助のための参考ツールです。表示内容は占い・スピリチュアルコンテンツであり、未来・結果・売上・復縁・結婚・契約成立などを保証または断定するものではありません。</p><p>医療、法律、税務、投資、契約、離婚、慰謝料、親権、健康状態など専門判断が必要な内容は、必ず専門家へ相談するよう案内してください。</p><p>入力内容は外部サーバーへ送信されません。ブラウザ上だけで鑑定文を作成します。</p><button type="button" class="primary" id="closeTermsBtn">閉じる</button></div></dialog>
+  <footer>© MOA / 生年月日なし占い配信アプリ</footer>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let currentMode = "simple";
+    let selectedNumber = "";
+    const flowLabels = ["開運準備期", "流れが整う日", "見直しの時", "小さな前進", "ご縁が動く時", "慎重に進む時", "本音が見える時", "切り替えの時", "チャンス前夜"];
+    const numberMessages = {"1":"1は始まりの数字です。今は誰かの答えを待つより、自分から小さく動くことで流れが開きます。","2":"2は調和の数字です。相手との距離感や、気持ちのバランスを整えることが鍵になります。","3":"3は表現の数字です。言葉にすること、発信すること、軽やかに伝えることが運を動かします。","4":"4は安定の数字です。焦らず土台を整える時です。約束・予定・お金・環境を見直すと吉です。","5":"5は変化の数字です。今のままにこだわりすぎず、少しやり方を変えると新しい流れが入ります。","6":"6は愛情と責任の数字です。人を大切にすることと、自分を犠牲にしすぎないことの両方が必要です。","7":"7は内省の数字です。すぐ答えを出すより、静かに本音を見つめることで正しい選択が見えてきます。","8":"8は現実化とお金の数字です。行動・数字・結果を見ながら整えると、現実面が動きやすくなります。","9":"9は完了と手放しの数字です。古い不安や執着をひとつ手放すことで、次のご縁が入りやすくなります。"};
+    const colorMessages = {"ピンク":"ピンクは愛情と癒しの色です。優しい言葉、柔らかい態度、安心できる距離感が運を開きます。","白":"白はリセットと浄化の色です。迷った時は一度まっさらに戻り、事実と感情を分けると答えが見えます。","紫":"紫は直感と精神性の色です。頭で考えすぎるより、違和感があるかどうかを大切にしてください。","青":"青は冷静さと対話の色です。感情的に動くより、落ち着いた言葉で確認することが開運です。","緑":"緑は回復と調和の色です。急いで答えを出すより、まず心と体を休ませることが必要です。","黄色":"黄色は希望と情報の色です。人に聞く、調べる、軽く試すことで良いヒントが入ります。","金":"金は豊かさと自信の色です。自分の価値を下げず、堂々と受け取る姿勢が運を強くします。","赤":"赤は行動と情熱の色です。迷いすぎて止まるより、今できる一歩を選ぶことで流れが変わります。","黒":"黒は守りと境界線の色です。無理な関係や負担から距離を取り、自分を守ることが開運です。"};
+    const moodMessages = {"不安":"不安がある時は、まだ見えていない部分を心が先に感じ取っています。今は急がず、確認できることから整えましょう。","迷い":"迷いは、どちらも大切だから起きています。損得だけでなく、選んだ後の自分が穏やかかを見てください。","期待":"期待がある時は、流れが前向きに動き始めています。ただし勢いだけで進まず、準備も一緒に整えると吉です。","疲れ":"疲れがある時は、判断力が落ちやすいです。大事な決断は少し休んでからにすると、良い選択ができます。","前向き":"前向きな気持ちは追い風です。今の勢いを使いながらも、やることを一つに絞ると結果につながります。","寂しい":"寂しさがある時は、相手に求めすぎるより、自分を安心させる行動を先に選ぶと心が落ち着きます。","焦り":"焦りは『早く変えたい』というサインです。ただ、急ぐほど見落としが出やすいので、小さな一歩に分けましょう。","落ち着いている":"落ち着いている時は、直感が働きやすいです。今感じている違和感や安心感を信じて大丈夫です。"};
+    const themeAdvice = {"総合運":"総合運では、今は整理と再出発の流れです。無理に全部を変えようとせず、心が軽くなるものを一つ選ぶと運が動きます。","恋愛":"恋愛では、相手の気持ちを知りたい思いが強く出ています。ただ、相手の言葉よりも行動を見ることで、今後の流れが分かりやすくなります。","相手の気持ち":"相手の気持ちは、完全に閉じているというより、様子を見ながら距離を測っている流れです。急かすより安心感を作る方が進展しやすいです。","復縁":"復縁では、過去を戻すより新しい関係として作り直せるかが鍵です。連絡の前に、同じ問題を繰り返さない準備をしてください。","片思い":"片思いでは、一気に距離を詰めるより小さな会話の積み重ねが吉です。相手が安心できる空気を作ると流れが良くなります。","不倫問題":"複雑な関係では、自分が大切にされているかを冷静に見る必要があります。苦しさが強い時は、会えるかどうかより自分の心を守ることを優先してください。","仕事":"仕事では、頑張りを増やすより、やることを絞る時期です。得意なことを見える形にすると評価につながります。","転職":"転職では、勢いだけで動くより条件整理が必要です。仕事内容・収入・人間関係・生活リズムを分けて考えてください。","お金":"お金では、増やす前に整えることが開運です。固定費や感情で使うお金を見直すと流れが落ち着きます。","人間関係":"人間関係では、優しさと我慢を混同しないことが大切です。会うと疲れる相手とは、少し距離を調整してください。","家族":"家族では、言わなくても分かるはずを手放す時期です。短くても言葉にして伝えると、関係が少しずつ整います。","結婚":"結婚では、気持ちだけでなく生活観を見ることが大切です。お金・家族・時間の使い方を穏やかに確認してください。","事業運":"事業運では、誰に何を届けるかをはっきりさせるほど流れが開きます。商品を増やす前に、伝え方を整えると吉です。","集客運":"集客運では、派手な宣伝より信頼の積み重ねが大切です。お客様の不安を先に説明すると申し込みにつながりやすくなります。","売上運":"売上運では、価格・説明・申込導線の見直しが鍵です。買ってくださいより、安心して申し込める流れを作りましょう。","法人総合運":"法人運では、理念・信用・導線を整える時期です。代表の言葉が事業の運気を動かすので、発信の軸を決めると安定します。","YES / NO":"YES / NOでは、今は即決より条件付きで進む流れです。準備が整っているならYES、心が不安定なら少し待つ方が安全です。","二択":"二択では、得に見える方より、選んだ後に心が穏やかでいられる方が開運です。焦りで選ばないことが大切です。"};
+    function value(id){return $(id).value.trim();} function theme(){return $("theme").value;} function color(){return $("color").value;} function mood(){return $("mood").value;} function nickname(){return value("nickname") || "相談者さん";} function question(){return value("question") || "詳しい相談内容は未入力です。";}
+    function escapeHtml(text){return String(text||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+    function seedText(){return nickname()+question()+theme()+color()+mood()+selectedNumber+currentMode;} function pick(list){const sum=Array.from(seedText()).reduce((a,c)=>a+c.charCodeAt(0),0); return list[sum%list.length];} function flow(){return pick(flowLabels);}
+    function analyzeQuestionTone(text){const q=text||""; if(/(限界|つらい|辛い|苦しい|不安|怖い|どうしたら|急|すぐ|泣)/.test(q))return "今は気持ちがかなり張りつめていて、早く答えを出したい状態が出ています。ただ、不安が強い時ほど判断が極端になりやすいので、今日決めることと、少し時間を置いて決めることを分けるのが大切です。"; if(/(復縁|不倫|片思い|好き|別れ|連絡|彼|彼女|夫|妻|恋|会いたい)/.test(q))return "恋愛面では、相手の気持ちを知りたい思いと、自分が傷つきたくない気持ちが重なっています。相手を追いかけるだけではなく、その関係が自分を安心させてくれるかを見てください。"; if(/(仕事|転職|職場|上司|同僚|独立|辞め|働|事業|売上|集客|会社)/.test(q))return "仕事や事業では、頑張っているのに結果が見えにくく、方向性を確認したい流れが出ています。才能がないのではなく、力を出す場所と見せ方を整える時期です。"; if(/(お金|収入|借金|支払|生活費|金運|稼|価格|売上)/.test(q))return "お金の面では、不安から動くより、数字を見える形にすることで流れが落ち着きます。増やす行動と守る行動を分けることが開運です。"; if(/(人間関係|家族|親|子ども|友人|仲間|嫌|距離|喧嘩|職場)/.test(q))return "人間関係では、相手に合わせすぎて自分の気持ちを後回しにしている流れが見えます。優しさは大切ですが、自分が削られる関係は距離感を見直してください。"; if(/(選ぶ|迷|どちら|二択|決め|判断|進む|やめる|続ける|A|B)/.test(q))return "選択の場面では、正解を探すより『選んだ後の自分が穏やかでいられるか』を見ると答えが出やすくなります。損得だけでなく、心が削られない道を選んでください。"; return "相談内容からは、今の状況をもっと良くしたい前向きな気持ちと、まだ少し迷いが残っている流れが見えます。大きく変えるより、小さく整えることから運が動き始めます。";}
+    function actionPlan(t){const plans={"恋愛":["相手を試す連絡ではなく、自然な会話を1回だけ送る。","返事の早さだけで愛情を判断しない。","自分が安心できる関係かを紙に書く。"],"相手の気持ち":["相手の反応を急かさず、行動の一貫性を見る。","言葉より態度を冷静に確認する。","不安な時は追いかける前に一晩置く。"],"復縁":["連絡する前に、別れた原因をひとつだけ整理する。","謝る・責めるより、今後どうしたいかを短くまとめる。","相手の反応が薄い時は追いLINEを控える。"],"不倫問題":["会えるかどうかより、自分が大切にされているかを確認する。","苦しくなる約束は一度立ち止まる。","誰にも言えない不安を紙に出して整理する。"],"仕事":["今週やる仕事を3つに絞る。","得意な作業と疲れる作業を書き分ける。","評価されたい相手に伝わる形で成果を見せる。"],"転職":["希望条件を『絶対必要』『できれば欲しい』に分ける。","感情で退職日を決めず、生活費を確認する。","今の職場で得た強みを3つ書く。"],"お金":["固定費をひとつだけ見直す。","気分で使うお金を一週間だけ記録する。","増やす行動と守る行動を分ける。"],"人間関係":["すぐ返事をしなくていい相手には時間を置く。","嫌なことをひとつだけやんわり断る。","会うと疲れる相手との距離を少し調整する。"],"事業運":["誰に届けるサービスかを1文で書く。","売れている理由と止まっている理由を分ける。","今あるメニューを増やす前に整理する。"],"集客運":["同じテーマを角度を変えて継続発信する。","申し込み前の不安を先に説明する。","実績・感想・よくある質問を見える場所に置く。"],"売上運":["価格の理由をわかりやすく書く。","申込ボタンや連絡先を探しやすくする。","リピートにつながる案内をひとつ用意する。"],"法人総合運":["今月いちばん届けたい商品やサービスを1つ決める。","プロフィール文をお客様目線に直す。","申込までの導線をスマホで確認する。"]}; return plans[t]||["今日やることを1つだけ決める。","不安を紙に書いて、事実と想像に分ける。","身の回りをひとつ整えてから行動する。"]}
+    function yesNoResult(){const sum=Array.from(seedText()).reduce((a,c)=>a+c.charCodeAt(0),0); const m=sum%5; if(m===0)return ["YES寄り","今は進んでよい流れです。ただし勢いだけではなく、相手や状況を見ながら丁寧に進めると安心です。"]; if(m===1)return ["少し待つ","今すぐ動くより、情報や気持ちが整うのを待つ方が良い流れです。焦りからの行動は避けてください。"]; if(m===2)return ["条件付きYES","準備ができているなら進んで大丈夫です。ただし不安な点をひとつ確認してから動くと、後悔が減ります。"]; if(m===3)return ["NO寄り","今は無理に進めるより、いったん距離を置く方が安全です。流れが変わるまで自分を整えましょう。"]; return ["保留が吉","答えを急がないことが今の開運です。もう少し様子を見ると、自然に判断材料が増えてきます。"]}
+    function choiceResult(){const a=value("optionA")||"選択肢A"; const b=value("optionB")||"選択肢B"; const sum=Array.from(seedText()+a+b).reduce((total,char)=>total+char.charCodeAt(0),0); if(sum%2===0)return {better:a,other:b,reason:`${a}は、今の流れでは自分の意思を取り戻しやすい選択です。少し勇気は必要ですが、選んだ後に気持ちが前に向きやすい暗示があります。`}; return {better:b,other:a,reason:`${b}は、今の流れでは無理を減らし、現実的に整えやすい選択です。焦りで決めるより、安心を守る選択として良い暗示があります。`}}
+    function scriptBox(name,t){return `<div class="script-box"><strong>配信での読み上げ用：</strong><br>「${name}さん、今のテーマは『${t}』ですね。生年月日なしで、選んでくれた数字・色・今の気分から流れを見ていきます。今は無理に答えを急ぐより、心が軽くなる一歩を選ぶことが大切です。」</div>`}
+    function commonReading(){const name=nickname(); const t=theme(); const q=question(); const numMsg=selectedNumber?numberMessages[selectedNumber]:"数字が未選択なので、今は全体の流れを中心に読みます。直感で数字を選ぶと、より配信向けに読みやすくなります。"; const actions=actionPlan(t).map(item=>`<li>${item}</li>`).join(""); return `<h2>${name}さんへの生年月日なし鑑定</h2>${scriptBox(name,t)}<h3>今の全体運</h3><p>今日の流れは「${flow()}」です。生年月日を使わなくても、相談文・選んだ数字・色・気分から見ると、今は心の奥にある本音が少しずつ表に出てきている時期です。</p><h3>${t}への答え</h3><p>${themeAdvice[t]||themeAdvice["総合運"]}</p><h3>相談内容からの読み解き</h3><p>「${escapeHtml(q)}」という相談からは、${analyzeQuestionTone(q)}</p><h3>選んだ数字からのメッセージ</h3><p>${numMsg}</p><h3>選んだ色・気分からのメッセージ</h3><p>${colorMessages[color()]}</p><p>${moodMessages[mood()]}</p><div class="mini-cards"><div class="mini-card"><strong>今の本音</strong>無理せず安心できる方向を探しています。</div><div class="mini-card"><strong>近未来</strong>小さな確認や気づきが入りやすい流れです。</div><div class="mini-card"><strong>開運の鍵</strong>焦らず、言葉と環境を整えることです。</div></div><h3>今日からできる具体的な一歩</h3><ul>${actions}</ul><h3>注意したいこと</h3><p>不安な時ほど、相手の一言や小さな出来事を大きく受け取りやすくなります。すぐ結論を出さず、落ち着いてから判断することで運の流れを崩さずに済みます。</p><h3>MOAさんからの締めメッセージ</h3><p>${name}さん、今は完璧な答えを出すより、自分を大切にしながら次の流れを整える時です。できることを一つずつ選んでいけば、ちゃんと運は動いていきます。</p>`}
+    function loveReading(){return `${commonReading()}<h3>相手の気持ちの流れ</h3><p>相手は完全に無関心というより、今は自分のペースや状況を優先している可能性があります。こちらから強く押すより、安心して返せる雰囲気を作る方が流れは良くなります。</p><div class="script-box"><strong>配信での一言：</strong><br>「相手の気持ちはゼロではなさそうです。ただ、今は追いかけすぎると不安が増えやすいので、自分の安心を守りながら様子を見るのが良さそうです。」</div>`}
+    function choiceReading(){const c=choiceResult(); return `${commonReading()}<h3>二択リーディング</h3><p>今の流れでより整いやすいのは、<strong>「${escapeHtml(c.better)}」</strong>です。${escapeHtml(c.reason)}</p><p>ただし、<strong>「${escapeHtml(c.other)}」</strong>が完全に悪いわけではありません。こちらを選ぶ場合は、焦りや不安ではなく、条件を整えてから進むことが大切です。</p>`}
+    function businessReading(){return `${commonReading()}<h3>仕事・法人の流れ</h3><p>今は、もっと頑張るより「伝わる形に整える」ことが大切です。魅力や実力があっても、入口・説明・申込導線が分かりにくいとチャンスを逃しやすくなります。</p><h3>配信で伝えやすい法人アドバイス</h3><div class="script-box"><strong>読み上げ用：</strong><br>「今ある魅力を、お客様に伝わる形へ整える時期です。入口をわかりやすくして、安心して申し込める流れを作ると、次のご縁が入りやすくなります。」</div>`}
+    function yesNoReading(){const [answer,reason]=yesNoResult(); return `${commonReading()}<h3>YES / NO 鑑定</h3><p>今回の答えは、<strong>${answer}</strong>です。${reason}</p><p>占いとしてはこの流れですが、人生の大事な判断は、気持ち・現実・安全面を確認してから進めてください。</p>`}
+    function updateMode(){const labels={simple:"かんたん鑑定",love:"恋愛・相手の気持ち",choice:"二択・選択",business:"仕事・法人",yesno:"YES / NO"}; $("modeLabel").textContent=labels[currentMode]; $("choiceBox").classList.toggle("hidden",currentMode!=="choice"); if(currentMode==="love")$("theme").value="相手の気持ち"; if(currentMode==="choice")$("theme").value="二択"; if(currentMode==="business")$("theme").value="事業運"; if(currentMode==="yesno")$("theme").value="YES / NO";}
+    document.querySelectorAll(".mode-btn").forEach(button=>{button.addEventListener("click",()=>{document.querySelectorAll(".mode-btn").forEach(btn=>btn.classList.remove("active")); button.classList.add("active"); currentMode=button.dataset.mode; updateMode();});});
+    document.querySelectorAll(".theme-btn").forEach(button=>{button.addEventListener("click",()=>{document.querySelectorAll(".theme-btn").forEach(btn=>btn.classList.remove("active")); button.classList.add("active"); $("theme").value=button.dataset.theme; $("question").value=button.dataset.text;});});
+    document.querySelectorAll("[data-number]").forEach(button=>{button.addEventListener("click",()=>{document.querySelectorAll("[data-number]").forEach(btn=>btn.classList.remove("active")); button.classList.add("active"); selectedNumber=button.dataset.number;});});
+    $("fortuneBtn").addEventListener("click",()=>{$("score").textContent=`今日の流れ：${flow()}`; if(currentMode==="simple")$("result").innerHTML=commonReading(); if(currentMode==="love")$("result").innerHTML=loveReading(); if(currentMode==="choice")$("result").innerHTML=choiceReading(); if(currentMode==="business")$("result").innerHTML=businessReading(); if(currentMode==="yesno")$("result").innerHTML=yesNoReading(); $("printArea").scrollIntoView({behavior:"smooth",block:"start"});});
+    $("copyBtn").addEventListener("click",async()=>{try{await navigator.clipboard.writeText($("result").innerText); alert("鑑定結果をコピーしました。");}catch(error){alert("コピーできませんでした。結果部分を選択してコピーしてください。");}});
+    $("pdfBtn").addEventListener("click",()=>window.print());
+    $("resetBtn").addEventListener("click",()=>{document.querySelectorAll("input, textarea").forEach(el=>el.value=""); $("theme").value="総合運"; $("color").value="ピンク"; $("mood").value="不安"; selectedNumber=""; document.querySelectorAll("[data-number], .theme-btn").forEach(btn=>btn.classList.remove("active")); $("score").textContent="今日の流れ：開運準備期"; $("result").innerHTML=`<h2>MOAさん専用 生年月日なし鑑定</h2><p>左側にニックネーム・相談内容・数字・色・気分を入れて「鑑定する」を押してください。生年月日を聞かずに、配信で読み上げやすい鑑定文を作ります。</p><div class="script-box"><strong>配信での案内例：</strong><br>「生年月日は言わなくて大丈夫です。ニックネーム、相談内容、1〜9で気になる数字、気になる色を送ってください。」</div>`;});
+    $("termsBtn").addEventListener("click",()=>$("termsDialog").showModal()); $("closeTermsBtn").addEventListener("click",()=>$("termsDialog").close()); updateMode();
+  </script>
+</body>
+</html>
